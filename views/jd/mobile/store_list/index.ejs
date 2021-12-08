@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+   *{text-align: center;color: #666;}  body{background: #ececec}a{text-decoration: none !important}
+   .navbar .col:hover{color: red}
+   #content{margin-top:46px;}#content>a{height: 200px; display: block;padding:2px;background: #fff;width: 49%;float: left;margin-right:1%;overflow: hidden;margin-bottom:1% } #content img{width: 100%}
+</style>
+<script>
+    document.addEventListener( "plusready", function(){
+	// 扩展API加载完毕，现在可以正常调用扩展API
+	var webview = plus.webview.currentWebview();
+        plus.key.addEventListener('backbutton', function() {
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+    });
+  })
+
+
+$(function () {
+//通过和他们的平台对接，丢一个店铺名给我，然后通过店铺名，检索出商品
+let data={};
+    
+      a="<%- data%>"
+      console.log(a)
+      let ur='/jd_mobile?order=gain_store_ware&store_name='+a;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                //创建元素
+                creat_content(res)
+              })
+              .catch(error => console.log('error is', error));
+
+
+
+
+
+
+
+
+  
+   function creat_content(res) {
+           console.log(res)
+           for (const i of res) {
+                let html='<a href=/want?want=jd/mobile/item&data='+i._id+'>'+
+                        '<img width=100px height=130px src='+i.information.imga1+' alt="" srcset="">'+
+                        '<div style="padding:5px;font-size:12px;text-align: left ">'+i.information.name+'</div>'+
+                        '<div style="padding:0 5px;"><span style="font-weight:500;;margin-top:-3px;color:red;font-size:16px;text-align:left;float:left">'+i.information.price+'</span><span style="font-size:12px;text-align:left;float:right">月销量1622笔</span></div>'+
+                    '</a>'
+                $('#content').append(html)
+           }
+        }
+  
+})
+</script>
+</head>
+
+
+<body>
+<div class="container-fluid">
+
+ <nav class="navbar  fixed-top"  style="background: #fff">     
+        <div class="row" style="width: 100%;margin: auto">
+           <div class="col">综合</div>
+           <div class="col">销量</div>
+           <div class="col">上新</div>
+           <div class="col">价格</div>
+        </div>
+ </nav>
+
+ <div id="content">
+        
+         
+ </div>
+ <%- include ../foot%>
+</div>    
+
+</body>
+</html>

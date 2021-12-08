@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.bootcss.com/angular.js/1.4.3/angular.min.js"></script> 
+</head>
+
+
+
+
+<body>
+	
+	我不信，竟然可以如此简单： <p>
+	date: <input type="date"> <p>
+	month: <input type="month"> <p>
+	<!-- time: <input type="time" value="06:30"> <p> -->
+	range: <input type="range" name="points" min="1" max="10"> <p>
+	number: <input type="number" name="quantity" min="1" max="5"> <p>
+	
+	<div ng-app="learnModule" ng-controller="LearnCtrl">
+	time: <input type="time"
+	           required
+	           ng-required
+	           ng-model="time"
+	           value="{{time}}"
+	           ng-change="change()"/>
+	</div>
+</body>
+
+<script>
+angular.module('learnModule', []).controller('LearnCtrl', function ($scope) {
+    $scope.time = new Date('2015/12/12 20:00');
+    //$scope.time = "06:35";
+    $scope.change = function () {
+        //alert($scope.time);
+        console.log($scope.time);
+    }
+    
+    
+    $scope.time3 = new Date('2015-12-12 20:00');
+    //$scope.time3 = "06:35";
+    $scope.$watch('time3',  function(newValue, oldValue) {
+        if (newValue === oldValue) { return; } // AKA first run
+        alert($scope.time);
+    });
+});
+</script>
+</html>

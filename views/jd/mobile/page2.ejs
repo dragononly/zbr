@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+ <link href="../../ico.ico" rel="icon" type="image/x-icon" />
+ <title>i am jd mobile page two</title>
+  <script type="text/javascript">
+	  let page=2;
+	  document.addEventListener( "plusready", function(){
+	// 扩展API加载完毕，现在可以正常调用扩展API
+	var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+  })
+  </script>
+  <style type="text/css">
+  	 .row>div{padding: 0;}
+  	 .row>div>div{color:#666;margin-bottom:3px;height:40px;padding: 2px;font-size: 13px;text-align: center;line-height: 40px;}
+     .right_show{display: none}
+  </style>
+  
+  <script type="text/javascript">
+  	$(function  () {
+  		//左边栏，点击变色
+  		css()
+  		function css () {
+  			$('.row>div>div').on('click',function  () {
+  				
+  				
+  				$('.row>div>div').css('background','#f5f5f5')
+  				$(this).css('background','#fff')
+  				
+  				let index=$(this).index()
+
+  			})
+  		}
+  		
+  		//点击左边栏，右边开始显示对应的层
+  		
+		//默认显示第一个
+		$('.right_show').eq(0).show()
+		
+		$('.left_click').on('click',function () {
+			let index=$(this).index()-1
+			$('.right_show').hide()
+			$('.right_show').eq(index).show()
+		})
+  		
+  		
+  		
+  		
+  		
+  		
+  	})
+  </script>
+</head>
+
+
+<body>
+	  	
+		
+<div class="container-fluid">
+	
+	<%- include header%>
+	
+    <div class="row">
+		<div class="col-5" style="background: #f5f5f5;">
+			<div style="color:black;font-weight: bold;font-size: 15px;background: #fff;">推荐分类</div>
+			<div class="left_click">男装/女装/童装/内衣</div>
+			<div class="left_click">男鞋/运动/户外 </div>
+			<div class="left_click">女鞋/箱包/钟表/珠宝</div>
+			<div class="left_click">母婴</div>
+			<div class="left_click">美妆个护</div>
+			<div class="left_click">手机/数码</div>
+			<div class="left_click">食品/酒类/生鲜/特产</div>
+			<div class="left_click">医药保健/计生情趣</div>
+			<div class="left_click">机票/酒店/旅游</div>
+			<div class="left_click">生活娱乐</div>
+			<div class="left_click">特色餐饮</div>
+			<div class="left_click">家居</div>
+			<div class="left_click">建材</div>
+		</div>
+		<div class="col-7 right_show">
+			<div style="margin-top: 43px">
+				<a href="##">女装</a>
+				<a href="##">男装</a>
+				<a href="##">内衣</a>
+				<a href="##">配饰</a>
+				<a href="##">童装</a>
+		    </div>
+		</div>
+
+		<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">流行男鞋</a>
+					<a href="##">运动鞋包</a>
+					<a href="##">运动服饰</a>
+					<a href="##">健身训练</a>
+					<a href="##">骑行运动</a>
+					<a href="##">体育用品</a>
+					<a href="##">户外鞋服</a>
+					<a href="##">户外装备</a>
+					<a href="##">垂钓用品</a>
+					<a href="##">游泳用品</a>
+					<a href="##">高尔夫用品</a>
+				</div>
+			</div>
+
+			<div class="col-7 right_show">
+					<div style="margin-top: 43px">
+						<a href="##">时尚女鞋</a>
+						<a href="##">潮流女包</a>
+						<a href="##">精品男包</a>
+						<a href="##">功能箱包</a>
+						<a href="##">钟表</a>
+						<a href="##">眼镜</a>
+						<a href="##">首饰</a>
+					</div>
+			</div>
+
+			<div class="col-7 right_show">
+					<div style="margin-top: 43px">
+						<a href="##">奶粉</a>
+						<a href="##">营养辅食</a>
+						<a href="##">尿裤湿巾</a>
+						<a href="##">喂养用品</a>
+						<a href="##">洗护用品</a>
+						<a href="##">寝居服饰</a>
+						<a href="##">妈妈专区</a>
+						<a href="##">童车童床</a>
+						<a href="##">玩具</a>
+					</div>
+			</div>
+
+			<div class="col-7 right_show">
+					<div style="margin-top: 43px">
+						<a href="##">面部护肤</a>
+						<a href="##">洗发护发</a>
+						<a href="##">身体护理</a>
+						<a href="##">口腔护理</a>
+						<a href="##">女性护理</a>
+						<a href="##">香水彩妆</a>
+						<a href="##">纸品清洗</a>
+						<a href="##">家庭清洁</a>
+					</div>
+			</div>
+
+			<div class="col-7 right_show">
+					<div style="margin-top: 43px">
+						<a href="##">手机通讯</a>
+						<a href="##">手机配件</a>
+						<a href="##">摄影摄像</a>
+						<a href="##">数码配件</a>
+						<a href="##">影音娱乐</a>
+						<a href="##">智能设备</a>
+						<a href="##">电子教育</a>
+					</div>
+			</div>
+
+			<div class="col-7 right_show">
+					<div style="margin-top: 43px">
+						<a href="##">新鲜水果</a>
+						<a href="##">蔬菜蛋品</a>
+						<a href="##">精选肉类</a>
+						<a href="##">海鲜水产</a>
+						<a href="##">冷饮冻食</a>
+						<a href="##">中外名酒</a>
+						<a href="##">进口食品</a>
+                        <a href="##">休闲食品</a>
+						<a href="##">地方特产</a>
+						<a href="##">进口食品</a>
+						<a href="##">进口食品</a>
+					</div>
+			</div>
+
+			
+			
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">中西药品</a>
+					<a href="##">营养健康</a>
+					<a href="##">营养成分</a>
+					<a href="##">滋补养生</a>
+					<a href="##">计生情趣</a>
+					<a href="##">保健器械</a>
+					<a href="##">护理护具</a>
+					<a href="##">隐形眼镜</a>
+				</div>
+			</div>
+
+
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">交通出行</a>
+					<a href="##">酒店预订</a>
+					<a href="##">旅游度假</a>
+					<a href="##">商旅服务</a>
+					<a href="##">演出票务</a>
+					<a href="##">生活缴费</a>
+				</div>
+			</div>
+
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">健康服务</a>
+					<a href="##">教育培训</a>
+					<a href="##">休闲养生</a>
+					<a href="##">健身游泳</a>
+					<a href="##">KTV</a>
+					<a href="##">儿童体验</a>
+				</div>
+			</div>
+			
+			
+			
+
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">火锅</a>
+					<a href="##">传统菜系</a>
+					<a href="##">日韩料理</a>
+					<a href="##">创意菜</a>
+					<a href="##">甜点饮品</a>
+					<a href="##">小吃快餐</a>
+					<a href="##">其他美食</a>
+				</div>
+			</div>
+			
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">储物家具</a>
+					<a href="##">客厅家具</a>
+					<a href="##">书房家具</a>
+					<a href="##">卧室家具</a>
+					<a href="##">阳台户外</a>
+					<a href="##">儿童家具</a>
+					<a href="##">餐厅家具</a>
+					<a href="##">商业办公</a>
+					<a href="##">家纺</a>
+					<a href="##">软装</a>
+				</div>
+			</div>
+			
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">陶瓷</a>
+					<a href="##">卫浴</a>
+					<a href="##">衣柜/橱柜（全屋定制）</a>
+					<a href="##">门窗</a>
+					<a href="##">墙纸/布艺</a>
+					<a href="##">石材</a>
+					<a href="##">涂料</a>
+					<a href="##">灯饰</a>
+					<a href="##">地板</a>
+					<a href="##">夹板/木业</a>
+					<a href="##">五金</a>
+					<a href="##">电线/电缆</a>
+					<a href="##">天花</a>
+					<a href="##">家装设计</a>
+				</div>
+			</div>
+			
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">电视</a>
+					<a href="##">空调</a>
+					<a href="##">洗衣机</a>
+					<a href="##">冰箱</a>
+					<a href="##">墙纸/布艺</a>
+					<a href="##">石材</a>
+					<a href="##">涂料</a>
+					<a href="##">灯饰</a>
+					<a href="##">地板</a>
+					<a href="##">夹板/木业</a>
+					<a href="##">五金</a>
+					<a href="##">电线/电缆</a>
+					<a href="##">天花</a>
+					<a href="##">家装设计</a>
+				</div>
+			</div>
+			
+			<div class="col-7 right_show">
+				<div style="margin-top: 43px">
+					<a href="##">电视</a>
+					<a href="##">空调</a>
+					<a href="##">洗衣机</a>
+					<a href="##">冰箱</a>
+					<a href="##">厨卫大电</a>
+					<a href="##">厨卫小电</a>
+					<a href="##">生活电器</a>
+					<a href="##">个户健康</a>
+					<a href="##">家庭影音</a>
+					<a href="##">进口电器</a>
+				</div>
+		    </div>
+
+
+
+
+
+		<!-- <div class="col-7">
+               <div style="padding:0 10px;height: 100px;"><a href="#"><img height="100px" width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_03.png"/></a></div>
+		       
+		       <div style="clear: both;padding-left: 10px;">
+		       	   <div style="font-size: 15px;color: #000000;font-weight: bold;text-align: left;">专场推荐</div>
+		       </div>
+		       
+		       <div style="padding: 5px;height:130px;box-shadow: 2px 2px 5px #F5F5F5;">
+		       	  <div style="width: 32%;float: left;margin-right: 1%;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_07.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">荣耀超级品牌日</div>
+		       	  	</a>
+		       	  </div>
+		       	  <div style="width: 32%;float: left;margin-right: 1%;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_09.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">女装超级日</div>
+		       	  	</a>
+		       	  </div>
+		       	  <div style="width: 32%;float: left;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_11.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">宠物园艺</div>
+		       	  	</a>
+		       	  </div>
+		       </div>
+		       
+		       <div style="clear: both;padding-left: 10px;">
+		       	   <div style="font-size: 15px;color: #000000;font-weight: bold;text-align: left;">热门分类</div>
+		       </div>
+		        <div style="padding: 5px;height:130px;box-shadow: 2px 2px 5px #F5F5F5;">
+		       	  <div style="width: 32%;float: left;margin-right: 1%;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_16.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">荣耀超级品牌日</div>
+			       	</a>
+		       	  </div>
+		       	  <div style="width: 32%;float: left;margin-right: 1%;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_17.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">女装超级日</div>
+			       	</a>
+		       	  </div>
+		       	  <div style="width: 32%;float: left;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_18.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">宠物园艺</div>
+			       	</a>  
+		       	  </div>
+		       	  
+		       	   <div style="width: 32%;float: left;margin-right: 1%;">
+		       	   	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_18.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">荣耀超级品牌日</div>
+			       	</a>
+		       	  </div>
+		       	  <div style="width: 32%;float: left;margin-right: 1%;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_23.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">女装超级日</div>
+			       	</a>
+		       	  </div>
+		       	  <div style="width: 32%;float: left;">
+		       	  	<a href="#">
+			       	  	<img width="100%" src="../jd/images/mobile/page2/微信图片_20180507154014_22.png"/>
+			       	  	<div style="color: #000000;font-size: 11px; font-weight: bold;">宠物园艺</div>
+			       	</a>
+		       	  </div>
+		       </div>
+		</div>
+    </div> -->
+
+   
+    <div id="space" style="width: 1px;height: 1px;margin-top:10px ">
+    	
+    </div>
+
+    
+    <%- include foot%>
+    
+</div>
+
+
+</body>
+</html>

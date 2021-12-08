@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+<body >
+
+<div data-role="page" data-theme="a" class=" ui-shadow" >
+
+  <div data-role="header">
+   
+  </div>
+
+   <div data-role="main" class="ui-content">
+                         
+                         	<div>每一个扫码，示为一个用户</div>
+                         	
+                         	<div class="">
+                         		<input type="text" name="" id="store_name" value="" placeholder="请输入您要查询的店铺名"/>
+                         		
+                         		<input type="text" name="" id="user_number" placeholder="用户总数" />
+                         		<input type="text" name="" id="card_number" placeholder="用户领取卡数" />
+                         		<input type="text" name="" id="card_use_number" placeholder="用户已使用卡数" />
+                         		<input type="button" name="" id="sub" value="查询" />
+                         		
+                         		
+                         	
+                         		
+                         	</div>
+     
+		   
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+</div>
+
+
+<script type="text/javascript">
+	$(function  () {
+		
+      
+     
+     $('#sub').on('click',function  () {
+     	  let store_name=$('#store_name').val();
+	     	fetch('/question/store_analysis?store_name='+store_name, {
+			    method: 'GET',
+			  })
+			  .then((res)=>{
+			    return res.json() 
+			  })
+			  .then((res)=>{
+			  	$('#user_number').val('用户总数'+res.length)
+			  	
+			  	let card_number=0,card_use_number=0;
+			  	
+			  	for (var i = 0; i < res.length; i++) {
+			  		
+			  		   card_number+=res[i].data_card.length
+			  		   card_use_number+=res[i].data_card_user.length
+
+			  	}
+			  	
+			  	
+			  	$('#card_number').val('用户领卡总数'+card_number)
+			  	$('#card_use_number').val('用户已使用卡总数'+card_use_number)
+			  	
+			  	
+			  	
+			  	
+			  	
+			  	
+			    console.log(res)
+			  })
+     	
+     })
+     
+
+
+		
+	
+	
+	})//end！
+</script>
+</html>
+</body>

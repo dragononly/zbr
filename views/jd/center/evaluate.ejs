@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+<style type="text/css">
+	#collect>a{
+		display: block;
+		width: 200px;
+		height: 220px;
+		background: gold;
+		float: left;
+		margin-right: 10px;
+		margin-top: 10px;
+		
+	}
+	#collect>a>div:nth-child(4)>button{float: right;}
+	#collect>a>img:nth-child(1){height: 130px;}
+</style>
+</head>
+
+
+<body>
+	
+   <% include ../header %>
+		<nav class="navbar navbar-expand-sm bg-danger navbar-dark" style="position: relative;">	
+			<div style="margin-left:50%;">
+		  <form class="form-inline">
+		    <input class="form-control" type="text" placeholder="您喜欢的宝贝" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		  </form>
+		  </div>
+		</nav>
+		
+	
+	
+<div class="container-fluid" style="margin-top: 20px;margin-left: 100px;margin-bottom: 200px;">
+ 
+  <div class="row">
+    <div class="col-sm-3" >
+    <div class="list-group">
+	    <a href="/jd/shop" class="list-group-item list-group-item-light">我的购物车</a>
+	    <a href="/jd/ucenter" class="list-group-item list-group-item-light">我的订单</a>
+	    <a href="/jd/collect" class="list-group-item list-group-item-light">我的收藏</a>
+	    <a href="/jd/favourable" class="list-group-item list-group-item-light">我的优惠信息</a>
+	    <a href="/jd/evaluate" class="list-group-item list-group-item-light bg-info text-white">评价管理</a>
+	    <a href="/jd/retreat" class="list-group-item list-group-item-light">退款维权</a>
+   </div>
+   
+   
+    
+    </div>
+    
+    
+    <div class="col-sm-9" >
+    
+		
+		<div>买家信用<span>♥♥♥♥</span></div>
+		<div>卖家信用<span>💎💎💎💎</span></div>
+		<div>卖家信用<span>👑👑👑👑</span></div>
+		
+		
+		
+		
+		
+		
+    </div><!--栅栏sm总9end-->
+    
+    
+    
+  </div><!--row end!!!-->
+   <% include ../advert/advert1 %>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+   <% include ../foot %>	
+</body>
+</html>

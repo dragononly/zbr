@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+<style type="text/css">
+	#box>div>a{
+		display: block;
+		width: 200px;
+		height: 220px;
+		background: gold;
+		float: left;
+		margin-right: 10px;
+		margin-top: 10px;
+		
+	}
+	#box>div>a>div:nth-child(4)>button{float: right;}
+	#box>div>a>img:nth-child(1){height: 130px;}
+</style>
+</head>
+
+
+<body>
+	
+   <% include ../header %>
+		<nav class="navbar navbar-expand-sm bg-danger navbar-dark" style="position: relative;">	
+			<div style="margin-left:50%;">
+		  <form class="form-inline">
+		    <input class="form-control" type="text" placeholder="您喜欢的宝贝" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		  </form>
+		  </div>
+		</nav>
+		
+	
+	
+<div class="container-fluid" style="margin-top: 20px;margin-bottom: 200px;padding-left: 200px;">
+ 
+  <div class="row">
+    <div class="col-sm-3" >
+    <div class="list-group">
+	    <a href="/jd/shop" class="list-group-item list-group-item-light">我的购物车</a>
+	    <a href="/jd/ucenter" class="list-group-item list-group-item-light">我的订单</a>
+	    <a href="/jd/collect" class="list-group-item list-group-item-light bg-info text-white">我的收藏</a>
+	    <a href="/jd/favourable" class="list-group-item list-group-item-light">我的优惠信息</a>
+	    <a href="/jd/evaluate" class="list-group-item list-group-item-light">评价管理</a>
+	    <a href="/jd/retreat" class="list-group-item list-group-item-light">退款维权</a>
+   </div>
+   
+   
+    
+    </div>
+    
+    
+    <div class="col-sm-9" >
+    	<!--收藏的宝贝搜索功能-->
+    	<form class="form-inline">
+		    <input class="form-control" type="text" placeholder="收藏的宝贝搜索" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		</form>
+        
+
+		
+		<div class="row" style="width: 800px;height: 39px;overflow-y: hidden;" id="for_menu">
+			  <div class="col-sm-2" id="show_menu"><a class="page-link" href="#">全部类别▼</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">数码</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">男装</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">其它</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">内衣</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">女装</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">家居</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">运动户外</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">健康</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">虚拟业务</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">家电</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">收藏兴趣</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">宠物</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">男鞋</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">女鞋</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">玩具</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">爱好</a></div>
+			  <div class="col-sm-2"><a class="page-link" href="#">运动</a></div>
+			  
+		</div>
+		<script type="text/javascript">
+			
+			{   
+				let n=0
+				
+				$('#show_menu').click(function  () {
+					if(n==0){ $('#for_menu').css('height','auto') 
+					return n=1 
+					}
+				    
+				    $('#for_menu').css('height','39px') 
+				    n=0
+			    })
+			}
+			
+			
+			
+		</script>
+		
+		
+		
+		
+		<div id="box" style="margin-top: 20px;"></div>
+
+		
+		
+		
+		
+    </div><!--栅栏sm总9end-->
+    
+    
+    
+  </div><!--row end!!!-->
+   <% include ../advert/advert1 %>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+<script type="text/babel">
+
+	var HelloMessage = React.createClass({
+    render: function() {
+    	
+    	{
+    	var items = [];
+        for (var i = 0; i < 3; i++) {
+        	items.push(
+        		<a href="#">
+				<img src={"../../game/xmg/media/graphics/splash/mobile/cover-start.png"}/>
+				<div>干人参250g小新鲜生晒白参</div>
+				<div>促¥ 92.00 ¥ 238.00</div>
+				<div>
+			     <button type="button" class="btn btn-primary">删除</button>
+			    </div>
+			</a>);
+            }//for end~~~~~
+        }//{}end~~~~
+    	
+        return (
+            <div>
+                {items}
+            </div>
+               )	   
+		
+  }
+ });
+ 
+ 
+    ReactDOM.render(
+    <HelloMessage />,
+   $('#box')[0]
+    );
+    
+
+ 
+
+
+
+    </script>
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+   <% include ../foot %>	
+</body>
+</html>

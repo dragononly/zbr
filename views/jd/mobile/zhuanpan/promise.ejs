@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+  <style>
+    .huan{display:inline-block;width: 110px}
+  </style>
+</head>
+
+
+<body>
+
+    <div class="container-fluid">
+   
+            <div class="form-group">
+              <label for="text">请输入昵称:</label>
+              <input type="text" class="form-control" id="id">
+            </div>
+            
+            <button type="button" id="sub" class="btn btn-primary">确认兑奖</button>
+            <div style="font-size: 13px">
+                管理员需要先输入昵称导出用户，再一次确认兑奖id
+            </div>
+
+            <div id="people" style="font-size: 13px">
+               
+            </div>
+    </div>    
+
+</body>
+</html>
+<script>
+
+
+
+    $('#sub').on('click',function () {
+      
+      $('#people').empty()
+      let nickname=$('#id').val()
+      let ur='/jd_mobile?order=zp_user_promise&nickname='+nickname;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                  console.log(res)
+                for (const i of res) {
+                    let html='<div id="people">'+
+                                 '<div><span>id：</span><span>'+i._id+'</span>&nbsp&nbsp<span class="huan">'+i.cake[0]+'</span><input type="button" class="duihuan" value="兑换"></div>'+
+                             '</div>'
+                $('#people').append(html)
+                }  
+               
+              })
+              .then(()=>{
+                  $(".huan").each(function () {
+                    
+                    let n=$(this).html();
+                    switch(n){
+                        case 'mu5':
+                        $(this).html("进口零食一份")
+                        break;
+                        case 'mu4':
+                        $(this).html("小夜灯一个")
+                        break;
+                        case 'mu3':
+                        $(this).html("20元现金奖")
+                        break;
+                        case 'mu2':
+                        $(this).html("100元现金大奖")
+                        break;
+                        case 'mu1':
+                        $(this).html("1688元现金大奖")
+                        break;
+                        default:
+                        $(this).html("未中奖用户")
+                    }
+
+                  })
+              })
+              .then(()=>{
+                  $('.duihuan').on('click',function () {
+                     let id=  $(this).prev().prev().html()
+                     let ur='/jd_mobile?order=zp_user_promise_clear&id='+id;    
+                     ur=encodeURI(ur)   
+                     fetch(ur, {
+                        method: 'GET',
+                        })
+                        .then((res)=>{
+                        return res.json() 
+                        })
+                        .then((res)=>{
+                            
+                            if(res.ok==1 && res.nModified==1){
+                                  alert('兑奖成功')
+                                  location.reload()
+                            }else{
+                                alert('这个用户并没有中奖')
+                            }
+                        
+                        })
+
+                  })
+              })
+              .catch(error => console.log('error is', error));
+    })
+</script>

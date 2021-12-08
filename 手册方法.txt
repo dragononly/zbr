@@ -1,0 +1,14 @@
+function timelater(params) {
+			            const promise = new Promise(function (resolve, reject) {		                
+							pay.native(params, function(msg) {
+								resolve(msg)			
+							})							               
+			                //  reject('加载失败的部分')
+			            })
+			            return promise
+			        }
+
+			    
+				const msg = await timelater(params)
+				
+				ctx.body = msg

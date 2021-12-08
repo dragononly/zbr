@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 这一句是什么意思呢？为何如此神奇，加上之后手机端样式就漂亮了 -->
+<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+<!-- <script src="/cdn/angular.min.js"></script> -->
+<script src="https://cdn.bootcss.com/angular.js/1.6.3/angular.min.js"></script>
+
+<!-- 下面这三个文件引入都是为了一个switch开关，没办法够折腾的 ; -->
+<!-- 而且这么神奇的问题，都被我偶遇了：这三个文件得放在angular.js之后，否则开关不能正常显示，得放在list.css之前，否则list.css中设置的一些样式无效 -->
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+ 
+<link rel="stylesheet" href="/getup/list.css">
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl" style="font-size:14px;">
+	<div class="navbar">
+		<a id="menu1" ng-click="setTab('menu',1,2)" class="selectNav">关注者排名</a>
+		<a id="menu2" ng-click="setTab('menu',2,2)" class="defaultNav">总排名</a>
+	</div>
+	<div style="height:40px;">
+		留出一片空白，保留一份寂寞~
+	</div>
+	<!-- 调测地理位置使用 -->
+	<!-- <button ng-click="getAddress()" style="color: red">show position</button><p>  -->
+	
+	<div class="getup_sign" ng-show="friendsPage">
+		<div style="height:40px;">
+			<span id="noway" style="float:left; margin-top:2px">
+				打卡提醒：
+				<input id="openNotice" type="checkbox" data-role="flipswitch">
+			</span>
+			<div style="float:left; margin-left:15px;">
+				<input id="noticeTime" type="time" ng-model="notice_time" value="{{notice_time}}" style="width:90px;" 
+				ng-change="modifyNoticeTime()"> 
+			</div>
+		</div>
+		
+		<!-- 上面的加了 float:left，这边不br就乱了，先这么鸡贼br下 -->
+		<br>
+		<div class="getupText">
+			21天早起计划：05:00 - 09:00<br>
+			<div class="{{hasSigned==true ? 'btn_signed':'btn_sign_not'}}">{{sign_text}}</div>
+		</div>
+	</div>
+	
+	<table class="userInfo">
+		<tr ng-repeat="p in showPersons | filter:filterContent" 
+		style="{{p.openid==friendOpenid ? 'background:#eefbef':''}}"
+		id="{{p.openid}}" on-finish-render>
+			<!-- 1 排名序号 -->
+			<td width="8%" align="center" ng-bind="$index+1"></td>
+			
+			<td  style="vertical-align: top;">
+			    <!-- 2.1 个人信息第一行，从微信获取的 -->
+				<div class="wxInfo">
+					<span style="width:60px; height:40px;">
+						<!--  圆型头像border-radius: --> 
+						<img ng-src="{{p.headimgurl}}" 
+						style="width: 40px; height: 40px; border-radius: 50%">
+					</span>
+					<span style="width:120px;">{{p.nickname}}</span>
+					<span style="float:right;">{{p.sign_time | date:'HH:mm'}}</span>
+				</div>
+				
+				<!-- 2.2 个人信息第二行，地理位置和加关注 -->
+				<div class="position">
+					<span style="width:165px;" class="positionText">
+						{{p.sign_position}} 
+					</span>
+					<span style="float: right" ng-hide="p.openid==loginUser.openid">
+						<a class="{{p.hasFollowed==true ? 'btn_followed':'btn_follow_not'}}" ng-click="doFollow(p)">
+						{{p.hasFollowed==true ? '√ 已关注':'+ 关注'}}
+						</a>
+					</span>
+				</div>
+			</td>
+			
+			<!-- 3 点赞啦 -->
+			<td width="15%" align="center" ng-click="doLike(p)">
+				{{p.praise_count}} 
+				<div style="width:20px; height:20px;" class="{{p.like_class}}"></div>
+			</td>
+			
+		</tr>
+	</table>
+	
+	<!-- 我是有底线的 -->
+	<div class="foot" ng-show="!friendsPage && showPersons.length>10">
+		<span class="line"></span> 
+		<span class="txt">&nbsp;别扯了，我是有底线的&nbsp;</span> 
+		<span class="line"></span>
+	</div>
+</body>
+</html>
+
+<script>
+var app = angular.module('myApp', []);
+
+//AngularJs页面dom不加载玩，就执行某些函数会出错，先定义下完成指令
+app.directive('onFinishRender', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    scope.$emit('ngRepeatFinished');
+                });
+            }
+        }
+    }
+});
+
+app.controller('myCtrl', function($scope, $http, $filter) {
+	//定义或初始化展现在界面上的用户数据
+	$scope.showPersons = [];
+	//true表示当前页面是关注者列表，false为所有用户列表
+	$scope.friendsPage = true;
+	//关注者列表是从所有者中过滤掉了，只显示关注了的人
+	$scope.filterContent = {"hasFollowed": true};
+	$scope.loginUser = "";
+	//初始默认是打了卡的，显示“good morning”样式
+	$scope.hasSigned = true;
+	//默认为false，还没打卡且在有效打卡时段才改为ture
+	$scope.canAutoSign = false;
+	//第一次访问页面
+	$scope.firstVisit = true; 
+		
+	//获取后台render过来的数据
+	let openid = '<%- openid %>';
+	let usersInfoArray = '<%- JSON.stringify(usersInfo) %>';
+	usersInfoArray = JSON.parse(usersInfoArray);
+	let currentUserStr = '<%- JSON.stringify(currentUserInDB) %>';
+	$scope.friendOpenid = '<%- friendOpenid %>';
+	$scope.friendNickname = '<%- friendNickname %>';
+	//这字段说没啥用，其实也没啥用；为了点赞时传个时间到后台，这样后台拼凑点赞模板链接时就加上时间，兼容了历史点赞信息的查看
+	$scope.todayStr = '<%- todayStr %>';
+	$scope.timeNow = new Date('<%- timeNow %>');
+	
+	//判断下为我们点赞的那个好友是否打卡了
+	$scope.friendSigned = false; 
+	
+	$scope.currentUserObj = JSON.parse(currentUserStr);
+	//这是一个历史性的记录时刻，html5竟然这么牛。那就用2018-04-29 这个日期吧
+	//IOS坑爹呢，'2018/04/29'这样的格式才支持初始化，'2018-04-29'就没法初始化了
+	$scope.notice_time = new Date('2018/04/29 ' + $scope.currentUserObj.notice_time);
+	//这一行转不转都无所谓，只是加上可以消除浏览器控制台的warning
+	//$scope.notice_time = $filter('date')($scope.notice_time, "HH:mm");
+	//初始化打卡提醒开关和时间是否显示
+	console.log("push_morning_notice: " + $scope.currentUserObj.push_morning_notice);
+	if ($scope.currentUserObj.push_morning_notice) {
+		$("#openNotice").prop("checked",true); 
+		$("#noticeTime").show();
+	} else {
+		$("#openNotice").prop("checked", false); 
+		$("#noticeTime").hide();
+	}
+	
+	$scope.sign_days = $scope.currentUserObj.keep_days;
+	$scope.sign_text = "√ 连续打卡" + $scope.sign_days + "天";
+	initDataByOpenid(usersInfoArray, openid);
+	$scope.showPersons = usersInfoArray;
+
+	
+	//-----------------   华丽的分割线：下面都是函数定义       -------------------
+	//进行点赞
+	$scope.doLike = function(p) {
+		//当前是点赞状态 || 自己的状态；啥也不干，直接返回
+		if(p.like_class == 'given_like' || p.openid == $scope.loginUser.openid) {
+			return;
+		} 
+		//先把界面改了，如果放在 http请求的successCallback中会有延时，那么第一次就可以疯狂点赞了
+		p.like_class = 'given_like'
+		p.praise_count++;	
+		//p.sign_time = $filter('date')(p.sign_time,'YYYY-MM-DD HH:mm');
+		//如果当前是未点赞状态，那么当下进行的就是点赞操作啦
+		$http({
+			method : 'GET',
+			//这里注意了，是往用户的sign_fans中塞我的openid,
+			params: {'praiseOpenid': p.openid, //被点赞人的openid
+				'sign_time':p.sign_time, //被点赞人的打卡时间
+				'myOpenid': $scope.loginUser.openid, //我的openid,
+				'myNickname': $scope.loginUser.nickname, //我的昵称
+				'todayStr': $scope.todayStr
+			},
+			url : 'praiseSign'
+		}).then(function successCallback(response) {
+			let renderData = response.data;
+			console.log("praise successfully: " + JSON.stringify(renderData));
+			//如果点赞失败，应该把状态改回来吧。可能是用户自己断网了，也可能是我们的锅：数据库挂了或者后台逻辑有坑
+		}, function errorCallback(response) {
+			// 请求失败执行代码
+		});
+	};
+
+	//进行加关注或者取消关注
+	$scope.doFollow = function(p) {
+		let userUrl = "addFollowUser";
+		//如果当前是关注状态，那么不好意思，当下进行的就是取关了
+		if (p.hasFollowed == true) {
+			var mymessage = confirm("你确定不再关注Ta了吗？");  
+		    if(mymessage == true)  
+		    {  
+		    	p.hasFollowed = false;
+		    	userUrl = "deleteFollowUser";
+		    }  
+		    else if(mymessage == false)  
+		    {  
+		        console.log("do right~");
+		        return;
+		    }  
+		//当前是未关注状态，那么当下进行的就是路人转粉啦
+		} else {
+			p.hasFollowed = true;
+		}
+		
+		console.log("do action: " + userUrl);
+		$http({
+			method : 'GET',
+			params: {'openid': $scope.loginUser.openid, 'follow_user_id': p.openid},
+			url : userUrl
+		}).then(function successCallback(response) {
+			let responseData = response.data;
+			console.log('responseData: ' + JSON.stringify(responseData));
+			
+		}, function errorCallback(response) {
+			// 请求失败执行代码
+		}); 
+	};
+	
+	//顶部切换“关注者”和“所有人”的选项卡
+	$scope.setTab = function(name, cursel, n) {
+		for (i = 1; i <= n; i++) {
+			var menu = document.getElementById(name + i);
+			menu.className = i == cursel ? "selectNav" : "defaultNav";
+		}
+		if (cursel == 1) {
+			$scope.filterContent = {"hasFollowed": true};
+			$scope.friendsPage = true;
+		} else {
+			$scope.filterContent = '';
+			$scope.friendsPage = false;
+		}
+	};
+	
+	function initDataByOpenid(usersInfoArray, openid) {
+		//从打卡记录中找当前用户的对象 和 确定为我点赞的人是否打卡了
+		for (var i=0; i<usersInfoArray.length; i++) {
+			if (usersInfoArray[i].openid == openid) {
+				$scope.loginUser = usersInfoArray[i];
+			} 
+			if (usersInfoArray[i].openid == $scope.friendOpenid) {
+				$scope.friendSigned = true;
+			}
+			
+			//1.打卡登录：没有点赞用户id的&&当前用户已经找到了  
+			//2.点赞登录：有点赞用户id&&当前用户已经找到了&&确定为我点赞的人也打卡了
+			if ((!$scope.friendOpenid&&$scope.loginUser!="") || 
+					($scope.friendOpenid&&$scope.loginUser!=""&&$scope.friendSigned)) {
+				break;
+			}
+		}  
+			
+		//usersInfoArray中没有我的记录，那我就是还没打过卡了
+		if ($scope.loginUser == "") {
+			$scope.loginUser = $scope.currentUserObj;
+			//console.log("ok? " + $scope.loginUser.openid);
+			
+			//判断是否过了打卡时间
+			//let dataNow = new Date($scope.timeNow);
+			var hourAndMinutes = $filter('date')($scope.timeNow, "HH:mm");
+			console.log(hourAndMinutes);
+		    if(hourAndMinutes>"24:00" || hourAndMinutes<"05:00") {
+		    	console.log("time out");
+		    	$scope.sign_text = "此刻非打卡良辰";
+		    	$scope.hasSigned = false; 
+		    } else {
+		    	//有效打卡时段，可自动打卡
+		    	$scope.canAutoSign = true;
+				$scope.sign_text = "点我打卡";
+		    }
+		}
+		
+		//读取我关注的人 && 判断界面上的用户是否关注了。
+		let follow_users = $scope.loginUser.follow_users;
+		for (var i=0; i<usersInfoArray.length; i++) {
+			// 初始化是否关注状态
+			// 我关注了当前用户 || 就是我本人，标为关注状态
+			if (follow_users.indexOf(usersInfoArray[i].openid) != -1 || usersInfoArray[i].openid == openid) {
+				usersInfoArray[i]['hasFollowed'] = true;
+			//如果登陆者(我)没有关注当前用户	
+			} else {
+				usersInfoArray[i]['hasFollowed'] = false;
+				//说明是从好友点赞卡片进来的 && 登陆者未关注这个点赞者
+				if (usersInfoArray[i].openid == $scope.friendOpenid)
+					$scope.focusPraiseFriend = false;
+			}
+			
+			let sign_recordObj = usersInfoArray[i]['sign_record'][0];
+			usersInfoArray[i]['sign_time'] = new Date(sign_recordObj.sign_time); 
+			usersInfoArray[i]['sign_position'] = sign_recordObj.sign_position;
+			
+			//点赞人数和是否应该标红
+			let praise_fans = sign_recordObj.praise_fans;
+			usersInfoArray[i]['praise_count'] = praise_fans.length;
+			//标红的情况：我在点赞里面 || (就是我本人的记录&&有人赞我了)
+			if (praise_fans.indexOf(openid)!=-1 
+					|| (usersInfoArray[i].openid==openid && praise_fans.length>0) ) {
+				usersInfoArray[i]['like_class'] = 'given_like';
+			} else {
+				usersInfoArray[i]['like_class'] = 'not_like';
+			}
+		}
+	}
+	
+	//打卡签到
+	$scope.sign = function() {
+		//0 初始变量
+		console.log('I want to sign');
+		let signObj = {
+			"sign_time": $scope.timeNow,
+			"sign_position": "",
+			"praise_fans": []
+		}
+		console.log('time: ' + signObj.sign_time);
+		
+		//1 为了给用户隐藏请求的卡顿感觉，把界面先给改了，再偷偷去做其它的
+		$scope.hasSigned = true;
+		
+		//如果打卡天数不为0，那就得判断今天是否为连续打卡，不是连续的给置为0
+		if ($scope.sign_days != 0) {
+			//最新一天打卡时间
+			let lastSignDay = $scope.currentUserObj.sign_record[$scope.currentUserObj.sign_record.length-1].sign_time;
+			lastSignDay = $filter("date")(new Date(lastSignDay), "yyyy-MM-dd");
+			console.log("lastSingDay: " + lastSignDay);
+			let yesterday = $filter("date")($scope.timeNow - 86400000, "yyyy-MM-dd");
+			console.log("yesterday: " + yesterday);
+					
+			//打卡有断裂哦
+			if (lastSignDay != yesterday) {
+				$scope.sign_days = 0;
+			}
+		}
+		$scope.sign_days++;
+		$scope.sign_text = "√ 连续打卡" + $scope.sign_days + "天";
+		$scope.loginUser['hasFollowed'] = true;
+		$scope.loginUser['like_class'] = 'not_like';
+		$scope.loginUser['praise_count'] = signObj.praise_fans.length;
+		$scope.loginUser['sign_time'] = signObj.sign_time; 
+		$scope.loginUser['sign_position'] = signObj.sign_position;
+		usersInfoArray.push($scope.loginUser);	
+		
+		//2 打开位置获取
+		$http({
+			method : 'GET',
+			params: {'requestUrl': location.href.split('#')[0]}, //当前页面，传给后台去签名
+			url : 'wxLocation'
+		}).then(function successCallback(response) {
+			let renderData = response.data;
+			//2.1 调用wxJs, 先得配置签名
+			wx.config({
+				//debug : true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId : renderData.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+				timestamp : renderData.timeStamp, // 必填，生成签名的时间戳
+				nonceStr : renderData.nonceStr, // 必填，生成签名的随机串
+				signature : renderData.signature,// 必填，签名，见附录1
+				jsApiList : [ 'getLocation' ]  // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			}); 
+			
+			//又是异步惹的祸，调用getLocation函数还得放在wx.ready中, 这样才会在wx.config之后调用
+			wx.ready(function(){
+			    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+				//2.2 获取经纬度
+				wx.getLocation({
+					success : function(res) {
+						//console.log("获取地理位置成功");
+						//alert("获取地理位置成功，经纬度为：（" + res.latitude + "，" + res.longitude + "）");
+						//let location = res.latitude + "," + res.longitude;
+						//let analyzePosUrl = "http://apis.map.qq.com/ws/geocoder/v1/?jsonp=JSON_CALLBACK&key=GVABZ-U3ZWG-NPJQC-I5CMS-SBV4K-7HBOP&location=" + location;
+						
+						//2.3 调用腾讯地图逆地址解析，也可以直接ajax跨域请求analyzePosUrl获得位置返回值
+						var latLng = new qq.maps.LatLng(res.latitude, res.longitude);
+					    //调用获取位置方法
+						var geocoder = new qq.maps.Geocoder({
+					        complete : function(result){
+					        	let addressComponents = result.detail.addressComponents;
+					        	let position = addressComponents.city + " " + addressComponents.district + " " + addressComponents.town;
+								//alert("wakaka: " + position);
+								$scope.loginUser['sign_position'] = position;
+								signObj.sign_position = position;
+								saveSignInfoToDb(signObj);
+					        },
+					      //若服务请求失败，则运行以下函数
+				            error: function (data) {
+				                /* alert(data);
+								alert("腾讯地图经纬度转地址错了，获取经纬度为：（" + res.latitude + "，" + res.longitude + "）"); */
+				            	saveSignInfoToDb(signObj);
+				            }
+					    });
+					    geocoder.getAddress(latLng);
+					},
+					fail : function(error) {
+						console.log("获取地理位置失败，请确保开启GPS且允许微信获取您的地理位置！");
+						saveSignInfoToDb(signObj);
+					},
+					cancel: function (res) {
+						console.log($scope.loginUser.nickname + ' 用户拒绝授权获取地理位置');
+						saveSignInfoToDb(signObj);
+				    }
+				});
+			    
+			});
+			
+		}, function errorCallback(response) {
+			// http请求后端接口失败
+			console.log(88);
+		});
+		
+	}
+	
+	function saveSignInfoToDb(signObj) {
+		console.log('save position: ' + signObj.sign_position);
+		$http({
+			method : 'GET',
+			params: {'openid': $scope.loginUser.openid, 'keep_days': $scope.sign_days, 'signObj': signObj},
+			url : 'sign'
+		}).then(function successCallback(response) {
+			//保存打卡信息成功
+			let renderData = response.data;
+			console.log("sign successfully: " + JSON.stringify(renderData));
+			if (renderData.ok != 1) 
+				alert("Sorry，出了点小状况，打卡信息保存失败。请截图给我们，并退出重新打卡~");
+		}, function errorCallback(response) {
+			// 请求失败执行代码
+			alert("Sorry，打卡信息保存失败，请退出重新打卡~");
+		});
+	}
+	
+	$scope.modifyNoticeTime = function() {
+		console.log("$scope.notice_time： " + $scope.notice_time);
+		if ($scope.notice_time == null) {
+			alert("提醒时间不可以为空");
+			return;
+		}
+		let notice_time = $filter('date')($scope.notice_time, "HH:mm");
+		//alert(hourAndMinutes);
+		
+		$http({
+			method : 'GET',
+			params: {'openid': $scope.loginUser.openid, 'notice_time': notice_time},
+			url : 'modifyNoticeTime'
+		}).then(function successCallback(response) {
+			let responseData = response.data;
+			console.log('responseData: ' + JSON.stringify(responseData));
+			
+		}, function errorCallback(response) {
+			// 请求失败执行代码
+		}); 
+	}
+	
+	$("#openNotice").change(function() { 
+		console.log($("#openNotice").prop('checked'));
+		let status = $("#openNotice").prop('checked');
+		if (status) {
+			$("#noticeTime").show();
+		} else {
+			$("#noticeTime").hide();
+		} 
+		
+		$http({
+			method : 'GET',
+			params: {'openid': $scope.loginUser.openid, 'status': status},
+			url : 'changeMorningNotice'
+		}).then(function successCallback(response) {
+			let responseData = response.data;
+			console.log('responseData: ' + JSON.stringify(responseData));
+		
+		}, function errorCallback(response) {
+			// 请求失败执行代码
+		});  
+	});
+	
+	//地理位置信息定位
+	$scope.getAddress = function() {
+		$http({
+			method : 'GET',
+			params: {'requestUrl': location.href.split('#')[0]},
+			url : 'wxLocation'
+		}).then(function successCallback(response) {
+			let renderData = response.data;
+			
+			//1. 调用wxJs, 先得配置签名
+			wx.config({
+				//beta: true,
+				debug : true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId : renderData.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+				timestamp : renderData.timeStamp, // 必填，生成签名的时间戳
+				nonceStr : renderData.nonceStr, // 必填，生成签名的随机串
+				signature : renderData.signature,// 必填，签名，见附录1
+				jsApiList : [ 'getLocation' ]
+			// 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			}); 
+			
+			wx.ready(function(){
+			    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+				//2. 获取经纬度
+				wx.getLocation({
+					success : function(res) {
+						//alert("获取地理位置成功，经纬度为：（" + res.latitude + "，" + res.longitude + "）");
+						//let location = res.latitude + "," + res.longitude;
+						//let analyzePosUrl = "http://apis.map.qq.com/ws/geocoder/v1/?jsonp=JSON_CALLBACK&key=GVABZ-U3ZWG-NPJQC-I5CMS-SBV4K-7HBOP&location=" + location;
+						
+						//3. 调用腾讯地图逆地址解析，也可以直接ajax跨域请求analyzePosUrl获得位置返回值
+						var latLng = new qq.maps.LatLng(res.latitude, res.longitude);
+					    //调用获取位置方法
+						var geocoder = new qq.maps.Geocoder({
+					        complete : function(result){
+					        	let addressComponents = result.detail.addressComponents;
+					        	let position = addressComponents.city + " " + addressComponents.district + " " + addressComponents.town;
+								//alert("wakaka: " + position);
+					        },
+				            //若服务请求失败，则运行以下函数
+				            error: function (data) {
+				                alert(data);
+				                alert("获取地理位置成功，经纬度为：（" + res.latitude + "，" + res.longitude + "）");
+				            }
+					    });
+					    geocoder.getAddress(latLng);
+						
+					},
+					fail : function(error) {
+						console.log("获取地理位置失败，请确保开启GPS且允许微信获取您的地理位置！" + error);
+					}
+				});
+			});
+			
+		}, function errorCallback(response) {
+			console.log("fail to request wxPostion...");
+		});
+	}
+	
+	// ------------- 这是什么怪癖，angularjs内部调用函数，一定得放在函数声明之后？ 否则显示未定义---------
+	//自动打卡
+	if ($scope.canAutoSign) 
+		$scope.sign();
+	
+	//说明是从好友点赞列表跳转过来的，自动给定位到点赞用户
+	if ($scope.friendOpenid) {
+		//登陆者未关注点赞者，自动切换到总排名
+		if ($scope.focusPraiseFriend == false) 
+			$scope.setTab('menu', 2, 2);
+		
+		//跳转到锚点
+		//引入jquery_mobile有点坑爹，会导致html的锚点不可用, 改用下面的window.onload...
+		//location.hash = '#' + $scope.friendOpenid;
+	}
+	
+	$scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+		//点赞的情况才去执行这个，我们自己打卡就不用执行这些了
+		if ($scope.friendNickname && $scope.firstVisit) {
+			$scope.firstVisit = false;
+			if ($scope.friendSigned) {
+				//自动滚动到为我点赞的好友处的三种写法
+				//$("#oW1_ow5j8G8ZOYYDPBBhra5C5XcY")[0].scrollIntoView(true);
+				//document.querySelector("#oW1_ow5j8G8ZOYYDPBBhra5C5XcY").scrollIntoView(true);
+				//带滚动动画的哦
+				$("html, body").animate({  
+					scrollTop: $('#' + $scope.friendOpenid).offset().top-235}, {duration:500, easing:"swing"}); 
+			} else {
+				alert($scope.friendNickname + " 未打卡 ~");
+			}
+		}
+	});
+
+});
+	
+</script>
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=GVABZ-U3ZWG-NPJQC-I5CMS-SBV4K-7HBOP&libraries=convertor"></script>
+

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>已卖出的宝贝</title>
+<style type="text/css">
+	body{overflow-y:scroll;}
+     
+</style>
+
+</head>
+<body style="background: #ececec">
+<div class="container" style="margin-top: 1%;">
+<% include ../header %>
+
+<div class="btn-group" id="menu" style="width: 100%">
+		<button type="button" id="get_pay_true" class="btn btn-dark active" style="width: 25%">待发货</button>
+		<button type="button" id="get_shouhuo_true" class="btn btn-dark" style="width: 25%">等待确认收货</button>
+		<button type="button" id="get_pingjia_store" class="btn btn-dark" style="width: 25%">待评价</button>
+		<button type="button" id="get_end_store" class="btn btn-dark" style="width: 25%">已完成订单</button>
+</div>
+
+<div id="content">
+
+</div>
+
+<!-- 模态框 -->
+<div class="modal fade" id="myModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+   
+		<!-- 模态框头部 -->
+		<div class="modal-header">
+		  <h4 class="modal-title">商品ID：<span id="out_trade_no"></span></h4>
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		</div>
+   
+		<!-- 模态框主体 -->
+		<div class="modal-body">
+			<div>
+				<div>收货人：<span id="customer_name"></span></div>
+				<div>电话：<span id="customer_phone"></span></div>
+				<div>收货地址：<span id="customer_address"></span></div>
+			</div>
+			<div class="form-group">
+					<label for="sel1">快递公司:</label>
+					<select class="form-control" id="sel1">
+					  <option>申通</option><option>韵达</option><option>中通</option>
+					  <option>顺丰</option><option>天天</option><option>宅急送</option>
+					  <option>ems</option><option>优速</option><option>汇通</option>
+					  <option>圆通</option>
+					  <option>百世汇通</option>
+					  <option>其它</option>
+					</select>
+			</div>
+			<div class="form-group">
+				<label for="usr">快递订单号:</label>
+				<input type="text" class="form-control" id="usr">
+			</div>
+		</div>
+   
+		<!-- 模态框底部 -->
+		<div class="modal-footer">
+		  <div id="openid" style="display: none"></div>
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		  <button type="button" class="btn btn-danger" id="go">确定发货</button>
+		</div>
+   
+	  </div>
+	</div>
+  </div>
+<% include ../foot %>      
+</div><!--container end~-->
+<script type="text/javascript">
+$(function () {
+let arr
+
+$('#menu>button').on('click',function () {
+	$('#menu>div').removeClass('active')
+	$('#get_pay_true').removeClass('active')
+	$('#content').empty()
+})
+
+
+$('#get_pay_true').on('click',function () {
+	public_get('get_pay_true','请发货')
+})
+
+$('#get_shouhuo_true').on('click',function () {
+	public_get('get_shouhuo_true','等待用户收货')
+})
+
+$('#get_pingjia_store').on('click',function () {
+	public_get('get_pingjia_store','等待评价')
+})
+
+$('#get_end_store').on('click',function () {
+	public_get('get_end_store','订单结束')
+})
+
+
+
+
+function public_get(n,state) {
+	 let data={};
+	  data.user='<%- user%>'
+	//   ==》2
+	//   console.log(data.user)
+      data=JSON.stringify(data)
+      let ur='/jd_mobile?order='+n+'&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+				arr=res
+				//去渲染页面
+				console.log("准备画的界面"+arr)
+				draw(arr,state)
+				
+			  })
+			  .then(()=>{
+				  //请发货
+				  delivery()
+			  })
+			  .then(()=>{
+				  //确定发货
+				  go()
+			  })
+			  .then(()=>{
+				
+			  })
+
+			  .catch(error => console.log('error is', error));
+	
+}
+
+
+
+
+   //1.1通过user去数据库获取已经买家已经付款的商品,这是第一次默认加载
+   let data={};
+      data.user='<%- user%>'
+      data=JSON.stringify(data)
+      let ur='/jd_mobile?order=get_pay_true&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+				arr=res
+				//去渲染页面
+				console.log(arr)
+				draw(arr,'请发货')
+				
+			  })
+			  .then(()=>{
+				  //请发货
+				  delivery()
+			  })
+			  .then(()=>{
+				  //确定发货
+				  go()
+			  })
+			  .then(()=>{
+				
+			  })
+
+			  .catch(error => console.log('error is', error));
+
+   function draw(arr,state) {
+
+	if(state=="等待用户收货" || state=="等待评价" || state=="订单结束"){
+		
+		for (const i of arr) {
+					
+					const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+									'<div style="float:left;display:none">'+i.pay.nickname+'</div>'+
+									'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.pay.out_trade_no+'</div>'+
+									'<div class="row" style="clear:both;">'+
+										'<div class="col"><img style="width:100%;" src='+i.pay.logo+'></div>'+
+										'<div class="col" style="font-size:12px;">'+i.pay.ware_name+
+										'<div>'+i.pay.size+i.pay.color+'</div>'+
+										'</div>'+
+										'<div class="col">'+
+											'<div style="font-size:14px;">￥'+i.pay.price+'</div>'+
+											'<div style="font-size:12px;">邮费：￥'+i.pay.ems+'</div>'+
+										'</div>'+
+									'</div>'+
+									'<div style="text-align:right;">'+
+										'<a href="##" style="margin-top:20px;"  class="btn btn-outline-success btn-sm" role="button">'+state+'</a>'+
+										'<div style="display:none;">'+i.pay.user+'='+i.pay.phone+'='+i.pay.address+'='+i.pay.out_trade_no+'='+i.pay.openid+'</div>'+
+									'</div>'+
+									'</div>'
+								
+						$('#content').append(html)
+					}
+	}else{
+		for (const i of arr) {
+					
+					const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+									'<div style="float:left;">'+i.pay.nickname+'</div>'+
+									'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.pay.out_trade_no+'</div>'+
+									'<div class="row" style="clear:both;">'+
+										'<div class="col"><img style="width:100%;" src='+i.pay.logo+'></div>'+
+										'<div class="col" style="font-size:12px;">'+i.pay.ware_name+
+										'<div>'+i.pay.size+i.pay.color+'</div>'+
+										'</div>'+
+										'<div class="col">'+
+											'<div style="font-size:14px;">￥'+i.pay.price+'</div>'+
+											'<div style="font-size:12px;">邮费：￥'+i.pay.ems+'</div>'+
+										'</div>'+
+									'</div>'+
+									'<div style="text-align:right;">'+
+										'<a href="##" style="margin-top:20px;" data-toggle="modal" data-target="#myModal" class="btn btn-outline-success btn-sm delivery" role="button">'+state+'</a>'+
+										'<div style="display:none;">'+i.pay.user+'='+i.pay.phone+'='+i.pay.address+'='+i.pay.out_trade_no+'='+i.pay.openid+'</div>'+
+									'</div>'+
+									'</div>'
+								
+						$('#content').append(html)
+		}
+	}
+	
+
+   }
+
+
+
+
+function delivery() {
+
+	//2.1 进行发货之前的页面渲染，人名地址
+	$('.delivery').on('click',function () {
+	 let val=	$(this).next().html().split('=')
+	 console.log("delivery"+val)
+	 $('#customer_name').html(val[0])
+	 $('#customer_phone').html(val[1])
+	 $('#customer_address').html(val[2])
+	 $('#out_trade_no').html(val[3])
+	 $('#openid').html(val[4])
+	 
+	})
+
+}
+
+
+function go() {
+//隐藏，模态框并且也发起后台传参。
+$('#go').on('click',function () {
+
+//$('#myModal').modal('hide')
+//只需要传入快递哦公司和订单号就行了
+
+
+//ui
+if($('#usr').val()==""){
+	alert('订单号不能为空')
+	return
+}
+
+//快递公司,快递订单号，out_trade_no
+let data={};
+data.address_company=$('#sel1').val()
+data.address_id=$('#usr').val()
+data.out_trade_no=$('#out_trade_no').html()
+data.openid=$('#openid').html()
+data=JSON.stringify(data)
+let ur='/jd_mobile?order=delivery&data='+data;    
+ur=encodeURI(ur)   
+fetch(ur, {
+		method: 'GET',
+		})
+		.then((res)=>{
+		return res.json() 
+		})
+		.then((res)=>{
+			console.log("delivery_get"+res)
+			if(res=="true"){
+				$('#myModal').modal('hide')
+			}
+		})
+		.catch(error => console.log('error is', error));
+
+
+
+
+})
+}
+
+
+})
+</script>  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+</body>
+</html>

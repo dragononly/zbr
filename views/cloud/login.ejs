@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+        <script src="https://cdn.bootcss.com/js-sha1/0.6.0/sha1.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	    <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+	</head>
+
+	<body>
+
+		<div data-role="header">
+
+		</div>
+		
+		<script type="text/javascript">
+	
+document.addEventListener('plusready', function() {
+    var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+});
+	</script>
+
+    
+     
+		<div data-role="main" class="ui-content">
+
+			<div id="loginPage" class="ui-content" style="width: 300px;margin: auto;height: 280px;border: 1px solid #ececec;box-shadow: 10px 5px 10px skyblue;margin-top: 20px;">
+		      <form method="get" action="cloud/get" id='form'>
+		      
+		        <div>
+		          <h3>登录信息</h3>
+		          <label for="user" class="ui-hidden-accessible">用户名:</label>
+		          <input type="text" name="user" id="user" value="天健" placeholder="用户名 " autocomplete="on">
+		          <label for="pswd" class="ui-hidden-accessible">密码:</label>
+		          <input type="password" name="password" id="pswd" placeholder="密码 " >
+		          <label for="log" class="savePassword" id='log2'>保存登录</label>
+		          <input type="checkbox" name="login" id="log" value="1" data-mini="true" >
+		          	<a  class="ui-btn ui-btn-inline" data-transition="flip" id='login'>登陆</a>
+		           <a  class="ui-btn ui-btn-inline" id='areg'>注册</a>
+		            <a href="#" class="ui-btn ui-btn-inline" data-rel="back">返回</a>
+		        </div>
+		        <input value="cloudLogin" name="order" style="display: none;">
+		      </form>
+		    </div>
+    
+        <div id="regPage" class="ui-content" style="width: 300px;margin: auto;height: 320px;border: 1px solid #ececec;box-shadow: 10px 5px 10px skyblue;margin-top: 20px;display:none;">
+			
+					<div>
+						<h3>注册信息</h3>
+						<label for="userreg" class="ui-hidden-accessible">用户名:</label>
+						<input type="text" name="userreg" id="userreg" placeholder="用户名">
+						<label for="pswdr" class="ui-hidden-accessible">密码:</label>
+						<input type="password" name="pswdr" id="pswdr" placeholder="密码">
+						<input id="demo" type="password" name="pswdr" id="pswdr" placeholder="确定密码">
+						<input type="email" name="email" placeholder="邮箱">
+						<input type="button" data-inline="true" value="确定注册" id="reg">
+						<a  class="ui-btn ui-btn-inline" id="backLogin">返回</a>
+
+					</div>
+
+			</div>
+
+		</div>
+<script>
+$(function  () {
+
+//reg //show reg page
+$('#areg').bind('click',function  () {
+   
+    $('#regPage').show()
+    $('#loginPage').hide()
+        		
+})//end!!
+	
+//reg account
+$('#reg').on('click',function  () {
+    let data=[],val;
+    val=$('#pswdr').val()
+	val=sha1(val)
+    data[0]=$('#userreg').val();
+    data[1]=val
+    fetch('/cloud/get?order=cloudReg1712&data='+data, {
+		 method: 'GET',
+		})
+		.then((res)=>{
+		return res.json() 
+		})
+		.then((res)=>{
+        if(res==true){
+        alert('注册成功')
+        $('#regPage').hide()
+        $('#loginPage').show()
+        }else{
+        		alert('账号已经存在')        					
+             }
+        		   
+        })
+
+})//end!!
+     
+          
+//login
+$('#login').on('click',function  () {           	
+    localStorage.cloudpw=$('#pswd').val()
+    if(sha1){
+           	  let val=$('#pswd').val()
+			      val=sha1(val)
+           		  $('#pswd').val(val)
+         		  $('#form').submit()
+            }
+
+})//end!!
+           
+        
+            
+//backLogin
+$('#backLogin').click(function  () {   
+	$('#loginPage').show()
+	$('#regPage').hide()           	
+})//end!!
+      	
+        	
+})//function end!
+</script>
+		<div data-role="footer" data-position="fixed">
+
+		</div>
+</body>
+</html>
+
+
+

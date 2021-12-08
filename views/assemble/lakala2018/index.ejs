@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>拉卡拉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+   *{text-align: center;color: #666;}  body{background: #ececec}a{text-decoration: none !important}
+   .bg{background: url('http://www.cxcuu.com/cloud/static/lakala2018/bg.png') repeat no-repeat;background-size:100% }
+</style>
+<script>
+$(function () {
+   //去后台获取参数
+   let ur='/lakala2018?order=user_gain_data';    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                   console.log(res)
+                   for (const i of res) {
+                       let html='<div style="width:340px;float:left;margin-left:50px;margin-top:20px;">'+
+                                    '<div class="bg" style="width:125px;height:150px;font-size:13px;float:left;">'+
+                                      '<div style="color:#fff;padding:10px 10px;">'+i.lakala.theme+'</div>'+
+                                    '</div>'+
+                                    '<div style="float:left;width:200px;margin-left:10px;">'+
+                                      '<div style="font-size:14px;text-align:left;height:50px;">'+i.lakala.theme+'</div>'+
+                                      '<div style="font-size:14px;text-align:left;margin-top:5px;color:green;">'+i.lakala.monicker+'</div>'+
+                                      '<div style="font-size:14px;text-align:left;margin-top:5px;color:darkred;">￥'+i.lakala.cost+'</div>'+
+                                      '<a href='+i.lakala.url+' class="btn btn-info" role="button">下载报告</a>'+
+                                    '</div>'+
+                                '</div>'
+                       
+                       $('#content').append(html)
+                   }
+                   
+
+              })
+              .catch(error => console.log('error is', error));
+   
+  
+})
+</script>
+</head>
+
+
+<body>
+<div class="container-fluid">
+
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+                <!-- Brand -->
+                <a class="navbar-brand" href="http://www.lklgongyi.com/index.aspx">回到首页</a>
+               
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+               
+                <!-- Navbar links -->
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                  <ul class="navbar-nav">
+                    <li class="nav-item">
+                      <a class="nav-link" href="/lakala2018?order=upload">研究机构入口</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/lakala20180806">用户下载中心</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/lakala2018?order=admin">后台管理员入口</a>
+                    </li>
+                  </ul>
+                </div> 
+              </nav>
+
+  <div style="width: 90%;margin: auto;border: 1px solid #ececec;background: #fff;padding: 20px;margin-top:30px;margin-bottom:30px ">
+    <div class="row" style="font-size: 13px">
+        <div class="col-1" style="padding-top:10px ">
+         行业
+        </div>
+        <div class="col-11">
+            <div class="row" style="padding: 10px">
+                <div class="col" style="text-align: left;color:#7fc740;font-weight: bold">
+                   全部
+                </div>
+                <div class="col" style="text-align: left">
+                    第三方支付
+                 </div>
+                 <div class="col" style="text-align: left">
+                    金融科技
+                 </div>
+                 <div class="col" style="text-align: left">
+                   征信
+                 </div>
+                 <div class="col" style="text-align: left">
+                    大数据
+                 </div>
+            </div>
+            <div class="row" style="padding: 10px">
+                <div class="col" style="text-align: left">
+                   网络服务
+                </div>
+                <div class="col" style="text-align: left">
+                    智能硬件
+                 </div>
+                 <div class="col" style="text-align: left">
+                    人工智能
+                 </div>
+                 <div class="col" style="text-align: left">
+                   社区O2O
+                 </div>
+                 <div class="col" style="text-align: left">
+                    金融
+                  </div>
+            </div>
+
+            <div class="row" style="padding: 10px">
+                <div class="col" style="text-align: left">
+                   区块链
+                </div>
+                <div class="col" style="text-align: left">
+                    大社交
+                 </div>
+                 <div class="col" style="text-align: left">
+                    云服务
+                 </div>
+                 <div class="col" style="text-align: left">
+                  智能营销
+                 </div>
+                 <div class="col" style="text-align: left">
+                    网红经济
+                 </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+ <div id="content" style="width: 90%;text-align: center;margin-left: 20px">
+       
+        <!-- <div class="row">
+                <div class="col">
+                    <div>
+                      <img src="http://www.cxcuu.com/cloud/static/lakala2018/bg.png" alt="" srcset="">
+                    </div>
+                </div>
+
+                <div class="col">
+                    .col
+                </div>
+
+                <div class="col">
+                    .col
+                </div>
+        </div> -->
+ </div>
+
+</div>    
+
+</body>
+</html>

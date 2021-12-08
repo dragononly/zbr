@@ -1,0 +1,210 @@
+<style type="text/css">
+	.page{width: 1100px;text-align:left;margin: auto;font-family: "微软雅黑";font-size: 13px;position: relative;}
+	.nav{background: #eeeeee;clear: both;margin-top:0px;height: 40px;width: 1100px;text-align: center;}
+	.nav>a{float: left;width: 70px;background: #eeeeee;height: 40px;line-height: 40px;color: #282828;display: block;}
+	.nav>a:hover{background: #95280b;cursor: pointer;color:#fff;}
+	a{text-decoration: none;}
+	.row1{margin-top: 25px;height: 60px;}
+	.row1>div:nth-child(2){float:right;width: 300px;margin-top: 5px;text-align: right;}.row1>div:nth-child(1){float: left;width: 200px;}
+	.row1 a{margin-left: 10px;display: inline-block;background: #579f23;border-radius: 2px;color: #fff;padding: 5px;}
+	 .login{display:none;height: 400px;width: 400px;background: #fff;position: fixed;left: 0;right: 0;margin: auto;top:100px;z-index: 4;text-align: center;padding-top: 50px;border:1px solid #23ADE5;border-radius:3px ;}
+    .login>input:not([type="button"]){outline: #23ADE5;border: 1px solid #ececec;font-size: 20px;height: 40px;}
+
+     @media screen and (max-width: 800px) {
+     	.page{width: 100%;text-align:left;margin: auto;font-family: "微软雅黑";font-size: 13px;position: relative;}
+    	.nav{background: #eeeeee;clear: both;margin-top:0px;height: 40px;width: 100%;text-align: center;overflow: hidden;}
+    	.nav>a{float: left;width: 30px;background: #eeeeee;height: 40px;line-height: 40px;color: #282828;display: block;}
+    }
+
+
+
+</style>
+<script type="text/javascript">
+	$(function  () {
+	
+		$('#backLogin').click(function  () {
+			
+			
+			$('#login').html('登录|注册')
+			$('.blhi').hide()
+			
+		})
+		
+if(sessionStorage.user){
+	$('#login').html(sessionStorage.user)
+
+}
+
+
+
+$('#login').click(function  () {
+			
+			
+				if(sessionStorage.user && $('#login').html()!='登录|注册'){
+		$('#login').html(sessionStorage.user)
+		if(sessionStorage.user=="admin"){
+			window.location.href='jump?jump=commonweal/admin'
+		}else{
+			window.location.href='jump?jump=commonweal/my'
+		}
+		
+		
+		
+	}else{
+		$('.login').show()
+	}
+			
+			
+			
+		
+})
+		
+		
+		
+		var regoff=0
+		
+		$('#reg').click(function  () {
+			
+			$('.hi').show()
+			if(regoff==0){regoff=1}else{
+
+				var data=[]
+			    data[0]=$('#user').val()
+			    data[1]=sha1($('#password').val())
+			    data[2]=[]
+				data[2][0]=$('.hi').eq(1).val()
+                data[2][1]=$('.hi').eq(2).val()
+                data[2][2]=$('.hi').eq(3).val()
+
+				$.ajax({
+					type:"get",
+					url:"commonweal",
+					dataType:'text',
+					async:true,
+					data:{
+						'order':'reg',
+						'data':data
+					},
+					traditional : true,
+					success:function  (d) {
+
+						if(d){
+							alert('注册成功')
+							$('.hi').hide()
+							regoff=0
+							
+						}
+					},
+					error:function  (e) {
+						alert('网络通讯失败，或者用户名已存在')
+					},
+				});
+				
+				
+				
+				
+				
+			}
+			
+		})
+		
+		
+		
+		
+		
+		$('#sub').click(function  () {
+			
+				var data=[]
+			    data[0]=$('#user').val()
+			    data[1]=sha1($('#password').val())
+
+			$.ajax({
+					type:"get",
+					url:"commonweal",
+					async:true,
+					data:{
+						'order':'login',
+						'data':data
+					},
+					traditional : true,
+					success:function  (d) {
+					
+						if(d){
+							alert('登陆成功')
+							$('.blhi').show()
+							sessionStorage.user=d
+							$('.login').hide()
+						
+							$('#login').html(d)
+						}
+					},
+					error:function  (e) {
+						alert('同步失败或者账户密码错误')
+					},
+				});
+			
+			
+			
+			
+		})
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	})
+</script>
+
+
+<div class="login">
+	
+	<input type="text" name="" id="user" value="" placeholder="账号"/>
+	<br />
+	<input type="password" name="" id="password" value="" placeholder="密码"/>
+	<br />
+	<input type="password" name="" value="" placeholder="密码" style="display: none;" class="hi"/><br />
+	<input type="text" name="" value="" placeholder="收件姓名和地址" style="display: none;" class="hi"/><br />
+	<input type="text" name="" value="" placeholder="邮箱" style="display: none;" class="hi"/>
+	<br />
+
+	<input type="text" name=""  value="" placeholder="国籍，中国不用填写" style="display: none;" class="hi"/>	<br />
+	<input type="button" value="登陆" id="sub" style="font-size: 17px;font-family: '幼圆';padding: 3px;width: 150px;"/><br /><br />
+	<input type="button" value="注册" style="font-size: 17px;font-family: '幼圆';padding: 3px;width: 150px;" id="reg"/>
+	
+</div>	
+
+	<div class="row1">
+		<div class="row1-1"><img src="images/commonweal/row1-1.png" width="200px"/></div>
+		
+		<div class="row1-2">
+			
+			
+		
+         
+      
+			<a href="#" id="login">登录|注册</a><span class="blhi" style="display: none;">&nbsp&nbsp|<a href="#" id="backLogin">退出</a></span>
+		
+			
+		
+		
+		</div>
+	</div>
+
+
+<div class="nav">
+	    <a style="background: none;width: 30px;"></a>
+		<a href="jump?jump=commonweal/pc">首页</a>
+		<a style="background: none;">|</a>
+		<a href="jump?jump=commonweal/collect">扶贫聚力</a>
+		<a style="background: none;">|</a>
+		<a href="jump?jump=commonweal/love">爱心聚焦</a>
+		<a style="background: none;">|</a>
+		<a href="jump?jump=commonweal/culture">非遗传承</a>
+		<a style="background: none;">|</a>
+		<a href="jump?jump=commonweal/jjh">基金会</a>
+		<a style="background: none;">|</a>
+	</div>

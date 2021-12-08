@@ -1,0 +1,33 @@
+
+http://www.cxcuu.com/jd/admin
+管理员后台
+
+jd_admin  mm000000
+
+
+开店，身份证审核认证中心 （不需要，备注）
+open_store2018
+
+mm000000
+
+浏览器窗口
+CTRL+F搜索用户名
+
+//后台汽车放行页面
+http://www.cxcuu.com/jd_mobile?order=car_pass
+
+
+
+
+
+
+        以非店主跳转店铺
+	location.href='/jd/user_store?order=his&user='+cab.user
+   
+必须是登陆才能干的事
+if(ctx.session.jd_user==undefined){
+			ctx.body=false
+			return
+		}
+a标签直接对象传值
+href='/jd_index?order=search_ware&data={"val":"手机"}'

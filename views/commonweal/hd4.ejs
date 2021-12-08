@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <script src="cdn/sha1.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+<script src="cdn/sha1.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://apps.bdimg.com/libs/jquery/1.10.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+	
+	*{margin: 0;padding: 0;}	a{display: block;}
+
+   body{height: 500px !important;}
+ .main p{margin-top: 10px;} .main div{text-align: center;}
+</style>
+
+</head>
+
+
+<body>
+
+<div class="page" >
+
+<% include header %>
+<script type="text/javascript">
+	$(function  () {
+		var data={}
+		    data.address='4'
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'getxmC',
+					'data':data
+				},
+				success:function  (d) {
+
+					$('.c1')[0].innerHTML=d[0].data[0]
+			        $('.c1')[1].innerHTML=d[0].data[2]
+			        $('.c1')[2].innerHTML=d[0].data[1]
+
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+
+		
+	})
+</script>
+<div class="main" style="margin-top: 20px;">
+
+    <div style="text-align: center;font-size: 17px;font-weight:bold ;" class="project c1"></div>
+    <p style="width:80%;margin: auto;" class="c1">
+
+</p>
+
+<div><img src="cloud/commonweal/new4/d1.png" alt=""  width="80%"/></div>
+<div class="c1"></div>
+
+</div>
+
+
+<% include donation %>
+<div class="su want" style="text-align:center;line-height:50px;font-size:27px;margin: auto;margin-top: 30px;border-radius:5px ;background: #4e931c;width: 200px;height: 50px;color: #fff;">我要捐款</div>
+
+</div>
+
+
+<% include footer %>
+</body>
+
+
+
+
+
+
+</html>

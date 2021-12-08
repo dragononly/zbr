@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+ <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+
+
+
+
+<body>
+
+<div data-role="page" data-theme="b" class="ui-shadow">
+	
+<script type="text/javascript">
+	
+document.addEventListener('plusready', function() {
+    var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+});
+</script>
+
+	
+	<style type="text/css">
+		.fileView>li>a>img{
+			height: 99% ;
+		}
+	</style>
+	
+	
+	
+	<div data-role="panel" id="myPanel"> 
+    <h2>面板头部..</h2>
+    <p>面板内容..</p>
+  </div> 
+	
+	
+
+	
+	
+  <div data-role="header" data-position="fixed" id="header">
+    <a href="#myPanel" class="ui-btn ui-icon-bars ui-btn-icon-left">个人中心</a>
+    <h1>欢迎访问，云盘</h1>
+    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left">搜索</a>
+  </div>
+
+   <div data-role="main" class="ui-content">
+      <form method="post" action="demo_form.php">
+			<div class="ui-field-contain" >
+			<input type="search" name="search" id="search" >
+			 <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left">搜索</a>
+			</div>
+			</form>
+				<ul data-role="listview" class="fileView" >
+				
+				</ul>
+   
+   <div style="width: 50%;margin: auto;margin-top: 30px;border: 1px solid black;padding: 10px;display: none;position: fixed;z-index: 2;top:30%;background:#2f2f2f;left:0;right: 0;border-radius: 5px;" id='mkdirShow'>
+		       
+		      <label for="mkdirText" style="margin-top:5px;">文件名：</label>
+		      <input type="text" name="mkdirText" id="mkdirText">
+		      <input type="button" data-inline="true" value="取消" id="mkdirHide">
+		      <input type="button" data-inline="true" value="确定" id="mkdirSub">
+		  
+   </div>
+   
+   
+   <div style="width: 50%;margin: auto;margin-top: 30px;border: 1px solid black;padding: 10px;display: none;position: fixed;z-index: 2;top:30%;background:#2f2f2f;left:0;right: 0;border-radius: 5px;" id='editShow'>
+		       
+		      <label for="editText" style="margin-top:5px;">新的文件名：</label>
+		      <input type="text" name="editText" id="editText">
+		      <input type="button" data-inline="true" value="取消" id="editHide">
+		      <input type="button" data-inline="true" value="确定" id="editSub">
+		  
+   </div>
+   
+   <div style="width: 50%;margin: auto;margin-top: 30px;border: 1px solid black;padding: 10px;display: none;position: fixed;z-index: 2;top:30%;background:#2f2f2f;left:0;right: 0;border-radius: 5px;" id='moveFile'>
+		       
+		      <label for="moveText" style="margin-top:5px;">新的文件名：</label>
+		      <input type="text" name="moveText" id="moveText" value="还没写，先忍忍">
+		      <input type="button" data-inline="true" value="取消" id="moveHide">
+		      <input type="button" data-inline="true" value="确定" id="moveSub">
+		  
+   </div>
+   
+   
+   
+   
+   
+   
+    <div class="uploadBox" style="width: 50%;margin: auto;margin-top: 30px;border: 1px solid black;padding: 10px;display: none;position: fixed;z-index: 3;top:30%;background:#2f2f2f;left:0;right: 0;border-radius: 5px;" id="uploadFile">
+		
+	       <div style="font-size: 12px;">
+		    <progress id="progressBar" value="0" max="100" ></progress>
+		    <span id="percentage"></span>
+		    <span id="time"></span>
+           </div>
+		    <input type="file" id="file" name="myfile" multiple="multiple"/>
+		    <input type="button" value="上传" id="start"/>
+		    <!--<input type="button"  value="隐藏窗口" class="clearo"/>-->
+
+		    <input type="button"  value="取消" id="cancel"/>
+	     <script type="text/javascript">
+	     	$('#cancel').click(e=>{$('#uploadFile').hide()})
+	     </script>
+	     </div>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   </div>
+   
+
+   <div data-role="footer" data-position="fixed">
+   	
+	<div data-role="navbar" class="foo1">
+      <ul>
+        
+        <li><a href="#myPop1" data-rel="popup" data-icon="plus" id="newFlie">新建</a></li>
+        <li><a href="#" data-icon="cloud" id="uploadButton">上传</a></li>
+        <li><a href="#myPop1" data-rel="popup" data-icon="carat-u" >更多</a></li>
+      </ul>
+    </div>
+    
+    <div data-role="navbar"class="foo2" style="display: none;" >
+      <ul>
+        <li><a href="#" data-icon="arrow-d" id="downloadFile">下载</a></li>
+        <li><a href="#" data-icon="delete" id="delete">删除</a></li>
+        <li ><a href="#myPop1" data-rel="popup" data-icon="edit" id="edit">重命名</a></li>
+        <li ><a href="#" data-rel="popup" data-icon="arrow-r" id="move">移动到</a></li>
+      </ul>
+    </div>
+    </div>
+  
+  
+<script type="text/javascript">
+$(function  () {
+	let data='<%- user%>',data_all;
+     	$('.fileView').empty()	
+	
+	fetch('/cloud/get?order=getFile&data='+data, {
+		 method: 'GET',
+		})
+		.then((res)=>{
+		return res.json() 
+		})
+		.then((res)=>{
+			data_all=res
+        		   
+        })
+		.then((res)=>{
+			 //关于从数据读取文件后，加载文件
+      
+
+       	for (let i of data_all){
+       			if(i.lastIndexOf('.')==-1){
+			
+			$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/file.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+			
+	       	}else if(i.indexOf('.txt')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/txt.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}else if(i.indexOf('.exe')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/exe.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}else if(i.indexOf('.pdf')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/pdf.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}else if(i.indexOf('.word')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/word.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}else if(i.indexOf('.xls')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/xls.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}else if(i.indexOf('.zip')!=-1 || i.indexOf('.rar')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/zip.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}else{
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="../images/cloud/cloud.png" alt="" /><h1>'+i+'</h1><p></p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r ui-icon-check ui-btn-icon-left ui-alt-icon">'+'</a>'+'</li>')
+	       		
+	       	}
+       		
+       		
+       	}//for end!!!!!!!
+
+    	//文件，选择逻辑
+    	//逻辑1，选择后改变勾选状态
+    	$('.fileView>li>a:nth-child(2)').on('click',function  () {
+    		
+    		
+    		$(this).toggleClass("ui-alt-icon");
+    		$(this).toggleClass("me");
+    	
+    		
+    		if($('.fileView>li>a:nth-child(2)').hasClass('me')){
+    			
+    			$('.foo2').show() 
+    			$('.foo1').hide()
+    		
+    		}else{
+    			$('.foo2').hide()
+    			$('.foo1').show()
+    		}
+    		
+    		
+    	})
+	
+    	
+     
+       	
+       	
+       	
+       	$('.fileView>li>a:nth-child(1)').tap(function  () {
+       		
+       		let temp=$(this).find('h1').html()
+       		
+       		if(temp.lastIndexOf('.')==-1){
+       			location.href=encodeURI("get?order=jumpFile&user="+'<%- user%>/'+temp)
+       		}else{
+       			location.href='../cloud/'+'<%- user%>'+'/'+temp
+       		}
+
+       	})
+	
+	})
+	.then((res)=>{
+
+      $('#mkdirSub').tap(e=>{
+        		
+        let data=[]
+        data[0]='<%- user%>'
+        data[1]=$('#mkdirText').val()
+   
+        fetch('/cloud/get?order=newFile&data='+data, {
+		 method: 'GET',
+		})
+		.then((res)=>{
+		return res.json() 
+		})	
+        .then((res)=>{
+        	
+             if(res==true){
+        		window.location.reload()
+        				}
+             
+		})		
+		
+       })
+        	
+        
+	
+	})
+	
+	
+	editFile ()
+	downloadFile()
+	deFile()
+	
+})//end!
+
+	
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+        function editFile () {
+        	
+        	$('#editSub').bind('click',e=>{
+        		let data=[]
+        		data[0]='<%- user%>'
+        		data[1]=$($('.me')[0]).prev().find('h1').html()
+        		let index=data[1].lastIndexOf('.')
+        		if(index!=-1){
+        			let last=data[1].substr(index)        		
+        		    data[2]=$('#editText').val()+last
+        		}else{
+        			 data[2]=$('#editText').val()
+        		}
+        		
+        		
+        		
+        		
+        fetch('/cloud/get?order=editFile&data='+data, {
+		 method: 'GET',
+		})
+		.then((res)=>{
+		return res.json() 
+		})
+		.then((res)=>{
+			
+			location.reload()
+        		   
+        })
+
+        		
+        		
+        	})
+        	
+        }
+        
+        
+        
+        
+        
+    
+    
+      function downloadFile () {
+      	
+      	$('#downloadFile').click(e=>{
+      
+      		  let arry=[]
+        
+          for (let i = 0; i < $('.me').length; i++) {
+        	
+        	arry[i]=$($('.me')[i]).prev().find('h1').html()
+        	
+        }
+        	
+        	let data={}
+        	    data.user='<%- user%>'
+                data.arry=arry
+        	
+      		 $('#header').append('<a class="down" download="" href="" data-ajax="false" style="display: none;" ></>')
+					      var i=0;
+		
+		        for(let i of data.arry){
+		        	var want='<%- user%>/'+i;
+					      	      
+					      	  $('.down').attr('href',want)
+					      	  
+							  $('.down')[0].click()
+		        }
+
+      	})
+      	
+      	
+      	
+      }
+    
+    
+    
+    
+    
+    
+    
+        function deFile () {
+
+        	$('#delete').tap(e=>{
+        		
+        	  let data=[]
+	        	  data[0]='<%- user%>'
+	              data[1]=[]
+
+        
+          for (let i = 0; i < $('.me').length; i++) {
+        	
+        	data[1][i]=$($('.me')[i]).prev().find('h1').html()
+        	
+        }
+           data = JSON.stringify(data);
+        fetch("/cloud/get?&order=deFile&data="+data, {
+		    method: 'GET',
+		    headers: new Headers({
+		      'Accept': 'application/json' 
+		    })
+		  })
+		  .then((res)=>{
+		    return res.json() 
+		  })
+		  .then((res)=>{
+		    if(res==true){
+		    	window.location.reload()
+		    }
+		  })
+
+  	   })
+        	
+        	
+        }
+
+
+
+
+       
+       
+       upload()
+       
+       
+       
+       function upload () {
+    		
+    	
+    	
+        var xhr;
+        var ot;//
+        var oloaded;
+        //上传文件方法
+        
+        $('#start').on("tap",function  () {
+        	start()
+        })
+        
+        var dataLength=0;
+        
+        function start() {
+        
+  
+            var url = "/upload"; // 接收上传文件的后台地址 
+            var form = new FormData(); // FormData 对象
+            form.enctype="multipart/form-data";
+           
+        	
+        		  var fileObj = document.getElementById("file").files
+        		
+        		
+        		   for (var i = 0; i <fileObj.length; i++) {
+        		   	
+        		   	form.append("mf", fileObj[i]); // 文件对象
+                    dataLength=dataLength+parseInt(fileObj[i].size);
+        		   	
+        		   }
+
+            form.append("address",'<%- user%>' ); // 文件对象
+            
+            xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
+            xhr.open("post", url, true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
+            xhr.onload = uploadComplete; //请求完成
+            xhr.onerror =  uploadFailed; //请求失败
+            xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
+            xhr.upload.onloadstart = function(){//上传开始执行方法
+                ot = new Date().getTime();   //设置上传开始时间
+                oloaded = 0;//设置上传开始时，以上传的文件大小为0
+            };
+            xhr.send(form); //开始上传，发送form数据
+        }
+        //上传进度实现方法，上传过程中会频繁调用该方法
+        function progressFunction(evt) {
+            
+             var progressBar = document.getElementById("progressBar");
+             var percentageDiv = document.getElementById("percentage");
+             // event.total是需要传输的总字节，event.loaded是已经传输的字节。如果event.lengthComputable不为真，则event.total等于0
+             if (evt.lengthComputable) {//
+                 progressBar.max = evt.total;
+                 progressBar.value = evt.loaded;
+                 percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100) + "%";
+             }
+            
+            var time = document.getElementById("time");
+            var nt = new Date().getTime();//获取当前时间
+            var pertime = (nt-ot)/1000; //计算出上次调用该方法时到现在的时间差，单位为s
+            ot = new Date().getTime(); //重新赋值时间，用于下次计算
+            
+            var perload = evt.loaded - oloaded; //计算该分段上传的文件大小，单位b       
+            oloaded = evt.loaded;//重新赋值已上传文件大小，用以下次计算
+        
+            //上传速度计算
+            var speed = perload/pertime;//单位b/s
+            var bspeed = speed;
+            var units = 'b/s';//单位名称
+            if(speed/1024>1){
+                speed = speed/1024;
+                units = 'k/s';
+            }
+            if(speed/1024>1){
+                speed = speed/1024;
+                units = 'M/s';
+            }
+            speed = speed.toFixed(1);
+            //剩余时间
+            var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
+            time.innerHTML = '，速度：'+speed+units+'，剩余时间：'+resttime+'s';
+               if(bspeed==0)
+                time.innerHTML = '上传已取消';
+        }
+        //上传成功响应
+        function uploadComplete(evt) {
+
+                     alert("上传成功！");
+                      window.location.reload()
+       
+    }
+        //上传失败
+        function uploadFailed(evt) {
+            alert("上传失败！");
+        }
+         
+
+         //取消上传
+        $('.clear').on("tap",function  () {
+        	 xhr.abort();
+        })
+        
+       }
+       
+       
+       
+       
+       
+       
+       
+
+
+
+	
+        css()
+
+    	function css () {
+    		
+    		$('.fileView>li>a:nth-child(2)').addClass("ui-btn ui-icon-check ui-btn-icon-left")
+    		
+    		$('#newFlie').click(e=>{
+    			$('#mkdirShow').show()
+    		})
+    		
+    		
+    		$('#mkdirHide').click(e=>{
+    			$('#mkdirShow').hide()
+    		})
+    		
+    		
+    		$('#uploadButton').click(e=>{
+    			$('#uploadFile').show()
+    		})
+    		
+    		
+    		$('#uploadButton').click(e=>{
+    			$('#uploadFile').show()
+    		})
+    		
+    		$('#edit').click(e=>{
+    			$('#editShow').show()
+    		})
+    		$('#editHide').click(e=>{$('#editShow').hide()})
+    		
+    		
+    		$('#move').click(e=>{$('#moveFile').show()})
+    		$('#moveHide').click(e=>{$('#moveFile').hide()})
+             
+    	}
+    	
+    	
+    	
+    	
+    	
+
+    	
+    	
+    	
+    	
+    </script>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+
+</html>
+</body>

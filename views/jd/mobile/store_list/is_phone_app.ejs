@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+   *{text-align: center;color: #666;}  body{background: #ececec}a{text-decoration: none !important}
+</style>
+<script>
+$(function () {
+ //去执行，询问用户是否曾经添加过电话号码
+                //事务1，为了降低开销，将在本地生成一个本地存储作为标记
+                //事务2，显示手机添加界面
+                
+               
+                
+                //sessionStorage.id='<%- openid%>'
+                openid='<%- openid%>'
+                // userinfo=JSON.stringify(userinfo)
+                console.log(openid)
+                // console.log(sessionStorage.id)
+                
+                //query sever the phone is exist
+                {
+                 
+                
+                $.ajax({
+                    type:"get",
+                    url:"/jd_mobile",
+                    async:true,
+                    data:{       
+                      'order':'wxapp_query_phone_exist',
+                      'openid':openid
+                    },
+                    success:function  (d) {
+                      if(d==null){
+                        //这里要执行，添加手机号码的页面，用户不存在手机号
+                        $('#myModal').modal('show')
+                      }else{
+                        sessionStorage.phone=d
+                        sessionStorage.way="app"
+                        sessionStorage.openid=openid
+                        location.href="http://www.cxcuu.com/jump?jump=jd/mobile/store_list/store_list"
+                      }
+                    },
+                    error:function  (e) {
+                      alert('ajax'+e)
+                      console.log(e)
+                    }
+                 })
+                }
+            
+              //get mobile phone code
+              //it need data and data.phone value
+              let get_code_off=0
+              $('#get_phone_code').on('click',function () {
+
+                let n=30
+                   function loop() {
+                     
+                     if(n>1){
+                        n--
+                        setTimeout(loop,1000)
+                        $('#get_phone_code').html(n+'秒')
+                     }else{
+                      $('#get_phone_code').html('获取验证码')
+                      get_code_off=0
+                     }
+                    
+                   }
+                   loop() 
+
+               if(get_code_off==0){
+                    let data={}
+                        data.phone=$('#phone_number').val()
+                        data=JSON.stringify(data)
+                        $.ajax({
+                        type:"get",
+                        url:"/jd/reg_code",
+                        async:true,
+                        data:{       
+                          "data":data
+                        },
+                        success:function  (d) {
+                        // console.log(d)
+                        //   ==>2296 code
+                          
+                        $('#verify').on('click',function () {
+                          //当点击确定的时候，如果通过验证码认证
+                          if($('#my_code').val()==d){
+                             
+                            //验证码通过后，去后台，数据库中保存这个手机号
+                            $.ajax({
+                                type:"get",
+                                url:"/jd_mobile",
+                                async:true,
+                                data:{       
+                                  'order':'wxapp_phone_save',
+                                  'openid':openid,
+                                  'phone_number':$('#phone_number').val(),
+                                },
+                                success:function  (d) {
+                                  console.log(d)
+                                  if(d.ok==1 && d.n==1){
+                                    //这里要执行，添加手机号码的页面，用户不存在手机号
+                                    $('#modal_off').click()
+                                    location.href="http://www.cxcuu.com/jump?jump=jd/mobile/store_list/store_list"
+                                  }else{
+                                    alert('数据库保存手机号码失败')
+                                  }
+                                },
+                                error:function  (e) {
+                                  alert('ajax'+e)
+                                  console.log(e)
+                                }
+                            })
+
+                            
+
+
+
+                          }
+                        })
+                        
+
+
+                        },
+                        error:function  (e) {
+                          alert('ajax'+e)
+                         
+                        }
+                      })
+                  }
+                   get_code_off=1
+                   
+                  
+              })
+   
+  
+})
+</script>
+</head>
+
+
+<body>
+<div class="container-fluid">
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">请绑定手机号</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="text" id="phone_number" class="form-control">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" id="get_phone_code" type="button">
+                            获取验证码                        
+                          </button>
+                        </span>
+                      </div>
+                      <br>
+                      <input type="text" class="form-control" id="my_code" placeholder="请输入验证码" >
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modal_off" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="verify" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>    
+
+</body>
+</html>

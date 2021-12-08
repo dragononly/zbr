@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>我的店铺</title>
+<style type="text/css">
+body{overflow-y:scroll;}
+</style>
+
+</head>
+<body>
+	
+   <% include ../header %>
+   
+   
+   
+   
+	<div class="container" style="margin-top: 1%;">
+		<!--shop name-->
+		<div>
+			店铺名：<span style="margin-right: 10px;">华为旗舰店</span> 开店时间<span style="margin-right: 10px;">2010-05-15</span> 信用度<span style="color: darkred;font-size: 20px;">♥♥♥♥</span>			
+		</div>
+		<!--shop name ~~-->
+		
+		<!--nav-->
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			  <!-- Navbar text-->
+			  <span class="navbar-text">
+			    店铺宝贝
+			  </span>
+              <!-- Navbar text ~~~-->
+        </nav><!--nav ~~-->
+        
+        <!--null ~~-->
+        <div>
+        	<div class="row" style="font-size:13px;" id="near3">
+			  <div class="col-3" v-for="i in res" style="width: 25%;margin-top: 20px;" >
+			  <a :href="'/jd/item?data='+i._id+'&user=<%- user%>'">
+			   <div>	
+			  	<div class="card">
+				  <div class="card-body">
+				  	<img style="width: 210px;" :src="i.information.imga1"/>
+				  	<div style="margin-top: 5px;"><a href="#">{{i.information.name}}</a></div>
+				  	<div style="margin-top: 5px;color: darkred;font-size: 20px;font-weight:400;">￥{{i.information.price}}</div>
+				  </div> 
+				</div>
+			   </div>
+			   </a>
+			  </div>
+			</div><!--row ~~~-->  	
+        </div><!-- null ~~-->    
+    </div><!--container~-->
+
+<% include ../foot %>
+</body>
+</html>
+
+<script type="text/javascript">
+$(function  () {
+	
+//initialise
+initialise()
+	
+	
+function  initialise() {
+
+		let data={};
+			data.user='<%- user%>'
+			data=JSON.stringify(data)
+			let ur='/jd_index?order=get_release&data='+data;    
+			ur=encodeURI(ur)
+			
+			fetch(ur, {
+					method: 'GET',
+					})
+			.then((res)=>{
+					return res.json() 
+			})
+			.then((res)=>{
+						console.log(res)
+						new Vue({
+							  el: '#near3',
+							  data: {
+							    res
+
+							  }
+							})
+
+						
+						$('.ahahah>img').each(function  () {
+							
+							if($(this).attr('me')=="true"){
+
+								if($(this).index()==0){
+									$(this).attr('src','../jd/images/fairy/天猫-七天退货.png')
+								}else if($(this).index()==1){
+									$(this).attr('src','../jd/images/fairy/正品保证.png')
+								}else if($(this).index()==2){
+									$(this).attr('src','../jd/images/fairy/service-如实描述.png')
+								}else{}							
+							}
+						})
+			})
+			.then(()=>{
+				
+			})
+
+}
+	
+		
+})//last end
+</script>
+

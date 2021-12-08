@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+
+   *{text-align: left;color: #666;}  body{background: #ececec;margin: 0;padding: 0}a{text-decoration: none !important}
+   #bg{background:#028dac}
+</style>
+<script>
+     let pgo;
+     let n=1,nMultiple=1;
+$(function () {
+   
+    
+   
+    if(sessionStorage.off==0){
+        $('#myModal').modal('hide')
+        start()
+        $('#content').show()
+    }else{
+        $('#myModal').modal('show')
+    }
+    
+    //user system
+    
+    $('#account_button').on('click',function () {
+        if($('#user').val()=="admin" && $('#pwd').val()=="<%- token%>"){
+            $('#myModal').modal('hide')
+            start()
+            sessionStorage.off=0
+            $('#content').show()
+        }else{
+            alert("账号密码错误")
+        }
+    })
+    function start() {
+        
+        $('#sub').on('click',function () {
+            //携带关键字，save to sever
+             let data=$('#gjz_text').val()
+             console.log(data)
+          	$.ajax({
+    			type:"get",
+    			url:"/gzby180910_save_gjz",
+    			async:true,
+    			data:{       
+    				'data':data,
+    			},
+    			success:function  (d) {
+                    console.log(d)
+                    $('#face').hide()
+                    location.reload()
+    			},
+    			error:function  (e) {
+    				alert('ajax'+e)
+    				console.log(e)
+                }})
+            
+        })
+
+    //now to read db information
+    $.ajax({
+    			type:"get",
+    			url:"/gzby180910_gain_gjz",
+    			async:true,
+    			success:function  (d) {
+                   draw(d)
+    			},
+    			error:function  (e) {
+    				alert('ajax'+e)
+    				console.log(e)
+                }})
+    
+    function draw(d) {
+        let n=1;
+        for (const i of d) {
+             //after gjzadd add html
+                let html='<div class="row">'+
+                            '<div class="col">'+
+                                n+
+                            '</div>'+
+                            '<div class="col">'+
+                                    i.gzby+
+                            '</div>'+
+                            '<div class="col">'+
+                                i.register_date+
+                            '</div>'+
+                            '<div class="col">'+
+                                '<a href="##" class="gjzde">删除</a>'+
+                            '</div>'+
+                        '</div>'
+                $('#reference').before(html)
+                n++
+        }
+        $('#gjznum').html(n-1)
+
+        $('.gjzde').on('click',function () {
+          let val=  $(this).parent().prev().prev().html()
+          $.ajax({
+    			type:"get",
+    			url:"/gzby180910_de_gjz",
+    			async:true,
+    			data:{       
+    				'data':val,
+    			},
+    			success:function  (d) {
+                    console.log(d)
+                   
+                    location.reload()
+    			},
+    			error:function  (e) {
+    				alert('ajax'+e)
+    				console.log(e)
+                }})
+          
+        })
+                    
+     }
+    
+
+    
+   
+    $('#addgjzbutton').on('click',function () {
+        $('#face').show()
+    })
+  
+    $('#log').on('click',function () {
+        $('#show').hide()
+        $('#show2').show()
+        $('#doubi').show()
+        
+    })
+    $('#gjz').on('click',function () {
+        $('#show').show()
+        $('#show2').hide()
+        $('#doubi').hide()
+    })
+   
+    //后台有个拦截器，来获取ip，然后存到数据库中，这里只需要遍历draw出来就行。
+
+
+   
+      let ur='/gzby180910_gain_ip'    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                console.log(res)
+                draw2(res)
+              })
+              .then(()=>{
+
+
+                   //先全部清除，再补充回去
+ let ht='<div class="row"><button type="button" class="btn btn-danger" >添加</button></div><br><div class="row"><div class="col">序号</div><div class="col">操作用户</div><div class="col">ip</div><div class="col">时间(+8)</div><div class="col">操作</div></div><div id="reference2"></div>'
+
+                //下一页
+                $('#prev').on('click',pr)
+                //上一页，这里是反的，没有改过来
+                $('#next').on('click',ne)
+                
+                function pr() {
+                $('#show2').empty()
+                $('#show2').append(ht)
+                nMultiple++
+                $('#pagenumber').html(nMultiple)
+                for (const i of pgo) {
+                if(n<=10*nMultiple){
+
+                }else{
+                return
+                }
+               if(n>=pgo.length){
+                  $('#prev').off()
+                  $('#next').off()
+                  $('#next').on('click',ne)
+                }
+            let ran=String(Math.random()*10000000000).substr(2,6)
+             //after gjzadd add html
+                let html='<div class="row">'+
+                            '<div class="col">'+
+                                n+
+                            '</div>'+
+                            '<div class="col">'+
+                                    ran+
+                            '</div>'+
+                            '<div class="col">'+
+                                    i.gzbyip+
+                            '</div>'+
+                            '<div class="col">'+
+                                i.register_date+
+                            '</div>'+
+                            '<div class="col">'+
+                                '中国'+
+                            '</div>'+
+                        '</div>'
+                $('#reference2').before(html)
+                n++
+                
+               }
+        
+                    
+                }
+
+
+                function ne() {
+                    $('#show2').empty()
+                    $('#show2').append(ht)
+                    if(nMultiple>1){
+                        nMultiple--
+                    }else{
+                        return
+                    }
+                    n=(nMultiple-1)*10+1
+                    if(n==1){
+                        $('#next').off()
+                        $('#prev').off()
+                        $('#prev').on('click',pr)
+                    }
+                    console.log('n'+n,nMultiple)
+                    $('#pagenumber').html(nMultiple)
+                 for (const i of pgo) {
+                        if(n<=10*nMultiple){
+
+                        }else{
+                            return
+                        }
+                        if(n>=pgo.length){
+                            $('#prev').unbind()
+                        }
+                        let ran=String(Math.random()*10000000000).substr(2,6)
+                        //after gjzadd add html
+                            let html='<div class="row">'+
+                                        '<div class="col">'+
+                                            n+
+                                        '</div>'+
+                                        '<div class="col">'+
+                                                ran+
+                                        '</div>'+
+                                        '<div class="col">'+
+                                                i.gzbyip+
+                                        '</div>'+
+                                        '<div class="col">'+
+                                            i.register_date+
+                                        '</div>'+
+                                        '<div class="col">'+
+                                            '中国'+
+                                        '</div>'+
+                                    '</div>'
+                            $('#reference2').before(html)
+                            n++
+                            
+                        }
+                    
+                }
+
+              })
+              .catch(error => console.log('error is', error));
+
+    function draw2(d) {
+        
+        $('#rizhinum').html(d.length)
+        let i=0
+        pgo=d
+        for (const i of d) {
+            if(n<=10){
+
+            }else{
+                return
+            }
+            let ran=String(Math.random()*10000000000).substr(2,6)
+             //after gjzadd add html
+                let html='<div class="row">'+
+                            '<div class="col">'+
+                                n+
+                            '</div>'+
+                            '<div class="col">'+
+                                    ran+
+                            '</div>'+
+                            '<div class="col">'+
+                                    i.gzbyip+
+                            '</div>'+
+                            '<div class="col">'+
+                                i.register_date+
+                            '</div>'+
+                            '<div class="col">'+
+                                '中国'+
+                            '</div>'+
+                        '</div>'
+                $('#reference2').before(html)
+                n++
+                
+        }
+
+        
+         
+         
+    }
+    
+    
+
+ }//start end
+
+})
+
+
+    
+
+</script>
+</head>
+
+
+<body id="bg">
+        <h1 style="color:#fff;padding-top:25px;padding-left:80px;background:#fff;color:black;padding-bottom: 25px">信息管理系统 <a href="http://www.lklgongyi.com" style="color:black;font-size:13px;float: right;padding-right: 100px">admin|退出</a></h1>
+<div class="container-fluid">
+    <!-- 模态框 -->
+<div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+       
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+              <h4 class="modal-title">请输入管理员账号和密码</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+       
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                    <input type="text" class="form-control" style="margin-bottom:5px;" id="user" placeholder="账号：">
+                    <input type="password" class="form-control" style="margin-bottom:5px;" id="pwd" placeholder="密码：">
+            </div>
+       
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" id="account_button" >确定</button>
+            </div>
+       
+          </div>
+        </div>
+      </div>
+
+   
+
+   <div id="face" style="display:none;width:250px;position: fixed;left: 0;right: 0;margin: auto;padding: 40px;background:goldenrod;z-index: 2;">
+        <div style="color:black;margin-bottom:5px;" >要添加的关键字：</div>
+        <input type="text" class="form-control" id="gjz_text" style="margin-bottom:5px;" >
+        <button type="button" class="btn btn-primary" id="sub">确定</button>
+   </div>
+
+  <div id="content" style="display:none;width:80%;margin: auto;background: #fff;padding: 10px;">
+        <div class="row">
+                <div class="col-3">
+                       <div style="color:black;font-size:20px;font-weight:bold;margin-bottom:3px">TCP管理</div>
+                       <div><a href="##" id="gjz" style="margin-left:20px;color:black;font-size: 13px">关键词过滤</a></div>
+                       <div><a href="##" style="margin-left:20px;color:black;font-size: 13px" id="log">访问日志</a></div>
+                </div>
+               
+                <div class="col-9" id="show">
+                    <div class="row">
+                        <button type="button" class="btn btn-danger" id="addgjzbutton">添加</button>
+                        
+                    </div>
+                    <br>
+                        
+                    <div class="row" id="gjzadd">
+                            <div class="col">
+                                   序号
+                            </div>
+
+                            <div class="col">
+                                   关键字
+                            </div>
+                            <div class="col">
+                                   时间(+8)
+                            </div>
+                    </div>
+                    
+                    <div id="reference">
+
+                    </div>
+                    <div style="font-size:12px;">共<span id="gjznum"></span>条记录，当前显示第 1 页 &nbsp;&nbsp;&nbsp;&nbsp;上一页 &nbsp;&nbsp;&nbsp;&nbsp;下一页</div>
+                </div>
+               
+                <div class="col-9" id="show2" style="display:none;">
+                        <div class="row">
+                            <button type="button" class="btn btn-danger" >添加</button>
+                            
+                        </div>
+                        <br>
+                            
+                        <div class="row">
+                                <div class="col">
+                                       序号
+                                </div>
+                                <div class="col">
+                                       操作用户
+                                 </div>
+    
+                                <div class="col">
+                                       ip
+                                </div>
+                                <div class="col">
+                                       时间(+8)
+                                </div>
+                                <div class="col">
+                                    操作
+                                </div>
+                        </div>
+                        <div id="reference2">
+    
+                        </div>
+                       
+                    </div>
+                    <div id="doubi" style="display: none;font-size:12px;margin: auto">共<span id="rizhinum"></span>条记录，当前显示第 <span id="pagenumber">1</span> 页 &nbsp;&nbsp;&nbsp;&nbsp;<span  id="next">上一页</span> &nbsp;&nbsp;&nbsp;&nbsp;<span id="prev" >下一页</span></div>
+
+        </div>
+  </div>
+    
+
+
+</div>    
+
+</body>
+</html>

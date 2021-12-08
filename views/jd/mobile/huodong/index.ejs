@@ -1,0 +1,334 @@
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8"/>
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript" charset="utf-8"></script>
+        <link href="../images/ico.ico" rel="icon" type="image/x-icon" />
+	    <script type="text/javascript">
+
+	    </script>
+	     <style type="text/css">
+	   
+	     </style>
+	</head>
+	<body>
+		<div data-role="page" id="pageone" data-theme="a" style="">
+  <div data-role="header">
+
+   
+   <script type="text/javascript">
+   	
+   	$(function  () {
+   		
+   	 if(localStorage.cake){
+         $('.cake').html(localStorage.cake)
+       }
+
+
+
+   	var data= '<%- data%>'.split(',');
+   //	console.log(data)
+      /*  data=data.sort()*/
+   for (var i = 0; i <data.length-2; i++) {
+   	var addsrc="http://www.cxcuu.com/cloud/Christmas2017/"+data[0]+"/"+data[i+2]
+  
+   	$('.img')[i].src=addsrc
+   	
+   } 	
+   
+    $('.img2')[0].src="http://www.cxcuu.com/cloud/Christmas2017/"+data[0]+"/"+data[1]
+
+
+    $('.iwant').click(function(event) {
+       $('.datatwo')[0].src="cloud/Christmas2017/"+data[0]+"/"+'<%- datatwo%>'
+       $('.datatwo').css('width', '200px');
+       $(this).val('长按识别图中二维码').button('refresh')
+    });
+   
+   
+   
+   
+
+   $('.img3').click(function  () {
+
+   	
+   	
+   	if('<%- key%>'){
+   		var mykey='<%- key%>'
+
+   		$.ajax({
+   		type:"get",
+   		url:"http://www.cxcuu.com/christmas2017/get",
+   		async:true,
+   		data:{
+   			'order':'key',
+   			'data':mykey,
+   		},
+   		success:function  (d) {
+   			
+   		
+   			if(d==true){
+   			
+   				callback()
+   				
+   			}else{
+   				alert('抱歉，该二维码已经被使用过')
+   			}
+   			
+   		},
+
+   		
+   	});
+   		
+   		
+   		
+   		
+   	}else{
+   			alert('请用微信或者支付宝扫一扫娃娃上的二维码，进行抽奖！')
+   	}
+   	
+   
+   	
+   	
+   	
+   	
+   	
+   	
+   	function callback () {
+   		
+   		
+   		
+   			
+   		
+   		
+   		
+   			var n=0;
+   	  	time()
+   	function time () {
+   		
+   		var number=Math.floor(Math.random()*100)
+   		
+   		var variable='<%- gl%>'.split('-')
+   	        
+   	        
+   	    var  constant =[];
+   	    
+   	    
+   	    
+   	    
+   	        for (var i = variable.length; i > 0; i--) {
+   	        	var variable2=0;
+                      for (var ii = 0; ii < i; ii++) {
+                      	
+                      	variable2=variable2+parseInt(variable[ii])
+      	//
+                      }
+                      
+                      constant[i]=variable2;
+   	         	
+   	        }
+   	   
+   	   
+   	   
+   	       
+   	        /* constant[0]=variable[0]
+   	          constant[1]=variable[0]+variable[1]
+   	           constant[2]=variable[0]+variable[1]+variable[2]*/
+   	  
+ 
+   		
+   		if(number<=constant[1]){
+   			
+   			circle(1)
+   			
+   		}else if(number>constant[1] && number<=constant[2]){
+   			
+   			circle(2)
+   			
+   		}else if(number>constant[2] && number<=constant[3]){
+   			
+   			circle(3)
+   			
+   		}else if(number>constant[3] && number<=constant[4]){
+   			
+   			circle(4)
+   			
+   		}else if(number>constant[4] && number<=constant[5]){
+   			
+   			circle(5)
+   			
+   		}else if(number>constant[5] && number<=constant[6]){
+   			
+   			circle(6)
+   			
+   		}else if(number>constant[6] && number<=constant[7]){
+   			
+   			circle(7)
+   			
+   		}else if(number>constant[7] && number<=constant[8]){
+   			
+   			circle(8)
+   			
+   		}else if(number>constant[8] && number<=constant[9]){
+   			
+   			circle(9)
+   			
+   		}else if(number>constant[9] && number<=constant[10]){
+   			
+   			circle(10)
+   			
+   		}
+   		
+   		var timeV;
+   		
+   		function circle (na) {
+   			
+   			console.log(na+'22222')
+   		
+   		var na=na;
+   		var n=0;
+   			time2()
+   			
+   			
+   			function time2 () {
+   				
+   			
+   					 xuan=360*3+(na-1)*36
+   				
+   				
+
+           
+                
+                
+               // 
+   			if(n<=xuan){
+   		
+		   	$('.img2').css('transform','rotate('+-n+'deg)')
+		   		
+		        timeV=setTimeout(time2,1)	
+		        n+=3
+		        
+		   		}else {
+		   			var u=location.href.split('data=')[1].split(',')[0]
+		   			   u=decodeURI(u)
+		   			   
+		   			  var uo=u+'-'+'<%- key%>'+na
+		   			      uo=uo.replace(/1/g,'X').replace(/2/g,'B').replace(/3/g,'C')
+		   		//	alert()
+            
+                   var uu="恭喜！！您已经中奖，你的奖品是"+u+"转盘的第"+na+"格奖品,"+'您的兑换奖品码是括号内，包含中文('+uo+")"
+
+                 alert(uu)
+               localStorage.cake=uu
+
+               $('.cake').html(uu)
+		   			
+		   		}
+   			}
+   			
+   		}
+   		
+  
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   			}
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   		
+   	}
+   	
+   	
+ 
+  	
+   
+   	
+   	
+   	   
+   	
+   	
+   	
+   })
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   	})//end
+   	
+   </script>
+  </div>
+
+  <div data-role="content" style="margin: 0;padding: 0;">
+
+  
+  <div class="newpaper" style="font-family: '仿宋';font-weight:bold;font-size:20px;padding: 20px;padding-bottom: 10px;padding-top: 10px;">
+  	<%- newpaper%>
+  	
+  </div>
+    
+   <div style="width: 100%;margin: auto;">
+         <div><input type="button" value="我要参加" class="iwant"></div>
+         <div style="text-align:center;"><img src="" alt=""  class="datatwo"  /></div>
+ 
+   </div>
+
+  	<div style="width: 100%;margin: auto;">
+
+	   <img src="" width="100%" class="img" />
+	    <img src="" width="100%" class="img"/>
+	     <img src="" width="100%" class="img"/>
+	      <img src="" width="100%" class="img"/>
+	 <!--     <video width="100%" height="" autoplay="autoplay" controls="controls" src="cloud/depot20171126/m.mp4">
+	      
+	    
+	      </video>-->
+	       <img src="" width="100%" class="img"/>
+	       
+	        <img src="" width="100%" class="img"/>
+           <div style="width:100%;text-align:center;color:red;" class="cake">
+              
+           </div>
+	         <div style="position: relative;">
+	       <img src="" width="100%"  class="img2"/>
+	       
+	       <img src="http://www.cxcuu.com/cloud/Christmas2017/zz.png" width="100%" class="img3" style="position: absolute;top:0;left:0;right:0;margin:auto;top:39%;bottom:50%;width:30%;"/>
+	       </div>  
+
+         </div>
+  </div>
+
+  <div data-role="footer">
+   
+  </div>
+</div> 
+	</body>
+</html>

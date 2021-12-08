@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+
+<body >
+
+
+	
+	
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content">
+      
+      <div style="text-align: center;">卡片录入系统！</div>
+     <div id="pointer">
+       	<input type="text" name=""  value="" placeholder="请输入店铺名称" id="store_name"/>
+       	<input type="text" name=""  value="" placeholder="请输入你要制造的卡片名称" class="text"/>
+       	<input type="text" name=""  value="" placeholder="请输入卡片代号" id="store_mark"/>
+     	  <input type="text" name=""  value="" placeholder="请输入描述" class="text"/>
+     	  
+	      
+	      <select name="" id="select">
+	      	<option value="0" selected="selected">请选择代金券种类</option>
+	      	<option value="食品代金券">食品现金券</option>
+	      	<option value="用品代金券">用品现金券</option>
+	      	<option value="保健品代金券">保健品现金券</option>
+	      	<option value="棉品代金券">棉品现金券</option>
+	      	<option value="全场通用劵">全场现金劵</option>
+	      	<option value="纸品代金券">纸品现金券</option>
+	      </select>
+	      
+	      <input type="button" name="" value="提交" />
+      </div> 
+      
+      
+     
+      
+
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+  <script type="text/javascript">
+  	$(function  () {
+
+  	   $("#pointer input[type='button']").click(function  () {
+          
+          let data=[]
+              data[0]=$('.text').eq(0).val()
+              data[1]=$('.text').eq(1).val()
+              data[2]=$('#select').val()
+          let store=$('#store_name').val()   
+          let store_mark=$('#store_mark').val()
+          
+              if($('#select').val()!=0){             	              	
+                			fetch('/question/voucher_add?data='+data+'&store='+store+'&store_mark='+store_mark, {
+									    method: 'GET',
+									    headers: new Headers({
+									      'Accept': 'application/json' 
+									    })
+									  })
+									  .then((res)=>{
+									    return res.json() 
+									  })
+									  .then((res)=>{
+									    if(res==true){
+									    	alert('提交成功！')
+									    }
+									  })
+									  
+              	
+              }
+
+
+  	
+
+
+	   })
+  		
+	
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  	})
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  
+  	
+  	
+  	
+  	
+
+  	
+  </script>
+  
+  
+  
+</div>
+
+</html>
+</body>

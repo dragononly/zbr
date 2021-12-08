@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+   *{text-align: center;color: #666;}  body{background: #ececec}a{text-decoration: none !important}
+</style>
+<script>
+document.addEventListener( "plusready", function(){
+	// 扩展API加载完毕，现在可以正常调用扩展API
+	var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+  })
+</script>
+<script>
+$(function () {
+  let page=null
+ //直接去后台获取所有商家店铺名，暂不排序
+ let data={};
+      data.name=$(this).val()
+      data=JSON.stringify(data)
+      let ur='/jd_mobile?order=gain_store_name_list&data='+data;    
+      ur=encodeURI(ur) 
+  let cab;
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                
+                cab=res
+                console.log(cab)
+              })
+              .then(()=>{
+               
+                for (const i of cab) {
+                  //console.log(i)
+                  let html='<a href="/jd_mobile?store_name='+i.message.store_name+'&order=store_page_mobile" >'+
+                            '<div class="row" style="background:#fff;margin-top:5px;height:120px;">'+
+                           
+                              '<div class="col-3" style="padding:10px;"><div style="height:100px;width:100px;border:1px solid #ececec;padding:5px;"><img width=90px height=90px src='+i.message.logo+' alt="" srcset=""></div></div>'+
+                              '<div class="col-6" >'+
+                                    '<div style="font-size:14px;font-weight:bold;margin-top:30px;">'+i.message.store_name+'</div>'+
+                                    '<div style="font-size:10px;margin-top:2px;">'+i.message.child_genre+'</div>'+
+                                    '<div style="font-size:10px;margin-top:2px;">'+i.message.loft+'</div>'+
+                              '</div>'+
+                              '<div class="col-3" ></div>'+
+                            
+                         '</div>'+
+                         '<a>'
+                $('#content').append(html)
+                
+                }
+
+                
+                
+              })
+              .then(()=>{
+              //   //去执行，询问用户是否曾经添加过电话号码
+              //   //事务1，为了降低开销，将在本地生成一个本地存储作为标记
+              //   //事务2，显示手机添加界面
+                
+              //   localStorage.xf={}
+              //   if(localStorage.xf.phone){return}
+               
+              //   console.log(sessionStorage.id)
+
+              //   $.ajax({
+              //       type:"get",
+              //       url:"/jd_mobile",
+              //       async:true,
+              //       data:{       
+              //         'order':'query_phone_exist',
+              //         'openid':sessionStorage.id, 
+              //       },
+              //       success:function  (d) {
+              //         if(d==null){
+              //           //这里要执行，添加手机号码的页面，用户不存在手机号
+              //           $('#myModal').modal('show')
+              //         }
+              //       },
+              //       error:function  (e) {
+              //         alert('ajax'+e)
+              //         console.log(e)
+              //       }
+              //    })
+              
+
+              // //get mobile phone code
+              // //it need data and data.phone value
+              // let get_code_off=0
+              // $('#get_phone_code').on('click',function () {
+
+              //   let n=30
+              //      function loop() {
+                     
+              //        if(n>1){
+              //           n--
+              //           setTimeout(loop,1000)
+              //           $('#get_phone_code').html(n+'秒')
+              //        }else{
+              //         $('#get_phone_code').html('获取验证码')
+              //         get_code_off=0
+              //        }
+                    
+              //      }
+              //      loop() 
+
+              //  if(get_code_off==0){
+              //       let data={}
+              //           data.phone=$('#phone_number').val()
+              //           data=JSON.stringify(data)
+              //           $.ajax({
+              //           type:"get",
+              //           url:"/jd/reg_code",
+              //           async:true,
+              //           data:{       
+              //             "data":data
+              //           },
+              //           success:function  (d) {
+              //           console.log(d)
+              //           //   ==>2296 code
+                          
+              //           $('#verify').on('click',function () {
+              //             //当点击确定的时候，如果通过验证码认证，那么将关闭模态框
+              //             if($('#my_code').val()==d){
+                            
+              //               //验证码通过后，去后台，数据库中保存这个手机号
+              //               $.ajax({
+              //                   type:"get",
+              //                   url:"/jd_mobile",
+              //                   async:true,
+              //                   data:{       
+              //                     'order':'phone_save',
+              //                     'openid':sessionStorage.id,
+              //                     'phone_number':$('#phone_number').val()
+              //                   },
+              //                   success:function  (d) {
+              //                     console.log(d)
+              //                     if(d.ok==1){
+              //                       //这里要执行，添加手机号码的页面，用户不存在手机号
+                                   
+              //                       $('#modal_off').click()
+              //                       localStorage.xf.phone=0
+              //                     }else{
+              //                       alert('数据库保存手机号码失败')
+              //                     }
+              //                   },
+              //                   error:function  (e) {
+              //                     alert('ajax'+e)
+              //                     console.log(e)
+              //                   }
+              //               })
+
+
+                            
+
+
+
+              //             }
+              //           })
+                        
+
+
+              //           },
+              //           error:function  (e) {
+              //             alert('ajax'+e)
+                         
+              //           }
+              //         })
+              //     }
+              //      get_code_off=1
+                   
+                  
+              // })
+
+
+              
+
+              
+            })
+              .catch(error => console.log('error is', error));
+})
+</script>
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+
+  <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">请绑定手机号</h4>
+              </div>
+              <div class="modal-body">
+                  <div class="input-group">
+                      <input type="text" id="phone_number" class="form-control">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" id="get_phone_code" type="button">
+                          获取验证码                        
+                        </button>
+                      </span>
+                    </div>
+                    <br>
+                    <input type="text" class="form-control" id="my_code" placeholder="请输入验证码" >
+              </div>
+              <div class="modal-footer">
+                  <button type="button" id="modal_off" class="btn btn-default" data-dismiss="modal">关闭</button>
+                  <button type="button" id="verify" class="btn btn-primary">确定</button>
+              </div>
+          </div>
+      </div>
+  </div> -->
+
+
+
+
+
+
+ <!-- <nav class="navbar  fixed-top"  style="background: #fff">     
+        <div class="row" style="width: 100%;margin: auto">
+           <div class="col">综合</div>
+           <div class="col">销量</div>
+           <div class="col">上新</div>
+           <div class="col">价格</div>
+        </div>
+ </nav> -->
+
+<!-- 
+ <div class="btn-group" style="width: 100%;margin-top: 20px">
+  <button type="button" class="btn btn-danger" style="width: 100%">楼层</button>
+  <button type="button" class="btn btn-danger" style="width: 100%">分类</button>
+  <button type="button" class="btn btn-danger" style="width: 100%">默认排序</button>
+</div> -->
+
+<nav class="navbar navbar-expand-sm  navbar-dark fixed-top" style="background: #fff;">
+	<div class="btn-group" style="width: 100%">
+    <div class="btn-group" style="width: 100%">
+      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+				楼层
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="##">A3</a>
+				<a class="dropdown-item" href="##">A2</a>
+        <a class="dropdown-item" href="##">A1</a>
+        <a class="dropdown-item" href="##">B1</a>
+        <a class="dropdown-item" href="##">B2</a>
+      </div>
+		</div>
+		<div class="btn-group" style="width: 100%">
+      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+				分类
+      </button>
+      <div class="dropdown-menu" style="font-size: 12px">
+        <a class="dropdown-item" href="##">全部</a>
+        <a class="dropdown-item" href="##">男装/女装/童装/内衣</a>
+        <a class="dropdown-item" href="##">男鞋/运动/户外</a>
+        <a class="dropdown-item" href="##">女鞋/箱包/钟表/珠宝/精品</a>
+        <a class="dropdown-item" href="##">母婴</a>
+        <a class="dropdown-item" href="##">美妆个护</a>
+        <a class="dropdown-item" href="##">手机/数码</a>
+        <a class="dropdown-item" href="##">食品/酒类/生鲜/特产</a>
+        <a class="dropdown-item" href="##">医药保健/计生情趣</a>
+        <a class="dropdown-item" href="##">机票/酒店/旅游</a>
+        <a class="dropdown-item" href="##">生活娱乐 </a>
+        <a class="dropdown-item" href="##">特色餐饮</a>
+        <a class="dropdown-item" href="##">家居</a>
+        <a class="dropdown-item" href="##">建材</a>
+        <a class="dropdown-item" href="##">家电</a>
+      </div>
+		</div>
+		<div class="btn-group" style="width: 100%">
+      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" style="width: 100%">
+				排序方式
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="##">点赞最多</a>
+        <a class="dropdown-item" href="##">优惠优先</a>
+        <a class="dropdown-item" href="##">团购优先</a>
+        <a class="dropdown-item" href="##">活动优先</a>
+      </div>
+		</div>
+
+  </div>
+</nav>
+
+
+<div id="content" style="margin-top: 60px">
+    
+</div>
+
+<%- include ../foot%>
+
+
+</div>    
+
+</body>
+</html>

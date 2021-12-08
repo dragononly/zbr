@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+  <script>
+  // location.href='https://wxydt.yidianting.xin/weixin/html/visit/ydtVisitorIndex.do?sd=1&si=1&sp=1&parkId=4266&code=061UBEhO1V0mM31QbljO1DnGhO1UBEhs'
+  </script>
+</head>
+   
+
+<body  style="background: url(/jd/images/car/car.png);background-size:100% ">
+ 
+  <div class="container" >
+    <div style="position: absolute;left: 0;right: 0;margin: auto;top: 27%;width: 150px">
+      <button  id="sub" type="button" class="btn btn-danger" style="font-size: 23px;height: 60px;width: 150px">我要通行</button>
+    </div>
+  </div>
+
+
+
+</body>
+</html>
+<script src="http://momentjs.cn/downloads/moment.js"></script>
+<script>
+
+        	$(function  () {
+
+             let view=""
+      	     var ws = new WebSocket("ws://minmm.uicp.cn:80");
+
+                  ws.onopen = function(e) {
+
+                          $('#sub').click(function  () {
+                             $(this).text('已通行')
+                             $(this).attr('disabled',true)
+                             $(this).addClass('btn-success')
+                             $(this).removeClass('btn-danger')
+                             
+                          	 var data={}
+	                          data.group="0"
+	                          data.name='user'
+	                          data.toname='admin'
+	                          data.message=moment().format('MMMM Do YYYY, h:mm:ss a'); 
+	                          data=JSON.stringify(data)
+                            ws.send(data);
+                          
+                          
+                            setTimeout(function () {
+                              $('#sub').attr('disabled',false)
+                              $('#sub').addClass('btn-danger')
+                              $('#sub').removeClass('btn-success')
+                              $('#sub').text('我要通行')
+                            },15000)
+      			            
+      		              })
+			    }
+                  
+          
+               ws.onmessage = function (evt) 
+               { 
+
+                  var received_msg = JSON.parse(evt.data);
+                  console.log(received_msg)
+                  if(received_msg.toname=='user'){
+                  	let message=received_msg.message
+                        name=received_msg.name
+                        
+
+                  }
+ 
+            		 
+               };
+ 
+//             ws.onclose = function()
+//             { 
+//                // 关闭 websocket
+//                alert("连接已关闭..."); 
+//             };
+                 ws.onerror = function(event) {
+		              console.log(event)
+				};
+               
+//          }
+//          
+//          else
+//          {
+//             // 浏览器不支持 WebSocket
+//             alert("您的浏览器不支持 WebSocket!");
+//          }
+         
+         
+         })
+</script>
+
+
+
+

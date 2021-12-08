@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8"/>
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript" charset="utf-8"></script>
+        <link href="../images/ico.ico" rel="icon" type="image/x-icon" />
+	    <script type="text/javascript">
+	    
+	    </script>
+	
+	</head>
+	<body>
+		<div data-role="page" id="pageone" data-theme="a">
+  <div data-role="header">
+ 
+  </div>
+
+  <div data-role="content">
+     
+     <input type="text" placeholder="请输入兑奖码" class="code"/>
+     <input type="button"  value="确定" class="sub"/>
+  </div>
+  
+   <script type="text/javascript">
+   	$(function  () {
+   		
+   		$('.sub').click(function  () {
+   		
+   		
+   		    var code= $('.code').val().replace(/X/g,1).replace(/B/g,2).replace(/C/g,3)
+   		 data=code.split('-')[1]
+   		 
+   		 data=data.substr(0,data.length-1)
+ 
+   		    $.ajax({
+   		    	type:"get",
+   		    	url:"get",
+   		    	async:true,
+   		    	data:{
+   		    		'command':'program20171124code',
+   		    		'data':data,
+   		    	},
+   		    	success:function  (d) {
+   		    		
+   		    		if (d==true) {
+   		    			code1=code.split('-')[0]+'的'
+   		    			code2="第"+code.substr(code.length-1)+'个格子的奖品，指针12点方向算第一个起。'
+   		    			da=code1+code2
+   		    			alert('您的奖品是'+da)
+   		    		}else if(d=="兑换码不存在"){
+   		    			alert('兑换码不存在')
+   		    		}else if(d=="兑换码已经兑换"){
+   		    			alert('兑换码已经兑换')
+   		    		}
+   		    		
+   		    	},
+   		    	error:function  (e) {
+   		    		alert(e)
+   		    	},
+   		    });
+   		
+   		
+   		})
+   		
+   		
+   		
+   		
+   	})
+   </script>
+
+  <div data-role="footer">
+   
+   
+  </div>
+</div> 
+	</body>
+</html>

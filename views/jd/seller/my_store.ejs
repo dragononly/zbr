@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>申请开店</title>
+<style type="text/css">
+	body{overflow-y:scroll;}
+</style>
+
+</head>
+<body>
+	
+   <% include ../header %>
+	 <!-- 模态框2 -->
+<div class="modal fade" id="myModal2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+        <h4 class="modal-title">模态框头部</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- 模态框主体 -->
+      <div class="modal-body">
+        <div class="form-group">
+					<label for="text">请输入街道楼层：</label>
+					<input type="text" class="form-control" id="text">
+				</div>
+				<div class="form-group">
+					<label for="sel1">请选择类别:</label>
+					<select class="form-control" id="sel1">
+						<option>男装/女装/童装/内衣</option><option>男鞋/运动/户外</option>
+						<option>女鞋/箱包/钟表/珠宝/精品</option><option>母婴</option>
+						<option>美妆个护</option><option>手机/数码</option>
+						<option>食品/酒类/生鲜/特产</option><option>医药保健/计生情趣</option>
+						<option>机票/酒店/旅游</option><option>生活娱乐</option>
+						<option>特色餐饮</option><option>家居</option><option>建材</option><option>家电</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="text">请填写子类别，例如川菜：</label>
+					<input type="text" class="form-control" id="text2" >
+				</div>
+				<input type="button" class="btn btn-info" value="提交修改" id="submit_store_information">
+      </div>
+		 	<script>
+		    $('#submit_store_information').on('click',function () {
+					 
+					 if($('#text').val()=="" || $('#text2').val()==""){
+						 alert('所有内容不能为空！')
+						 return
+					 }
+					 //console.log($('#sel1').val())
+					 
+					 let data={};
+						data.loft=$('#text').val()
+						data.genre=$('#sel1').val()
+						data.child_genre=$('#text2').val()
+						data.user=sessionStorage.user
+						data=JSON.stringify(data)
+						let ur='/jd_mobile?order=store_list_set_information&data='+data;    
+						ur=encodeURI(ur)   
+						fetch(ur, {
+										method: 'GET',
+										})
+										.then((res)=>{
+										return res.json() 
+										})
+										.then((res)=>{
+											console.log(res)
+										})
+										.catch(error => console.log('error is', error));
+
+
+
+
+
+
+				})	
+		 	</script>
+      <!-- 模态框底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+	 
+
+
+	 
+	 <!-- 模态框 -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+ 
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+        <h4 class="modal-title">模态框头部</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+ 
+      <!-- 模态框主体 -->
+      <div class="modal-body">
+				 <div>请设置店铺Logo的地址</div>
+				 <input type="text" id="store_logo_png">
+				 <div><img src="" alt="" srcset="" id="logo_img" width="200px"></div>
+				 <input type="button" id="change_store_logo" value="确认修改">
+				 <div>
+					 说明：图片的地址，在卖家中心=》图片空间=》上传一张图片后=》点击图片=》获得地址栏=》复制粘贴到此
+				 </div>
+			</div>
+			<script>
+        $('#store_logo_png').change(function () {
+					$('#logo_img').attr('src',$(this).val())
+				})
+
+			 $('#change_store_logo').on('click',function () {
+					
+					if($('#logo_img').attr('src')==""){
+						alert('您还没有选择图片。')
+						return
+					}else{
+						console.log($('#logo_img').attr('src'))
+					}
+
+					//把整个图片上传给，后台让后台去保存。
+					let data={};
+					data.logo_src=$('#logo_img').attr('src')
+					data.user=sessionStorage.user
+					data=JSON.stringify(data)
+					let ur='/jd_mobile?order=save_store_logo&data='+data;    
+					ur=encodeURI(ur)   
+					fetch(ur, {
+									method: 'GET',
+									})
+									.then((res)=>{
+									return res.json() 
+									})
+									.then((res)=>{
+										console.log(res)
+										if(res.n==1 && res.nModified==1 && res.ok==1){
+											alert('图片修改成功')
+										}
+									})
+									.catch(error => console.log('error is', error));
+
+				 
+			 })
+			</script>
+ 
+      <!-- 模态框底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+
+   
+   
+   <div class="container" style="margin-top: 1%;">
+   	
+   	
+   	<div class="row">
+	  <div class="col-sm-2.5">
+	      <div class="card">
+		    <div class="card-header bg-success text-white">
+		    	店铺管理
+		    </div><!--card-header end~~~-->
+		    <div class="card-body" style="font-size: 12px;">
+		    	<div class="row">
+				  <div class="col"><a href="/jd/cloud">图片空间</a></div>
+				  <div class="col"><a href="/jd/user_store">查看店铺</a></div>
+				</div>
+				<div class="row">
+				  <div class="col"><a href="/jd/sell_in">出售中的宝贝</a></div>
+				  <div class="col"><a href="/jd/release_baby">发布宝贝</a></div>
+				</div>
+		    </div> <!--card-body end~~~-->
+		  </div>
+		  
+		   <div class="card" style="margin-top:20px;">
+		    <div class="card-header bg-success text-white">
+		    	交易管理
+		    </div><!--card-header end~~~-->
+		    <div class="card-body" style="font-size: 12px;">
+		    	<div class="row">
+				  <div class="col"><a href="/jd/evaluate_seller">评价管理</a></div>
+				  <div class="col"><a href="/jd/sell_out">已卖出宝贝</a></div>
+				</div>
+				<div class="row">
+				  <div class="col"><a href="#"  data-toggle="modal" data-target="#myModal">设置Logo</a></div>
+				  <div class="col"><a href="#" data-toggle="modal" data-target="#myModal2">设置店铺</a></div>
+				</div>
+				
+		    </div> <!--card-body end~~~-->
+		   </div>
+		   
+		   
+		   <div class="card" style="margin-top:20px;">
+		    <div class="card-header bg-success text-white">
+		    	服务中心
+		    </div><!--card-header end~~~-->
+		    <div class="card-body" style="font-size: 12px;">
+		    	<div class="row">
+				  <div class="col"><a href="#">退款管理</a></div>
+				  <div class="col"><a href="#">违规记录</a></div>
+				</div>
+		    </div> <!--card-body end~~~-->
+		  </div>
+		  
+		  <div class="card" style="margin-top:20px;">
+		    <div class="card-header bg-success text-white">
+		    	您当前的排名
+		    	<br />
+		    	<span style="font-size: 24px;color: #fbd437;font-weight: bold;">2342423</span>
+		    </div><!--card-header end~~~-->
+		   
+		  </div>
+		  
+	  </div><!--col3 end~~~-->
+	  
+	  <div class="col-sm-9.5" style="margin-left: 30px;">
+	  	<div class="card bg-light text-dark" style="width: 900px;padding-left: 10px;">
+		    <div class="card-body" >亲，这是您开店的<span style="color: #1e98e8;font-size: 20px;font-weight: 400;">100</span>天，继续加油~~~~</div>
+		</div>
+	    <div style="width: 900px;">
+	     <div id="mountNode"></div>
+	     
+	    </div>
+	   
+	    
+	  </div><!--col9.5 end~~~-->
+	</div><!--row end~~-->
+         
+   </div><!--container end~-->
+   
+   
+   
+   
+   
+  <script>
+  const { DataView } = DataSet;
+  const data = [
+    { item: '访问量', count: 40 },
+    { item: '推广点击量', count: 21 },
+    { item: '成交量', count: 17 },
+    { item: '收藏量', count: 13 },
+    { item: '投诉指数', count: 9 }
+  ];
+  const dv = new DataView();
+  dv.source(data).transform({
+    type: 'percent',
+    field: 'count',
+    dimension: 'item',
+    as: 'percent'
+  });
+  const chart = new G2.Chart({
+    container: 'mountNode',
+    forceFit: true,
+    height: window.innerHeight,
+  });
+  chart.source(dv, {
+    percent: {
+      formatter: val => {
+        val = (val * 100) + '%';
+        return val;
+      }
+    }
+  });
+  chart.coord('theta', {
+    radius: 0.75
+  });
+  chart.tooltip({
+    showTitle: false,
+    itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+  });
+  chart.intervalStack()
+    .position('percent')
+    .color('item')
+    .label('percent', {
+      formatter: (val, item) => {
+        return item.point.item + ': ' + val;
+      }
+    })
+    .tooltip('item*percent', (item, percent) => {
+      percent = percent * 100 + '%';
+      return {
+        name: item,
+        value: percent
+      };
+    })
+    .style({
+      lineWidth: 1,
+      stroke: '#fff'
+    });
+  chart.render();
+</script>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+<% include ../foot %>
+</body>
+</html>

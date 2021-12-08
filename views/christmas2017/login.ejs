@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+ <script src="cdn/sha1.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+		<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	    
+	</head>
+
+	<body>
+
+		<div data-role="header">
+
+		</div>
+
+		<div data-role="main" class="ui-content">
+
+			<div id="loginPage" class="ui-content" style="width: 300px;margin: auto;height: 280px;border: 1px solid #ececec;box-shadow: 10px 5px 10px skyblue;margin-top: 20px;">
+		      <form method="get" action="cloud/get" id='form'>
+		      
+		        <div>
+		          <h3>登录信息</h3>
+		          <label for="user" class="ui-hidden-accessible">用户名:</label>
+		          <input type="text" value="Christmas2017" name="user" id="user" placeholder="用户名 " autocomplete="on">
+		          <label for="pswd" class="ui-hidden-accessible">密码:</label>
+		          <input type="password" value="a000000" name="password" id="pswd" placeholder="密码 " autocomplete="on">
+		          <label for="log" class="savePassword" id='log2'>保存登录</label>
+		          <input type="checkbox" name="login" id="log" value="1" data-mini="true" >
+		          	<a  class="ui-btn ui-btn-inline" data-transition="flip" id='login'>登陆</a>
+		           <a  class="ui-btn ui-btn-inline" id='areg'>注册</a>
+		            <a href="#" class="ui-btn ui-btn-inline" data-rel="back">返回</a>
+		        </div>
+		        <input value="cloudLogin" name="order" style="display: none;">
+		      </form>
+		    </div>
+    
+        <div id="regPage" class="ui-content" style="width: 300px;margin: auto;height: 320px;border: 1px solid #ececec;box-shadow: 10px 5px 10px skyblue;margin-top: 20px;display:none;">
+			
+					<div>
+						<h3>注册信息</h3>
+						<label for="userreg" class="ui-hidden-accessible">用户名:</label>
+						<input type="text" name="userreg" id="userreg" placeholder="用户名">
+						<label for="pswdr" class="ui-hidden-accessible">密码:</label>
+						<input type="password" name="pswdr" id="pswdr" placeholder="密码">
+						<input id="demo" type="password" name="pswdr" id="pswdr" placeholder="确定密码">
+						<input type="email" name="email" placeholder="邮箱">
+						<input type="button" data-inline="true" value="确定注册" class="reg">
+						<a  class="ui-btn ui-btn-inline" id="backLogin">返回</a>
+
+					</div>
+
+			</div>
+
+		</div>
+       <script>
+$(function  () {
+	
+
+
+         
+         animation()
+         
+         transmit()
+         
+         
+         if(localStorage.cloudUser){
+         	$('#user').val(localStorage.cloudUser)
+         	$('#pswd').val(localStorage.cloudpw)
+         }
+         
+       
+         
+         
+         $('#pswd').blur(function  () {
+         	     localStorage.cloudUser=$('#user').val()
+         		 localStorage.cloudpw=$('#pswd').val()
+         		
+         })
+         
+
+       
+     
+         
+         
+         
+         
+
+        function animation () {
+        	
+        	//show reg page
+        	
+        	$('#areg').bind('tap',function  () {
+ 
+        		$('#regPage').show()
+        		$('#loginPage').hide()
+        		
+        	})
+
+	
+        }
+
+
+        
+        
+        
+        function transmit () {
+        	
+        	//reg account
+        	
+        	
+        	$('.reg').bind('tap',function  () {
+        		var data={}
+        		    data.user=$('#userreg').val()
+        		    
+        		    
+        		   
+		
+           		let val=$('#pswdr').val()
+			 
+		             val=sha1(val)
+           		
+        		    
+        		    data.password=val
+        		    
+        	  
+        		
+        		$.ajax({
+        			type:"get",
+        			url:"cloud/get",
+        			async:true,
+        			data:{
+        				'order':'cloudReg1712',
+        				'data':data,
+        			},
+        			success:function  (d) {
+        				if(d==true){
+        					
+        					alert('注册成功')
+        					
+        					$('#regPage').hide()
+        					$('#loginPage').show()
+        					
+        				}else{
+        					
+        		                alert('账号已经存在')
+        					
+        				}
+        				
+        				
+        				
+        			},
+        			error:function  (e) {
+        				alert(e)
+        			},
+        			
+        		});
+
+        	})//reg account end!!!
+        	
+
+          
+           //login
+           $('#login').bind('tap',function  () {
+           	
+       
+           	  let val=$('#pswd').val()
+			      val=sha1(val)
+		
+           		$('#pswd').val(val)
+         		
+         		  	$('#form').submit()
+          
+           	
+           	       
+           	
+          
+
+           })
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+            
+           //backLogin
+           
+           $('#backLogin').click(function  () {   
+        
+           	
+           	$('#loginPage').show()
+           	$('#regPage').hide()
+           	
+           })
+           	
+        
+           	
+           
+           
+            
+        	
+        	
+        	
+        	
+        	
+        	
+        }//transmit end!!!
+        
+
+        
+        
+        
+ })//window.load end!!!!!!!!!!!       
+        
+        
+
+
+
+</script>
+		<div data-role="footer" data-position="fixed">
+
+		</div>
+
+</html>
+</body>
+
+

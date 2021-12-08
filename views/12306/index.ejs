@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+
+
+
+
+<body>
+
+<div data-role="page" data-theme="b" class="ui-shadow">
+	
+	
+	<style type="text/css">
+		.fileView>li>a>img{
+			height: 99% ;
+		}
+	</style>
+	
+	
+	
+	<div data-role="panel" id="myPanel"> 
+    <h2>免费版本</h2>
+    <p>免费版本</p>
+  </div> 
+	
+	
+	<!--<h1><%= user %></h1>-->
+	
+	
+  <div data-role="header" data-position="fixed">
+    <a href="#myPanel" class="ui-btn ui-icon-bars ui-btn-icon-left">个人中心</a>
+    <h1>欢迎访问，内部免费版</h1>
+    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left">搜索</a>
+  </div>
+
+   <div data-role="main" class="ui-content">
+      <form method="post" action="demo_form.php">
+	<!--		<div class="ui-field-contain" >
+			<input type="search" name="search" id="search" >
+			 <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-search ui-btn-icon-left">搜索</a>
+			</div>-->
+			</form>
+				<ul data-role="listview" class="fileView" >
+				  <li>
+				    <a href="#" ><img src="../../images/cloud/file/1.png" ><h3>3222</h3> <p>2017-08-12 00:40</p></a>
+				    <a href="#" >Some Text</a>
+				  </li>
+				  <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png" ><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				    <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				    <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png" ><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				    <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png" ><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				    <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				    <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				    <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				   <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				   <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				   <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				   <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#">Some Text</a>
+				  </li>
+				  
+				   <li>
+				    <a href="#"><img src="../../images/cloud/file/1.png"><h1>3222</h1> <p>2017-08-12 00:40</p></a>
+				    <a href="#" class="">Some Text</a>
+				  </li>
+				</ul>
+   
+   
+   </div>
+   
+
+   <div data-role="footer" data-position="fixed">
+   	
+	<div data-role="navbar" class="foo1">
+      <ul>
+        <li><a href="#" data-icon="cloud">网盘</a></li>
+        <li><a href="#" data-icon="action">分享</a></li>
+        
+
+     
+        <li><a href="#myPop1" data-rel="popup" data-icon="plus" >更多</a></li>
+      </ul>
+    </div>
+    
+    <div data-role="navbar"class="foo2" style="display: none;" >
+      <ul>
+        <li><a href="#" data-icon="arrow-d">下载</a></li>
+        <li><a href="#" data-icon="delete">删除</a></li>
+        <li ><a href="#myPop1" data-rel="popup" data-icon="plus" >更多</a></li>
+
+      </ul>
+    </div>
+    </div>
+  
+  
+    <script type="text/javascript">
+
+        //captain ！！！！！！！
+
+
+   animation()
+    	
+        transmit()
+
+
+
+
+
+
+
+        function transmit () {
+        	
+        	 getFile()
+
+        	
+        }
+
+
+
+
+
+       function getFile () {
+
+		$.ajax({
+			type:"get",
+			url:"get",
+			async:true,
+			data:{
+				'order':'getFile',
+     			'data':'<%= user %>',
+			},
+			success:function  (d) {
+				view(d)
+				
+			},
+			error:function  (e) {
+				alert(e)
+			},
+		});
+
+       	
+       }//getFile end!!!!!!!
+       
+       
+       
+       function view (d) {
+       	
+       //	$('.fileView').empty()
+       	
+       	
+/*       	for (var i = 0; i < d.length; i++) {
+
+	       	if(d[i].lastIndexOf('.')==-1){
+			
+			$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="images/cloud/file.jpg" alt="" /></a>' +'<a class="ui-btn ui-icon-check ui-btn-icon-left ui-btn-icon-notext ui-icon-carat-r">'+d[i] +'</a>'+'</li>')
+			
+	       	}else if(d[i].indexOf('.txt')!=-1){
+	       		
+	       		$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="images/cloud/txt.jpg" alt="" /></a>' +'<a>'+d[i] +'</a>'+'</li>')
+	       		
+	       	}
+       	
+       	
+       	}*/
+       	
+       	
+       	  	for (var i = 0; i < d.length; i++) {
+
+	       	if(d[i].lastIndexOf('.')==-1){
+			
+			$('.fileView').append('<li class="ui-li-has-alt ui-li-has-thumb">' + '<a class="ui-btn"><img src="images/cloud/file.jpg" alt="" /><h1>'+d[i]+'</h1><p>2222</p></a>' +'<a class="ui-btn ui-btn-icon-notext ui-icon-carat-r">'+'</a>'+'</li>')
+			
+	       	}else if(d[i].indexOf('.txt')!=-1){
+	       		
+	       		$('.fileView').append('<li>' + '<a><img src="images/cloud/txt.jpg" alt="" /></a>' +'<a>'+d[i] +'</a>'+'</li>')
+	       		
+	       	}
+       	
+       	
+       	}
+       	
+       	
+       	
+       	
+       	
+       }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    	function animation () {
+    		
+    		//勾选改变状态，select
+    		select()
+    		
+    		css()
+    		
+    	}
+    	
+    	
+    	
+    	function css () {
+    		
+    		$('.fileView>li>a:nth-child(2)').addClass("ui-btn ui-icon-check ui-btn-icon-left")
+    
+    	}
+    	
+    	
+    	
+    	
+    	
+    	function  select() {
+    		
+    	
+    	
+    	
+    	//文件，选择逻辑
+    	//逻辑1，选择后改变勾选状态
+    	$('.fileView>li>a:nth-child(2)').bind('tap',function  () {
+    		
+    		
+    		$(this).toggleClass("ui-alt-icon");
+    		
+    	
+    		
+    		if($('.fileView>li>a:nth-child(2)').hasClass('ui-alt-icon')){
+    			
+    			$('.foo2').show() 
+    			$('.foo1').hide()
+    		
+    		}else{
+    			$('.foo2').hide()
+    			$('.foo1').show()
+    		}
+    		
+    		
+    	})
+	
+    	}
+    	
+    	
+    	
+    	
+    </script>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>
+
+</html>
+</body>

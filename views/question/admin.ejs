@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+
+<body >
+<div data-role="page">
+	
+	
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content">
+      
+  
+      	<a href="#" data-transition="flip" data-role="button" target="_top" id="store_create">店铺创建</a>
+      	<a href="/question/depot" data-transition="flip" data-role="button" target="_top">题目库</a>
+        <a href="/question/voucher" data-transition="flip" data-role="button" target="_top">卡片库</a>
+        <a href="/question/erwei" data-transition="flip" data-role="button" target="_top">二维码生成</a>
+        <a href="/question/user_analysis" data-transition="flip" data-role="button" target="_top">用户分析</a>
+        
+        <div id="store_show" style="margin-top: 40px;display: none;">
+	        <input type="text" id="store_input" placeholder="请输入店铺名,格式 store1"/>
+	        <input type="button" id="store_button" value="确定"/>
+        </div>
+        
+      
+        <input type="text" id="store_input_show" style="display: none;"/>
+  
+      	
+      </div>
+      
+      
+
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+    
+    
+    <script type="text/javascript">
+    	$(function  () {
+    		
+    		$('#store_create').on('click',function  () {
+    			
+    			$('#store_show').show()
+
+    		})
+    		
+    		
+    		$('#store_button').on('click',function  () {
+    			
+    			if($('#store_input').val()!=""){
+    				
+    				$('#store_show').hide()
+    				
+    				$('#store_input_show').show()
+    				
+    				let url='http://www.cxcuu.com/question/index?data='+$('#store_input').val()
+    				
+    				$('#store_input_show').val(url)
+    				
+    				
+    			}
+    			
+    			
+    			
+    		})
+    		
+    		
+    		
+    		
+    		
+    		
+    	})
+    </script>
+    
+    
+    
+    
+    
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

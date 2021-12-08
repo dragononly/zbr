@@ -1,0 +1,10 @@
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx48e03b78091bdf2d&redirect_uri=http://www.cxcuu.com/getup/sb&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect
+
+
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6be8b878577cd89e&redirect_uri=http://www.cxcuu.com/jd_mobile?order=sb&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect
+
+
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6be8b878577cd89e&redirect_uri=http://www.cxcuu.com/jd_mobile?order=sb&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect
+
+
+

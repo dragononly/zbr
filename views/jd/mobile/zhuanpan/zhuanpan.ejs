@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+  <style>
+    #zp{transform: rotate(18deg)}
+  </style>
+</head>
+
+
+<body>
+<div class="container-fluid">
+
+            
+   <div style="position: relative;height: 450px;text-align: center">
+         <img id="zp" src="/jd/images/zhuanpan/转盘w.png" alt="" srcset="" width="320px">
+         <img id="zz" style="position: absolute;right: 0;left: 0;margin: auto;top:110px ;" src="/jd/images/zhuanpan/指针w.png" alt="" srcset="" width="100px">
+         <img id="dz" width="320px" style="position: absolute;right: 0;left: 0;margin: auto;top:264px;"  src="/jd/images/zhuanpan/底座w.png" alt="" srcset="" height="120px">
+   </div>
+   <div id="show" style="text-align: center">网络连接中....请等待...</div>
+   <div id="cake" style="text-align: center">
+       欢迎你：  <%-nickname %>
+   </div>
+   <div>
+    兑奖说明：中奖者可在6月2-3日到雄峰城B1馆服务台或B1馆中庭活动展位处，出示中奖页面进行兑奖。如需咨询，请致电简先生：18578640716。
+   </div>
+</div>   
+</body>
+</html>
+
+<script>    
+
+//20元50个，100元10个，小夜灯100个，麻薯190个，1688一个
+$(function () {
+    //关于转盘的三个组建样式
+    
+  
+  
+    //dz该偏移的高度 
+  
+  
+
+    //点击指针的时候进行旋转
+    
+     
+    
+    
+   
+ //指定选谁
+//    0 =》1  -36=》2    -72=》3  -108=》4 -144=》5 -180=》6 -216=》7  -252=》8 -288=》9 -324=》10
+      //中奖的分别是 2  4  6 8 10
+//概率算法
+//设置总人数为x
+
+// ***逻辑顺序 ，从后台获取参数，
+//    返回类目的数量   除以分母便是概率
+//    每次点击都将更新后台的库存，和重新请求后台的库存。
+
+
+   //公式区
+   //每个-36° 对应一格
+    //    第一个（不用转）对应谢谢惠顾1
+    //    第二个（-36）    现金1688           1                   1/x
+    //    第3             谢谢惠顾2
+    //      4             100元              10
+    //      5             谢谢惠顾3
+    //      6             20元               50
+    //      7             谢谢惠顾4
+    //      8             小夜灯             100
+    //      9             谢谢5
+    //      10            进口零食           190
+
+      let set_time;
+      let openid='<%- openid%>'
+      let ur='/jd_mobile?order=get_xf_zp' 
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                let cab= res.xf.data
+                    // cab=JSON.parse(cab)
+                    $('#show').html('连接成功，可以抽奖')
+                    let deg=0;
+                
+                
+                //判断用户是否已经抽过一次奖
+          
+                let ur4='/jd_mobile?order=zp_user_one&openid='+openid
+                                    fetch(ur4, {
+                                    method: 'GET',
+                                    })
+                                    .then((res)=>{
+                                           return res.text() 
+                                    })
+                                    .then((res)=>{
+                                     
+                                        res=JSON.parse(res)
+                                        console.log(res)
+                                           if(res.zp_one==""){
+                                            can_click()
+                                           }else if(res.cake!=""){
+                                           
+                                               let ca;
+                                            switch(res.cake[0]){
+                                                case 'mu1':
+                                                ca='1688元现金大奖！'
+                                                break;
+                                                case 'mu2':
+                                                ca='100元现金大奖！'
+                                                break;
+                                                case 'mu3':
+                                                ca='20元现金奖！'
+                                                break;
+                                                case 'mu4':
+                                                ca='小夜灯一个！'
+                                                break;
+                                                case 'mu5':
+                                                ca='进口零食麻薯一份！'
+                                                break;
+                                            }
+                                            $('#show').html("亲爱的："+"<%- nickname%>"+"你已经抽过一次奖，您的奖品是"+ca+"<br>"+"中奖号是:"+'<%- openid%>')
+                                           }else{
+                                            $('#show').html("亲爱的："+"<%- nickname%>"+"你已经抽过一次奖，很遗憾您没中奖！")
+                                           }
+                                    })
+
+
+
+                 function can_click() {
+                     
+                 
+
+                  $('#zz').one('click',function () {
+                      clearTimeout(set_time)
+                        //重置deg
+                        deg=0
+                        //每次点击必须保证分子，分母是新鲜的。
+                        fetch(ur, {
+                        method: 'GET',
+                        })
+                        .then((res)=>{
+                        return res.json() 
+                        })
+                        .then((res)=>{
+                            cab= res.xf.data
+                            let ur5='/jd_mobile?order=zp_one_click&openid='+openid 
+                            fetch(ur5, {
+                            method: 'GET',
+                            })
+                            .then((res)=>{
+                            return res.json() 
+                            })
+                            .then((res)=>{
+
+                            }).then(()=>{
+
+                            
+
+
+
+                                
+                                // cab=JSON.parse(cab)
+                                const sui=   parseInt(Math.random()*cab.fenmu+1)
+                                console.log(cab)
+                                console.log(sui)
+                                //这是基于分母的随机数
+                                let fenzi=Number(cab.mu1)+Number(cab.mu2)+Number(cab.mu3)+Number(cab.mu4)+Number(cab.mu5)
+                                //所有分子的和
+                                // 如果sui<=cab.fenmu
+                                // 那么意味着奖品出现
+                                if(sui<=Number(cab.mu1)){
+                                        let n=36  //这是将决定转到谁
+                                            //开始运作  
+                                        have('mu1',n)
+                                }else if(sui<=Number(cab.mu2)+Number(cab.mu1)){
+                                        let n=108
+                                        have('mu2',n)    
+                                       
+                                }else if(sui<=Number(cab.mu3)+Number(cab.mu2)+Number(cab.mu1)){
+                                        let n=180
+                                        have('mu3',n) 
+                                       
+                                }else if(sui<=Number(cab.mu4)+Number(cab.mu3)+Number(cab.mu2)+Number(cab.mu1)){
+                                        let n=252
+                                        have('mu4',n) 
+                                        
+                                }else if(sui<=fenzi){
+                                        let n=324
+                                        have('mu5',n)
+                                       
+                                }else{
+                                        time(0)
+                                        setTimeout(function () {
+                                            $('#cake').html('很遗憾'+'<%- nickname%>'+'，去参与其它的活动吧~')
+                                        },6000)
+                                       
+                                }
+
+                                //如果有人中奖了，那么库存就要减去一个
+                                function have(name,n) {
+                                    let data=name
+                                    let ur2='/jd_mobile?order=xf_zp_minus&uu='+data
+                                    fetch(ur2, {
+                                    method: 'GET',
+                                    })
+                                    .then((res)=>{
+                                           return res.text() 
+                                    }).then((res)=>{
+                                        time(n)
+                                    }).then(()=>{
+                                       
+                                        let ur3='/jd_mobile?order=zp_save_cake&openid='+openid+'&cake='+name
+                                        fetch(ur3, {
+                                        method: 'GET',
+                                        })
+                                        .then((res)=>{
+                                            return res.text() 
+                                        })
+                                        .then((res)=>{
+                                            if(name=='mu1'){
+                                                let nickname='<%- nickname%>'
+                                        $('#cake').html('恭喜'+nickname+"中了1688元现金大奖。"+"<br>"+"中奖号是:"+'<%- openid%>')
+                                            }else if(name=='mu2'){
+                                                let nickname='<%- nickname%>'
+                                        $('#cake').html('恭喜'+nickname+"中了100元现金大奖。"+"<br>"+"中奖号是:"+'<%- openid%>')
+                                            }else if(name=='mu3'){
+                                                let nickname='<%- nickname%>'
+                                        $('#cake').html('恭喜'+nickname+"中了20元现金大奖。"+"<br>"+"中奖号是:"+'<%- openid%>')
+                                            }else if(name=='mu4'){
+                                                let nickname='<%- nickname%>'
+                                        $('#cake').html('恭喜'+nickname+"中了小夜灯一个。"+"<br>"+"中奖号是:"+'<%- openid%>')
+                                            }else if(name=='mu5'){
+                                                let nickname='<%- nickname%>'
+                                        $('#cake').html('恭喜'+nickname+"中了进口零食麻薯一份。"+"<br>"+"中奖号是:"+'<%- openid%>')
+                                            }
+                                        })
+
+
+
+                                       
+                                    })
+
+                                    
+                                    
+                                }
+
+                              })//then 3 end
+                            })//then 2 end
+                        
+
+                        
+                        function time(n) {
+                            $('#zp').css({"transform":"rotate("+deg+"deg)"})
+                            if(deg>-2160-n+18){
+                                deg-=2
+                                set_time= setTimeout(function(){time(n)},1)
+                            }
+                        }
+                    })//oneclick end
+                }//can click end
+
+              })
+              .catch(error => console.log('error is', error));
+
+
+
+
+
+
+
+
+
+
+
+})
+</script>

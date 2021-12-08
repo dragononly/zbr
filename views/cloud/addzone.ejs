@@ -1,0 +1,163 @@
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8"/>
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript" charset="utf-8"></script>
+        <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+	    <script type="text/javascript">
+	    	
+	     //这里是载入内存，被调用部分 	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    //载入内存结尾	
+	    	
+	    	
+	    	
+	    $(document).on("pagebeforecreate",function(event){
+
+    
+
+			
+			
+			      
+			
+			
+			
+		  
+		});//pagebeforecreate end; 
+		
+		
+		
+		
+		
+		
+		
+		
+		$(document).on("pagecreate",function(event){
+			
+
+                
+			$.ajax({
+				type:"get",
+				url:"get",
+				async:true,
+				dataType:'json',
+				data:{
+					'command':'getZone',
+					'name':sessionStorage.name
+				},
+				success:function  (d) {
+					var overplus=d.zonemax-d.zone
+				      
+					$('.max').html('最大'+parseInt(d.zonemax/1000000)+'MB')
+					$('.overplus').html('剩余'+parseInt(overplus/1000000)+'MB')
+				},
+				error:function  (e) {
+					
+				}
+			});
+			
+			
+			
+			$('.add').click(function  () {
+				
+				
+				var num=parseInt($('.number').val())
+				    if(isNaN(num)){
+				    	alert('必须输入数字')
+				    }else{
+				    	
+				    	
+				    	$.ajax({
+						type:"get",
+						url:"get",
+						async:true,
+						dataType:'json',
+						data:{
+							'command':'addZone',
+							'name':sessionStorage.name,
+							'val':num
+						},
+						success:function  (d) {
+							location.reload()
+						},
+						error:function  (e) {
+							
+						}
+					});
+				    	
+				    	
+				    	
+				    	
+				    }
+				
+				
+			})
+			
+			
+			
+			
+			
+			
+			
+		 
+		});//pagecreate end 
+		
+		
+		
+		
+		
+		
+		
+		$(document).on("pageinit",function(event){
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		  
+		});//pageinit end
+	    </script>
+	
+	</head>
+	<body>
+		<div data-role="page" id="pageone" data-theme="a">
+  <div data-role="header">
+    
+  </div>
+
+  <div data-role="content">
+   <div style="width: 250px;margin: auto;margin-top: 100px;margin-bottom: 100px;font-family: '华文彩云';font-size: 20px;">
+         <div class="max">最大</div>
+         <div class="overplus">剩余</div>
+        <input type="text" type="number" class="number" maxlength="5"/>
+     <input type="button" name="" id="" value="增加" class="add"/>
+     <input type="button" value="返回" class="goback"/>
+     <script type="text/javascript">
+     	$('.goback').click(function  () {
+     		
+     		window.history.go(-1);
+     		
+     		
+     	})
+     	
+     </script>
+   </div>
+  </div>
+
+  <div data-role="footer">
+    
+  </div>
+</div> 
+	</body>
+</html>

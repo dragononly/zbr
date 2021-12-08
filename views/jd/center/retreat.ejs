@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+<style type="text/css">
+	#collect>a{
+		display: block;
+		width: 200px;
+		height: 220px;
+		background: gold;
+		float: left;
+		margin-right: 10px;
+		margin-top: 10px;
+		
+	}
+	#collect>a>div:nth-child(4)>button{float: right;}
+	#collect>a>img:nth-child(1){height: 130px;}
+    .card{width: 800px;font-size: 12px;font-family: "微软雅黑";margin-bottom: 20px;}
+    .card_span{margin-right: 20px;}
+    .card_img{width: 140px;}
+    .card-body>div{float: left;margin-right: 20px;}
+    .card-body>div:nth-child(2){width: 140px;}
+</style>
+
+</head>
+
+
+<body>
+	
+   <% include ../header %>
+		<nav class="navbar navbar-expand-sm bg-danger navbar-dark" style="position: relative;">	
+			<div style="margin-left:50%;">
+		  <form class="form-inline">
+		    <input class="form-control" type="text" placeholder="您喜欢的宝贝" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		  </form>
+		  </div>
+		</nav>
+		
+	
+	
+<div class="container-fluid" style="margin-top: 20px;margin-left: 100px;margin-bottom: 200px;">
+ 
+  <div class="row">
+    <div class="col-sm-3" >
+    <div class="list-group">
+	    <a href="/jd/shop" class="list-group-item list-group-item-light">我的购物车</a>
+	    <a href="/jd/ucenter" class="list-group-item list-group-item-light">我的订单</a>
+	    <a href="/jd/collect" class="list-group-item list-group-item-light">我的收藏</a>
+	    <a href="/jd/favourable" class="list-group-item list-group-item-light">我的优惠信息</a>
+	    <a href="/jd/evaluate" class="list-group-item list-group-item-light">评价管理</a>
+	    <a href="/jd/retreat" class="list-group-item list-group-item-light bg-info text-white">退款维权</a>
+   </div>
+   
+   
+    
+    </div>
+    
+    
+    <div class="col-sm-9" >
+        <div style="margin-bottom: 20px;" >
+		 <button type="button" class="btn btn-danger">退款中</button>
+		 <button type="button" class="btn btn-success">退款成功</button>
+		</div>
+		
+		
+	    <div id="box">
+	    	
+	    </div>
+
+		
+		
+		
+    </div><!--栅栏sm总9end-->
+    
+    
+    
+  </div><!--row end!!!-->
+   <% include ../advert/advert1 %>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+		
+
+    <script type="text/babel">
+
+	var HelloMessage = React.createClass({
+    render: function() {
+    	
+    	{
+    	var items = [];
+        for (var i = 0; i < 3; i++) {
+        	items.push(
+        	<div className="card">
+        	<div className="card-header">
+        	<span className='card_span'>订单编号：148021812499907361</span>
+        	<span className='card_span'>退款编号：8513212563906173</span>
+        	<a href="#" className='card_span'>卖家店铺名</a>
+	        	</div>
+		        	<div className="card-body">
+		        	      <div>
+		        	         <img className='card_img' src={'../../cloud/jd/轮播/现用/6.jpg'}/>	
+		        	      </div>
+		        	      <div>
+		        	         曼牌机油滤芯W67/1适配日产骐达轩逸阳光奇骏森林人科雷傲马3机滤
+		        	      </div>
+		        	      <div>
+		        	         ￥{i}
+		        	      </div>
+		        	      <div>
+		        	         2018-04-13 21:37:03
+		        	      </div>
+		        	      <div>
+		        	         退货退款
+		        	      </div>
+		        	      <div>
+		        	        <div>待商家收货</div>
+                            <div>还剩6天6时22分</div>
+		        	      </div>
+		        	      <a href="/jd/detail">
+		        	          服务详情
+		        	      </a>
+		        	</div>
+	        	</div>);//push end!!!
+            }//for end~~~~~
+        }//{}end~~~~
+    	
+        return (
+            <div>
+                {items}
+            </div>
+               )	   
+		
+  }
+ });
+ 
+ 
+    ReactDOM.render(
+    <HelloMessage />,
+   $('#box')[0]
+    );
+    
+
+ 
+
+
+
+    </script>
+		
+		
+		
+		
+		
+		
+		
+		
+   <% include ../foot %>	
+</body>
+</html>

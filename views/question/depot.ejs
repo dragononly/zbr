@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+
+<body >
+
+
+	
+	
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content">
+      
+      <div style="text-align: center;">题目录入系统！</div>
+      <input type="text" name=""  value="" placeholder="请输入店铺名称" id="store_name"/>
+     <div id="pointer">
+       	
+	      <input type="text" name=""  value="" placeholder="请输入问题？" />
+	      <input type="text" name=""  value="" placeholder="请输入答案1" />
+	      <input type="text" name=""  value="" placeholder="请输入答案2" />
+	      <input type="text" name=""  value="" placeholder="请输入答案3" />
+	      <input type="text" name=""  value="" placeholder="请输入答案4" />
+	      
+	      
+	      <select name="" id="select">
+	      	<option value="0" selected="selected">请选择一项正确的答案</option>
+	      	<option value="1">答案1</option>
+	      	<option value="2">答案2</option>
+	      	<option value="3">答案3</option>
+	      	<option value="4">答案4</option>
+	      </select>
+	      
+	      <input type="button" name="" value="提交" />
+      </div> 
+      
+      
+     
+      
+
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+  <script type="text/javascript">
+  	$(function  () {
+  		
+  		
+  		
+  		
+  		
+  	   $("#pointer input[type='button']").click(function  () {
+  	   	
+  	   	let data=[]
+  	   	    for (var i = 0; i < 5; i++) {
+  	   	    	data[i]=$("#pointer input[type='text']").eq(i).val()
+  	   	    }
+  	   	    data[5]=$('#select').val()
+  	   	    
+  	    let store=$('#store_name').val()
+  	    
+  	        if($('#select').val()==0){
+  	        	alert('您还没有选择一个选项，作为正确的答案。')
+  	        	return
+  	        }
+  	
+					fetch('/question/depot_add?data='+data+'&store='+store, {
+					    method: 'GET',
+					    headers: new Headers({
+					      'Accept': 'application/json' 
+					    })
+					  })
+					  .then((res)=>{
+					    return res.json() 
+					  })
+					  .then((res)=>{
+					    if(res==true){
+					    	alert('提交成功！')
+					    }
+					  })
+			
+			  })
+  		
+	
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  	})
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  
+  	
+  	
+  	
+  	
+
+  	
+  </script>
+  
+  
+  
+</div>
+
+</html>
+</body>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+<body >
+
+<div data-role="page" data-theme="a" class=" ui-shadow" style="background: url(../images/question/b.jpg);background-size:100%;repeat no-repeat">
+
+  <div data-role="header">
+   
+  </div>
+
+   <div data-role="main" class="ui-content">
+   	    
+   	    <div id="rule" style="display: none;text-align:center;width:80%;background: #fff;padding: 15px;border:20px;position: fixed;top: 15%;left: 0;right: 0;z-index: 2;margin: auto;">
+   	    	
+   	    	答题规则：1.每个二维码有回答六道答题机会，答完失效。
+   	    	<br />
+					2.总共六道答题，答对一题将会获得现金券一张，答错没有。<br />
+					3.回答完所有答题，可以在我的奖金中查看中奖记录，现金券可以在门店当现金使用，但不能兑现金。<br />
+					4.最终解释权归门店所有
+					<br />
+					<div id="rule_hide" style="width: 80%;background: #444444;margin: auto;margin-top: 20px;border-radius:10px ;padding: 5px;"> 
+						<img src="../images/question/up.png" width="40px"/>
+					</div>
+            
+            
+            <script type="text/javascript">
+            	$(function  () {
+            		
+            		$('#rule_show').on('click',function  () {
+            			
+            			       $('#rule').show()
+            			
+            		})
+            		
+            		$('#rule_hide').on('click',function  () {
+            			
+            			       $('#rule').hide()
+            			
+            		})
+            		
+            		
+            		
+            	})
+            </script>
+   	    </div>
+   	
+   	
+   	    <div style="width: 60%;margin: auto;top:15%;position: fixed;left: 0;right: 0;text-align: center;">
+             <a href="#" target="_top" id="rule_show"><img src="../images/question/rule.png" width="130px"/></a>
+	    	</div>
+        <div style="width: 60%;margin: auto;top: 35%;position: fixed;left: 0;right: 0;text-align: center;">
+             <a href="#" target="_top" id="start_game"><img src="../images/question/start.png" width="250px"/></a>
+	    	</div>
+	    	
+        <div style="width: 60%;margin: auto;bottom: 5%;position: fixed;left: 0;right: 0;text-align: center;">
+        	
+        <a href="card?data=<%- data%>" target="_top"><img src="../images/question/cake.png" width="250px"/></a>
+        
+		</div>
+      
+     
+		   
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+</div>
+
+
+<script type="text/javascript">
+	$(function  () {
+		
+		
+		localStorage.store='<%- data%>'
+		
+		localStorage.minpoo_url=location.href
+		let minpoo_key=location.href.split('key=')[1]
+		let save,signal;
+
+//localStorage.minpoo_key='1520588374501'
+     if(localStorage.minpoo_key){
+     	    
+     	    save=localStorage.minpoo_key.split(',')
+               save_l=save.length
+
+         
+     	         for (let i = 0; i < save_l; i++) {
+
+     	         	        if(save[i]==minpoo_key){
+     	         	        	     signal=false
+     	         	            
+     	         	               break
+     	         	        }
+     	         	        
+     	         }
+     	         
+     	         if(signal==false){
+     	         	  
+     	         	//  cab(signal)
+     	         	
+     	         }else{
+     	         	
+     	         	signal=true
+     	         	 // cab(signal)
+     	         	 jisuan(save)
+     	         }
+     	         
+     	    
+     	     function jisuan (save) {
+     	     	
+     	     	save[save.length]=minpoo_key
+  	       	save=save.toString()
+          	localStorage.minpoo_key=save
+     	     }
+
+     }else{
+         	localStorage.minpoo_key=minpoo_key
+     }
+
+			
+				$('#start_game').on('click',function  () {
+
+
+					 if(signal==true){
+
+					 	   window.location.href='starting?data=<%- data%>'
+					 }else{
+					 
+					 	alert('该二维码已经使用过')
+					 	
+					 }
+
+			     if(localStorage.card){}else{localStorage.card=null}
+					
+					
+				})
+
+
+
+		
+		
+	})//end！
+</script>
+</html>
+</body>

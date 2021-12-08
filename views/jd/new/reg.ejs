@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+ <script src="https://cdn.bootcss.com/js-sha1/0.6.0/sha1.min.js"></script>
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<script type="text/javascript">
+	$(function  () {
+		
+		 //start
+		 
+		 //按钮读秒事件
+		 read_button()
+		
+		 //手机号正则判断 await
+		 //regz
+		 
+		 //常规前端拦截
+		 //reg_common()
+		 
+		 //后台获取验证码 await 
+		 //get_code()
+		 
+		 
+	    //reg 常规阻止
+	    reg_event2()
+
+function reg_event2 () {
+	
+	
+	$('#reg').on('click',function  () {
+			if($('#user').val()=="" || $('#pwd').val()=="" || $('#pwd2').val()=="" || $('#phone').val()=="" || $('#code').val()==""){
+			     		alert('所有项，都不能填空')
+			     		return
+			     	}
+	})
+	
+			     	
+}
+
+
+
+function get_code () {
+
+            let data={};
+     	    data.phone=$('#phone').val()
+     	    data=JSON.stringify(data)
+     	let ur='/jd/reg_code?data='+data;    
+     	    ur=encodeURI(ur)
+     	    
+          	fetch(ur, {
+				 method: 'GET',
+				})
+				.then((res)=>{
+				return res.json() 
+				})
+				.then((res)=>{
+					
+					reg_common(res)
+					
+					
+                })
+
+
+}
+
+
+
+
+
+
+
+
+function reg_common (code) {
+	
+		    //reg event    
+			     $('#reg').on('click',function  () {
+			     	
+			     	
+			     	if($('#pwd').val()!=$('#pwd2').val()){
+			     		alert('两次密码不一致') 
+			     		return
+			     	}
+			     	
+			     	let data={};
+			     	    data.user=$('#user').val()
+			     	    data.password=sha1($('#pwd').val())
+			     	    data.phone=$('#phone').val()
+			     	    data=JSON.stringify(data)
+			     	  
+			     	  
+			     	
+			     	if(code==$('#code').val()){
+			     		reg_one()
+			     	}
+			     	
+			     	function reg_one(){
+			     		
+			     		    	fetch('/jd/reg_user?data='+data, {
+								 method: 'GET',
+								})
+								.then((res)=>{
+								return res.json() 
+								})
+								.then((res)=>{
+								if(res==true){
+									alert('恭喜，注册成功！')
+									location.href='/jd/login'
+								}else if(res==3){
+									alert('账号已经存在')
+								}else if(res==4){
+									alert('手机号已经被注册')
+								}else{
+									console.log(res)
+									alert('其他错误')
+								}
+						        		   
+						        })
+			     	}
+			     	
+			     	
+			 
+			   	
+			  })//reg click end！！！！
+	
+}
+
+
+
+
+
+function regz () {
+		var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;  
+          if (!myreg.test($('#phone').val())) {  
+              return false;  
+          } else {  
+              return true;  
+          }  
+}
+	
+	
+function  read_button() {
+	
+		let n=60
+    	function sub_time () {
+    		if(n<=0){
+	  			$('#huo').attr('disabled',false)
+	  			$('#huo').html('获取验证码')
+	  		}else{
+	  			$('#huo').html(n+'秒后再次获取')
+	  			setTimeout(sub_time,1000)
+	  			n--
+	  		}
+    	}
+    	
+	  	$('#huo').click(function  () {
+	  		n=60
+	  		
+	  		if(regz()){
+	  			       get_code()
+	  			       sub_time()
+	  		           $(this).attr('disabled',true)  
+	  		}else{
+	  			alert('不是有效的手机号')
+	  		}
+            
+            
+            
+	  	})	
+}
+	
+  
+
+        
+        
+        
+        
+        
+})//function end!!!!
+  
+
+	
+</script>
+  
+</head>
+
+
+<body>
+<div class="container">	
+	
+	<div style="font-family: '华文彩云';font-size: 30px;margin-left: 20%;">欢迎注册</div>
+	
+	<form style="width: 80%;margin: auto;margin-bottom: 10%;">
+	  <div class="form-group">
+	    <label for="user">账号:</label>
+	    <input type="text" class="form-control" id="user" placeholder="请输入账号">
+	  </div>
+	  <div class="form-group">
+	    <label for="pwd">密码:</label>
+	    <input type="password" class="form-control" id="pwd" placeholder="请输入密码">
+	  </div>
+	  <div class="form-group">
+	    <label for="pwd2">密码:</label>
+	    <input type="password" class="form-control" id="pwd2" placeholder="请再次输入密码">
+	  </div>
+	  <div class="form-group">
+	    <label for="pwd2">手机号:</label>
+	    <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
+	  </div>
+	  <div class="form-group">
+	    <label for="pwd2">验证码:</label>
+	    <input type="text" class="form-control" id="code" placeholder="验证码">
+	  </div>
+
+	  <button type="button" class="btn btn-primary" id="huo">获取验证码</button>
+	  <button type="button" class="btn btn-primary" id="reg">注册</button>
+	</form>
+
+
+
+
+
+
+</div>
+</body>
+</html>
+
+

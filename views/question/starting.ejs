@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+  <script type="text/javascript">
+  	 //防止页面后退
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+  </script>
+</head>
+
+
+<body >
+
+<div data-role="page" data-theme="a" class=" ui-shadow" style="background: url(../images/question/b.jpg);background-size:100%;repeat no-repeat">
+	
+	
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content">
+      
+      <div id="qu" style="margin-top:40px;margin-bottom:40px;text-align: center;">1.你吃过最好吃的是什么啊？</div>
+      
+      
+      
+      <div style="width: 90%;margin: auto;text-align: center;">
+      	
+      	<a href="#" data-transition="flip" data-role="button" class="se"></a>
+      	<a href="#" data-transition="flip" data-role="button" class="se"></a>
+      	<a href="#" data-transition="flip" data-role="button" class="se"></a>
+      	<a href="#" data-transition="flip" data-role="button" class="se"></a>
+
+      	<a href="#" data-transition="flip" data-role="button" id="sub" style="margin-top: 30px;">确定</a>
+      	
+      	 <div style="text-align: center;font-size: 60px;color:darkred;display: none;" id="ask" >x</div>
+           <div style="margin-top: 30%;">
+           <a href="card?data=<%- data%>" data-transition="flip" data-role="button" target="_top">我的卡券</a>
+           </div>
+      </div>
+      
+     
+   </div>
+  
+
+   
+    
+  
+   <div data-role="footer" data-position="fixed">
+ 
+   </div>
+    </div>
+
+  
+  
+  <script type="text/javascript">
+  	$(function  () {
+  	
+  	let cab=null,data,data_all,n=0,store='<%- data%>',topic_n=-1,once=0;
+        
+    
+		fetch('/question/depot_get?store='+store, {
+		    method: 'GET',
+
+		  })
+		  .then((res)=>{
+		    return res.json() 
+		  })
+		  .then((res)=>{
+
+  	data_all=res
+		data =data_all[n].data[0].split(',')
+		
+		$('#qu').html(data[0])
+		  
+		
+		for (var i = 0; i < $('.se').length; i++) {
+			
+			
+			$('.se').eq(i).html(data[i+1])
+			
+		}
+   
+		})
+		.then(()=>{
+			
+			$('.se').on('click',function  () {
+				  $('.se').css({'background':'#fff','color':'black'})
+				  
+				  $(this).css({'background':'goldenrod','color':'#fff'})
+			    cab=$(this).index()+1
+			    
+			})
+			
+			
+			
+
+			
+			$('#sub').on('click',function  () {				
+				
+				
+			  
+			 if(once==0){
+			 	
+			   
+				if(cab==null){
+					alert('必须选择一个选项.')
+					return
+				}
+				
+				if(topic_n<5){
+					topic_n++
+				}else{
+					return
+				}
+				
+				
+				if(data[data.length-1]==cab && topic_n<=5){
+					
+								once++
+								fetch('/question/card_get?store='+store, {
+						    method: 'GET',
+							  })
+							  .then((res)=>{
+							    return res.json() 
+							  })
+							  .then((res)=>{
+
+							  	alert('恭喜您回答正确，赠送您一张现金券。在我的卡券包中使用。')
+									
+                  
+                   let newadd=res[topic_n].data[0]
+								  
+								  
+								
+								  let save=localStorage.card.split(',')
+								      save[save.length]=newadd
+								      save=save.join(',')
+								      localStorage.card=save
+      
+								      next_question()
+
+							  })
+								
+
+					
+					
+				}else{
+
+	$('#ask').show()
+			 	next_question()
+
+			
+				}
+				
+				
+			 }else{
+			 	$('#ask').show()
+			 	next_question()
+			 }
+			})
+
+		})
+
+     
+     			function  next_question() {
+     				once=0
+     				$('.se').css({'background':'#fff','color':'black'})
+								setTimeout(function  () {
+						$('#ask').hide()
+						if(n<data_all.length-1){
+							n++
+						}else{
+							
+							
+										//同步相关数据到数据库
+										{
+											let data_card=localStorage.card,
+											    data_card_user=localStorage.card_use,
+											    store=localStorage.store;
+										
+											    
+											fetch('/question/card_user_save?data_card='+data_card+'&data_card_user='+data_card_user+'&store='+store, {
+														    method: 'GET',
+															  })
+															  .then((res)=>{
+															    return res.json() 
+															  })
+															  .then((res)=>{
+															        console.log('已经同步数据至数据库')
+															        window.location.href='card?data=<%- data%>'
+															  })
+											  
+										  		
+										} 
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+						}
+						data=data_all[n].data[0].split(',')
+						$('#qu').html(data[0])
+
+		        for (var i = 0; i < $('.se').length; i++) {
+
+						$('.se').eq(i).html(data[i+1])
+						
+					  }
+					},1000)
+
+				}	
+
+     
+     
+     
+			})
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+  
+  
+  
+</div>
+
+</html>
+</body>

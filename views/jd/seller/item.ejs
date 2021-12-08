@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>宝贝页面</title>
+<style type="text/css">
+    #show_shop{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+    body{overflow-y:scroll;}
+	#for_brand .col{text-overflow: ellipsis;white-space: nowrap;}
+	#for_brand a{display: block;float: left;width: 90px;margin-right: 5px;height: 20px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-bottom: 5px;margin-right: 20px;}
+    #for_brand>div>div{height: 50px;margin-bottom: 5px;}
+    #chenghang>img{display: block;margin: auto;}
+    #ware_size>span:hover,#color>span:hover{cursor: pointer;border: 1px solid red;}
+		#collect_store,#in_store{color: #fff}
+		#collect_store,#collect_baby:hover,#in_store{cursor: pointer;}
+</style>
+
+
+<script type="text/javascript">
+$(function  () {
+//start
+start()
+
+//global 
+let cab;
+
+function start () {
+	
+	let data={};
+	let ware_id=location.href.split('data=')[1].split('&')[0]
+	data.ware_id=ware_id
+	data=JSON.stringify(data)
+	let ur='/jd_index?order=want_ware_message&data='+data;    
+	ur=encodeURI(ur)
+		
+fetch(ur,{
+		    method: 'GET',
+				})
+.then((res)=>{
+			return res.json() 
+				})
+.then((res)=>{
+
+cab=res
+$('#kucun').val(cab.information.size_number[0])
+	                new Vue({
+							  el: '#vue_ware_left',
+							  data: {
+							    res
+							  }
+					})
+
+
+					new Vue({
+							  el: '#vue_left_img',
+							  data: {
+							    res
+							  }
+					})
+			})
+
+
+			
+
+   
+
+
+
+.then(()=>{
+	
+	//遍历徽章
+	for (const i of cab.information.hz) {
+		$('#hz').append('<span class="badge badge-danger" style="margin-right:2px;">'+i+'</span>')
+	}
+   
+    let size= Array.from(new Set(cab.information.size));
+	
+	for (const i of size) {
+		$('#ware_size').append('<span style="margin-right:3px;display: inline-block;border:1px solid #aba5a1;padding:0 5px;">'+i+'</span>')
+	}
+	
+	let color=Array.from(new Set(cab.information.color));
+	
+	for (const i of color) {
+		$('#color').append('<span style="margin-right:3px;display: inline-block;border:1px solid #aba5a1;padding:0 5px;">'+i+'</span>')
+	}
+		
+	
+	////宝贝详情页的图加载
+	for (const i of cab.information.imgb) {
+		$('#chenghang').append('<img src='+i+' style="width: 70%;"/>')
+	}
+	
+		
+	
+	
+})
+
+.then(()=>{
+	
+	//选中综合报价事件
+	let new_arr=[]
+	$('#ware_size>span').on('click',function  () {
+		$('#ware_size>span').css('border','1px solid #aba5a1')
+		$(this).css('border','2px solid red')
+		let i_val=$(this).html()
+		$('#color').empty()
+        new_arr=[]
+		for (let i=0; i < cab.information.size.length; i++) {
+			if(i_val==cab.information.size[i]){
+
+				$('#color').append('<span style="margin-right:3px;display: inline-block;border:1px solid #aba5a1;padding:0 5px;">'+cab.information.color[i]+'</span>')
+                 
+                 new_arr.push(i)
+               
+				}
+		}
+		
+//		console.log(new_arr)
+		
+	    $('#color>span').on('click',function  () {
+			$('#color>span').css('border','1px solid #aba5a1')
+			$(this).css('border','2px solid red')
+			let i2_val=$(this).html()
+				for (let i = 0; i < new_arr.length; i++) {
+					if(i2_val==cab.information.color[new_arr[i]]){
+
+					    $('#kucun').val(cab.information.size_number[new_arr[i]])
+					    $('#ware_price').html('￥'+cab.information.size_price[new_arr[i]])
+					    
+					}
+					
+				}
+			
+			
+		})
+	    
+	})
+
+
+	
+
+	
+	
+})
+.then(()=>{
+	
+	//左边切换商品图
+	  		$('#qiehuantu>img').click(function  () {
+	  			let src=this.src
+	  			$('#qiewotu')[0].src=src
+	  		})
+	  		
+	//获取商家部分的信息
+	let data={};
+	data.user=cab.user
+	data=JSON.stringify(data)
+	let ur='/jd_index?order=gain_store_message&data='+data;    
+	ur=encodeURI(ur)	
+	fetch(ur, {
+					 method: 'GET',
+					})
+					.then((res)=>{
+					return res.json() 
+					})
+					.then((res)=>{
+					  
+					      	new Vue({
+							  el: '#vue_store',
+							  data: {
+							  res
+							  }
+							})
+
+
+							new Vue({
+							  el: '#show_master',
+							  data: {
+							  cab
+							  }
+							})
+                            
+                            
+					      
+					})
+
+})
+.then(()=>{
+	//收藏宝贝
+	$('#collect_baby').on('click',function () {
+	  let data={};
+	  data.user='<%- user%>'
+	  data.id=cab._id
+      data=JSON.stringify(data)
+      let ur='/jd_index?order=collect_baby&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+							 
+								if(sessionStorage.user==undefined){return alert('请先登录')}
+                alert('收藏成功')
+              })
+              .catch(error => console.log('error is', error));
+	})
+
+
+
+		//收藏店铺
+		$('#collect_store').on('click',function () {
+	  let data={};
+	  data.user='<%- user%>'
+		data.store=cab.user
+    data=JSON.stringify(data)
+      let ur='/jd_index?order=collect_store&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+								
+								if(sessionStorage.user==undefined){return alert('请先登录')}
+                alert('收藏成功')
+              })
+              .catch(error => console.log('error is', error));
+	})
+
+
+
+	//进入店铺
+	$('#in_store').on('click',function () {
+		location.href='/jd/user_store?order=his&user='+cab.user
+	})
+
+
+
+	
+
+	
+})//then end
+
+	
+}//start
+})//$
+</script>
+
+</head>
+<body>
+	
+   <% include ../header %>
+
+   		<nav class="navbar navbar-expand-sm  navbar-dark" style="position: relative;">	
+   			
+   			<div class="row" style="margin: auto;margin-top: 20px;">
+			  <div class="class=col-sm-8">
+				  <form class="form-inline">
+				    <input class="form-control" type="text" placeholder="搜索" style="width:400px;">
+				    <button class="btn btn-danger" type="button">搜索</button>
+				  </form>
+			  </div>
+			  <div class="class=col-sm-4" style="padding-left: 30px;">
+			  	<button type="button" class="btn btn-danger" id="wodegouwuche">
+				  我的购物车<span class="badge badge-light">4</span>
+				</button>
+			
+			  </div>
+			 
+			</div>
+			
+		
+		</nav>
+		
+   
+   
+   
+   <div class="container" style="margin-top: 1%;">
+   	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+	  <!-- Brand -->
+	  <a class="navbar-brand" href="/jd/user_store" >Logo</a>
+	 
+	  <!-- Links -->
+	  <ul class="navbar-nav">
+	    <div class="dropdown">
+		  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+		    所有分类
+		  </button>
+		  <div class="dropdown-menu">
+		    <a class="dropdown-item" href="/jd/user_store">阿玛尼</a>
+		    <a class="dropdown-item" href="/jd/user_store">赠品区</a>
+		    <a class="dropdown-item" href="/jd/user_store">折扣区</a>
+		    <a class="dropdown-item" href="/jd/user_store">拉夫劳斯</a>
+		    <a class="dropdown-item" href="/jd/user_store">男鞋</a>
+		    <a class="dropdown-item" href="/jd/user_store">女鞋</a>
+		    <a class="dropdown-item" href="/jd/user_store">韩国代购</a>
+		  </div>
+		</div>
+	    <li class="nav-item">
+	      <a class="nav-link" href="/jd/user_store">有好货</a>
+	    </li>
+	 
+	    <!-- Dropdown -->
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="/jd/user_store" id="navbardrop" data-toggle="dropdown">
+	                品质折扣节
+	      </a>
+	      <div class="dropdown-menu">
+	        <a class="dropdown-item" href="/jd/user_store">3折</a>
+	        <a class="dropdown-item" href="/jd/user_store">5折</a>
+	        <a class="dropdown-item" href="/jd/user_store">8折</a>
+	      </div>
+	    </li>
+	  </ul>
+	</nav><!--nav 2-->
+
+    <div class="row" style="margin-top: 20px;position: relative;" >
+	  <div class="col-sm-4" style="padding: 10px;" id="vue_left_img">
+	  	<div><img :src="res.information.imga1" width="300px" height="300px" id="qiewotu"/></div>
+	  	<div id="qiehuantu">
+	  		<img :src="res.information.imga1" alt=""  style="width:50px;margin-left: 10px;"/>
+	  		<img :src="res.information.imga2" alt="" style="width: 50px;margin-left: 10px;"/>
+	  		<img :src="res.information.imga3" alt="" style="width: 50px;margin-left: 10px;"/>
+	  		<img :src="res.information.imga4" alt="" style="width: 50px;margin-left: 10px;"/>
+	  		<img :src="res.information.imga5" alt="" style="width: 50px;margin-left: 10px;"/>
+	  	</div>
+
+	  	<div style="font-size: 13px;padding-top: 10px;padding-left: 10px;">
+			  <span>⭐</span>
+			  <span id="collect_baby">收藏宝贝（人气）</span>
+		</div>
+	  </div>
+	  
+	  <div class="col-sm-4" id="vue_ware_left">
+	  	<div><span class="badge badge-success">良品</span>{{res.information.name}}</div>
+	    
+	    <div id="hz">
+	    	
+	    
+
+	    </div>
+	    
+	    <div style="background: #fff2e8;margin-top: 20px;">
+	    	<span style="color: #ff4400;font-size: 40px;font-weight: bold;margin-left: 10px;" id="ware_price">￥{{res.information.price}}</span>
+	    	<span style="color:#885505;margin-left: 100px;" >运费￥{{res.information.ems}}</span>
+	    </div>
+	    <div style="margin-top: 20px;">
+	    	<span style="font-size: 14px;margin-right: 20px;display: inline-block;width: 60px;">尺寸</span>
+	    	<span id="ware_size">
+	    	 
+            </span>
+	    </div>
+	    
+	    <div style="margin-top: 20px;">
+	    	<span style="font-size: 14px;margin-right: 20px;display: inline-block;width: 60px;">颜色分类</span>
+	    	<span id="color">
+	        </span>
+	    </div>
+	    
+	    <div style="margin-top: 20px;">
+	    	<div class="form-inline">
+	    		<span style="margin-right: 20px;display: inline-block;width: 60px;">数量</span>
+	    		<!--<button  type="button" class="btn btn-primary btn-sm zn_zeng">-</button>-->
+				<input type="number" value="1" class="form-control zn_zeng" style="width: 70px;">
+				<!--<button type="button" class="btn btn-primary btn-sm zn_zeng">+</button>-->
+			</div>
+	    </div>
+	    
+	    <div style="margin-top: 20px;">
+	    	<div class="form-inline">
+	    		<span style="margin-right: 20px;display: inline-block;width: 60px;">库存</span>
+				<input type="button" value="1" id="kucun" class="form-control" style="width: 50%;">
+			</div>
+	    </div>
+	    
+	    <div style="margin-top: 20px;">
+	    	  <button type="button" class="btn btn-outline-success">立即购买</button>
+	          <button type="button" class="btn btn-outline-info">加入购物车</button>
+		</div>
+	    
+	  </div>
+	  
+	  <div id="vue_store" class="col-sm-4" style="padding-left: 50px;font-size: 14px;border: 1px solid #ececec;padding-top: 50px;">
+	  	<!--<div style="text-align: center;"><span class="badge badge-success">7年老店</span></div><br />-->
+	  	<a href="#" >{{res.message.store_name}}</a>
+	  	<div style="margin-top: 10px;">信誉<span style="margin-left:3px;color:darkred;font-size: 20px;">♥</span></div>
+	  	<div style="margin-top: 10px;"><a href="/chat/free?name=<%- user %>&toname=东方叔叔" target="_blank">掌柜：{{res.user}}</a></div>
+	  	<div style="margin-top: 10px;">注册时间：<span>{{res.register_date}}</span>  <span class="badge badge-warning"></span></div>
+	    <div style="margin-top: 50px;background: red"> 
+		
+	    </div>
+			
+		
+		</div>
+		<div style="position: absolute;right: 100px;top:200px;">
+				<a class="btn btn-info" role="button" id="in_store">进入店铺</a>
+				<a  class="btn btn-info"  role="button" id="collect_store">收藏店铺</a>
+		</div>
+		
+	</div><!--row2-->
+
+    <div id="show_master" style="margin-top: 30px;text-align: center;">
+    	<ul class="pagination">
+		  <li class="page-item"><a class="page-link" >宝贝详情</a></li>
+		  <li class="page-item"><a class="page-link" href="#">累计评论</a></li>
+		</ul>
+		<div style="padding: 10px 200px;text-align: left;text-indent:25px">
+			{{cab.information.describe}}
+		</div>
+	  <div id="chenghang">
+	       
+	  </div>
+    </div>
+
+
+
+    
+   
+   </div><!--container end~-->
+<!-- <% include ../advert/advert1 %>-->
+
+   
+   <% include ../foot %>
+   
+
+</body>
+</html>
+	<script type="text/javascript">
+					$('#wodegouwuche').click(function  () {
+						location.href='/jd/shop'
+					})
+					
+				</script>

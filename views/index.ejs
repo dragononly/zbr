@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+ <script src="cdn/sha1.js"></script>
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+
+<body>
+
+<div data-role="page" data-theme="a" class=" ui-shadow">
+	<div data-role="panel" id="myPanel"> 
+    <h2>面板头部..</h2>
+    <p>面板内容..</p>
+  </div> 
+	
+	<style type="text/css">
+	.viewPage>a{width: 100px;line-height:100px;color:black;float:left;margin: auto;height: 100px;border: 1px solid #ececec;box-shadow: 10px 5px 10px skyblue;margin-top: 20px;margin-right:10px;display: block;text-align: center;"}
+    .viewPage>a:hover{color: red !important;cursor: pointer;}
+</style>
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content">
+      
+			
+         <form method="post" action="demo_form.php">
+					<div class="ui-field-contain" >
+					 <div style="width: 60%;margin: auto;"> <input type="search" name="search" id="search"></div>
+                      <div style="width: 60%;margin: auto;"><a href="#" class="ui-btn ui-btn-b ui-corner-all">搜索</a></div>
+					</div>
+		</form>
+		
+		
+		
+			
+				
+				
+		
+		  <div class="viewPage" style="width: 60%;margin: auto;">
+			<a href="jump?jump=cloud/login" class="view" data-role='none' data-transition="flip">
+				
+				云盘
+				
+		    </a>	
+		    
+		    <a href="jump?jump=tools/index" class="view" data-role='none' data-transition="flip">
+				
+				在线加密
+				
+		    </a>	
+		    
+		    <a class="view" data-role='none' >
+				
+				
+				
+		    </a>
+		    
+
+		</div>	
+		
+		
+		
+		   
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+</div>
+
+</html>
+</body>

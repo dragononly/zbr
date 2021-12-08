@@ -1,0 +1,77 @@
+{
+  "run_type": "server",
+  "local_addr": "0.0.0.0",
+  "local_port": 443,
+  "remote_addr": "127.0.0.1",
+  "remote_port": 80,
+  "log_level": 1,
+  "log_file": "/etc/trojan-go/test.log",
+  "password": [
+       "你的密码"
+  ],
+  "buffer_size": 32,
+  "dns": [],
+  "ssl": {
+    "verify": true,
+    "verify_hostname": true,
+      "cert": "/etc/trojan-go/server.crt",
+      "key": "/etc/trojan-go/server.key",
+    "key_password": "",
+    "cipher": "",
+    "cipher_tls13": "",
+    "curves": "",
+    "prefer_server_cipher": false, 
+    "sni": "你绑定的域名",
+    "alpn": [
+      "http/1.1"
+    ],
+    "session_ticket": true,
+    "reuse_session": true,
+    "plain_http_response": "",
+    "fallback_port": 1234,
+    "fingerprint": "firefox",
+    "serve_plain_text": false
+  },
+  "tcp": {
+    "no_delay": true,
+    "keep_alive": true,
+    "reuse_port": false,
+    "prefer_ipv4": false,
+    "fast_open": false,
+    "fast_open_qlen": 20
+  },
+  "mux": {
+    "enabled": true,
+    "concurrency": 8,
+    "idle_timeout": 60
+  },
+  "router": {
+    "enabled": false,
+    "bypass": [],
+    "proxy": [],
+    "block": [],
+    "default_policy": "proxy",
+    "domain_strategy": "as_is",
+    "geoip": "/etc/trojan-go/geoip.dat",
+    "geosite": "/etc/trojan-go/geosite.dat"
+  },
+  "websocket": {
+    "enabled": true,
+    "path": "/你的路径",
+    "hostname": "你绑定的域名",
+    "obfuscation_password": "",
+    "double_tls": true,
+    "ssl": {
+      "verify": true,
+      "verify_hostname": true,
+      "cert": "/etc/trojan-go/server.crt",
+      "key": "/etc/trojan-go/server.key",
+      "key_password": "",
+      "prefer_server_cipher": false,
+      "sni": "你绑定的域名",
+      "session_ticket": true,
+      "reuse_session": true,
+      "plain_http_response": ""
+    }
+  }
+}

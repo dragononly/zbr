@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+	#collect>a{display: block;width: 200px;height: 220px;background: gold;float: left;margin-right: 10px;margin-top: 10px;}
+	#collect>a>div:nth-child(4)>button{float: right;}
+	#collect>a>img:nth-child(1){height: 120px;}
+	.card>div>div{float: left;margin-right: 10px;}
+	.card>span:nth-child(2){font-size: 13px;}
+	.card>a:nth-child(3){font-size: 13px;}
+	.card>div{padding:10px;height:150px;font-size: 13px;border: 1px solid #c5c5c5;width: 800px;}
+	.card>div>div:nth-child(3){width:150px;margin-right: 30px;}
+	.card>div>div:nth-child(4)>div{text-decoration: line-through;color: #9c9c9c;}
+	.card>div>div:nth-child(5)>input:nth-child(1){width: 50px;}
+	.card>div>div:nth-child(6){color:#ff4400;font-weight: bold;}
+	.card>div>div:nth-child(7)>a{display: block;}
+</style>
+  <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+</head>
+
+
+<body>
+	
+   <% include ../header %>
+		<nav class="navbar navbar-expand-sm bg-danger navbar-dark" style="position: relative;">	
+			<div style="margin-left:50%;">
+		  <form class="form-inline">
+		    <input class="form-control" type="text" placeholder="您喜欢的宝贝" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		  </form>
+		  </div>
+		</nav>
+		
+	
+	
+<div class="container-fluid" style="margin-top: 20px;margin-left: 100px;margin-bottom: 200px;">
+ 
+  <div class="row">
+    <div class="col-sm-3" >
+    <div class="list-group">
+	     <a href="/jd/shop" class="list-group-item list-group-item-light bg-info text-white">我的购物车</a>
+	    <a href="/jd/ucenter" class="list-group-item list-group-item-light">我的订单</a>
+	    <a href="/jd/collect" class="list-group-item list-group-item-light">我的收藏</a>
+	    <a href="/jd/favourable" class="list-group-item list-group-item-light">我的优惠信息</a>
+	    <a href="/jd/evaluate" class="list-group-item list-group-item-light">评价管理</a>
+	    <a href="/jd/retreat" class="list-group-item list-group-item-light">退款维权</a>
+   </div>
+   
+   
+    
+    </div>
+    
+    
+    <div class="col-sm-9" >
+    	<!--收藏的宝贝搜索功能-->
+    	<form class="form-inline">
+		    <input class="form-control" type="text" placeholder="收藏的宝贝搜索" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		</form>
+        
+
+
+		
+		
+	    <div style="margin-top: 10px;font-size: 14px;font-family: '微软雅黑';">
+	    	<input class="all_select" type="checkbox" style="vertical-align:middle;"/>&nbsp;&nbsp;全选
+	    </div>
+
+		
+		<div id='box'></div>
+	
+		
+			<!-- 底部栏-->
+	    <div style="background: #ededed; width: 800px;height: 60px;padding: 10px;">
+	    	<input type="checkbox" class="all_select"/>
+	        <a style="margin-left: 20px;">全选</a>
+	        <a href="#" style="margin-left: 20px;">删除</a>
+	        <a href="#" style="margin-left: 20px;">移入收藏夹</a>
+	        <span style="margin-left: 20px;">已选商品<span style="color:#ff4400;font-weight: bold;">0</span>件</sapn>
+	        <span style="margin-left: 20px;">合计（不含运费）<span style="color:#ff4400;font-weight: bold;font-size: 20px;">0.00</span></span>
+	        <button style="margin-left: 20px;" type="button" class="btn btn-danger">结算</button>
+	    </div>
+    </div><!--栅栏sm总9end-->
+    
+   
+    
+    
+    
+  </div><!--row end!!!-->
+   <% include ../advert/advert1 %>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+<script type="text/babel">
+
+	var HelloMessage = React.createClass({
+    render: function() {
+    	var card= {
+           width:'800px',
+           marginBottom:'20px'
+        };
+        var fl={height:'40px',}
+    	{
+    	var items = [];
+        for (var i = 0; i < 3; i++) {
+        	items.push(
+        	  <div className="card" style={card}>
+        	   <div className="card-header" style={fl}>
+				<input type="checkbox" /> 
+				<span>店铺：芜湖金辰车务</span>
+				<a href="#">卖家联系名</a>
+			   </div>
+				<div>
+					<div><input type="checkbox"/></div>
+					<div><img width="200px" src="../../cloud/jd/轮播/现用/6.jpg"/></div>
+					<div><a href="#">芜湖汽车上牌 过户 转籍 迁出 二手车上牌转入</a><div>7❀正</div></div>
+					<div><div>￥899</div>￥500.00</div>
+					<div><input type="number" className='number'/></div>
+					<div>￥500.00</div>
+					<div>
+						<a href="#">移入收藏夹</a>
+						<a href="#">删除</a>
+					</div>
+				</div>
+		      </div>);
+            }//for end~~~~~
+        }//{}end~~~~
+    	
+        return (
+            <div>
+                {items}
+            </div>
+               )	   
+		
+  }
+ });
+ 
+ 
+    ReactDOM.render(
+    <HelloMessage />,
+   $('#box')[0]
+    );
+    
+    
+
+//我是最后执行的函数，为了设置标签最后的非样式属性
+	$(function  () {
+		
+		$('.number').attr({'max':'999','min':'0'})
+//      $('.card>div>div>div>input').oninput(function  () {
+//      	alert($(this).val())
+//      	//if(value.length>6)value=value.slice(0,3)
+//      
+//      })
+
+        $('.number').on("input",function(event){
+        	let value=$(this).val()
+        	console.log(value)
+            if(value.length>3){value=value.slice(0,3)
+                  $(this).val(value)
+            }
+        
+           });
+        
+       {
+       	let n=0
+        $('.all_select').click(function  () {
+         console.log(n)
+         if(n==0){
+         	
+        	$('.card').each(function  () {
+        		$(this).find('input').attr('checked',true)
+        		
+        	})
+        	n=1
+        	$('.all_select').attr('checked',true)
+          }else{
+          	
+          	$('.card').each(function  () {
+        		$(this).find('input').attr('checked',false)
+        		
+        	})
+          	n=0
+          	$('.all_select').attr('checked',false)
+          }
+         
+         
+        
+        })
+       }  
+	})
+
+ 
+
+
+
+    </script>
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+   <% include ../foot %>	
+</body>
+</html>

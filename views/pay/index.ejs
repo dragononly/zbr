@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title><%- title%></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div class="description">
+     
+	  <p><center><button id="test" class="button">点击支付</button></center></p>
+    </div>
+    <script id='spay-script' src='https://jspay.beecloud.cn/1/pay/jsbutton/returnscripts?appId=3a4b817c-0cb7-4f77-8611-6e31f45be82c'></script>
+  <script>
+  	let money=1;
+    document.getElementById("test").onclick = function() {
+    	
+
+        asyncPay();
+        
+    };
+    function bcPay() {
+    	var  out_trade_no = "<%- OutTradeNo%>";
+    	var sign = "<%- Sign%>";
+    	let amount="<%- amount%>"
+        /**
+         * click调用错误返回：默认行为console.log(err)
+         */
+        BC.err = function(data) {
+            //注册错误信息接受
+            alert(data["ERROR"]);
+        }
+        /**
+         * 3. 调用BC.click 接口传递参数
+         */
+        BC.click({
+            "title": "中文 node.js water",
+            "amount": amount,
+            "out_trade_no": out_trade_no, //唯一订单号
+            "sign" : sign,
+            /**
+             * optional 为自定义参数对象，目前只支持基本类型的key ＝》 value, 不支持嵌套对象；
+             * 回调时如果有optional则会传递给webhook地址，webhook的使用请查阅文档
+             */
+            "return_url":"http://www.cxcuu.com/pay/ok",
+            "optional": {"test": "willreturn"}
+        });
+
+    }
+    function asyncPay() {
+        if (typeof BC == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('beecloud:onready', bcPay, false);
+            }else if (document.attachEvent){
+                document.attachEvent('beecloud:onready', bcPay);
+            }
+        }else{
+            bcPay();
+        }
+    }
+    
+  </script>
+  </body>
+</html>

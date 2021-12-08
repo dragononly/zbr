@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+  <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+  <style type="text/css">
+  	*{margin: 0;padding: 0;}
+  	#left{float: left;width: 300px;background: #ececec;}
+  	#right{float: right;width: 900px;background: #ececec;}
+  	a{display: block;text-decoration: none;}
+  </style>
+</head>
+
+
+<body>
+	
+<div class="container-fluid">
+  <button type="button" class="btn btn-primary btn-block">后台管理模板</button>
+  <div class="row">
+    <div class="col-sm-2" style="background-color:lavender;">
+	    <div class="list-group" id="menu">
+		    <a href="#" class="list-group-item list-group-item-action">商品类目</a>
+		    <a href="#" class="list-group-item list-group-item-success">所有商品种类设置</a>
+		    <a href="#" class="list-group-item list-group-item-secondary">首页UI设置</a>
+		    <a href="#" class="list-group-item list-group-item-info">信息列表项</a>
+		    <a href="#" class="list-group-item list-group-item-warning">警告列表项</a>
+		    <a href="#" class="list-group-item list-group-item-danger">危险列表项</a>
+		    <a href="#" class="list-group-item list-group-item-primary">主要列表项</a>
+		    <a href="#" class="list-group-item list-group-item-dark">深灰色列表项</a>
+		    <a href="#" class="list-group-item list-group-item-light">浅色列表项</a>
+	    </div><!--list-group !!!!-->
+    </div><!--col-sm-2 !!!-->
+    <div class="col-sm-10" style="background-color:lavenderblush;">
+      <div>	
+    	<button type="button" class="btn btn-info">后台菜单展示</button>	
+			<div class="row">
+			  <div class="col">
+			  	<div class="form-group" id="first1">
+					  <label for="sel1">一级目录:</label>
+					  <select class="form-control grade1" id="grade1">
+					    <option v-for="i in grade1">{{i.grade1}}</option>
+					  </select>
+				  </div><!--form-group7-->
+			  </div><!--col 6-->
+			  <div class="col" id="level2">
+			  	 <div class="form-group">
+					  <label for="sel1">二级目录:</label>
+					  <select class="form-control grade2" id="grade2">
+
+					  </select>
+				  </div><!--form-group7-->
+			  </div><!--col 6-->
+			  <div class="col">
+			  	<div class="form-group">
+					  <label for="sel1">三级目录:</label>
+					  <select class="form-control grade3" id="grade3">
+
+					  </select>
+				  </div><!--form-group7-->
+			  </div><!--col 6-->
+			</div><!--row 5-->  
+            <button type="button" class="btn btn-info">创建信息</button>	
+            <div class="row">
+            	<div class="col">
+            		<div class="form-group">
+					  <label for="sel1" id="for_menu_input">一级目录:</label>
+					  <select class="form-control" id="menu_input">
+					    <option>一级目录</option>
+					    <option>二级目录</option>
+					    <option>三级目录</option>
+					  </select>
+		            </div><!--form-group5-->
+            	</div><!--col 4-->
+            	<div class="col" id="show1" style="display: none;">
+				  
+				</div><!--col 4-->
+				<div class="col" id="show2" style="display: none;">
+				  	<div class="form-group">
+						  <label for="sel1">二级目录:</label>
+						  <select class="form-control">
+						    <option ></option>
+						  </select>
+					  </div><!--form-group5-->
+				</div><!--col 4-->
+            	<div class="col">
+            		 <div class="form-group">
+				      <label for="text">名称</label>
+				      <input type="text" class="form-control" id="save_val" placeholder="输入名称">
+				     </div>
+            	</div>
+            </div>
+            <button type="button" class="btn btn-info" id="save">保存</button>	
+		</div><!--4 -->   
+    </div><!--col-sm-10 !!!-->
+    
+    <div class="col-sm-10" style="background-color:lavenderblush;display: none">
+		
+			<a style="margin-top: 20px;margin-bottom: 5px;" href="/cloud/get?user=jd_admin&password=d354b3d46c9e1bddeab98f2ff1c75957baf526a3&order=cloudLogin" class="btn btn-info" role="button">更换主页Logo和轮播图</a>
+			<DIV>替换原来图片的名字，（注意格式要与原来的一致，.jpg 和.png）</DIV>	
+	
+
+
+
+    </div>
+    
+  </div><!--row !!-->
+  
+
+  
+</div><!--container-fluid !-->
+
+<script type="text/javascript">
+	
+	
+	//start
+	make_shop_level()
+	
+	//click this left menu can chang display
+	menu_show_child()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function  menu_show_child() {
+		$('#menu>a').on('click',function  () {
+		let index=$(this).index();
+		$('.col-sm-10').css('display','none')
+		$('.col-sm-10').eq(index-1).css('display','block')
+	})
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+function make_shop_level () {
+		
+	
+	
+	//商品三级目录,先去获取一级目录
+	fetch('/jd/commodity_get_grade1', {
+			 method: 'GET',
+			})
+			.then((res)=>{
+			return res.json() 
+			})
+			.then((res)=>{
+				
+				var grade1 = new Vue({
+							  el: '#grade1',
+							  data: {
+							    grade1:res
+							  }
+							})
+				$('#show1').html($('#first1').clone())
+				
+	//根据一级目录，获取二级目录	
+	$('.grade1').on('change click',function  () {
+		let name=$(this).val()
+			fetch('/jd/commodity_get_grade2?data='+name, {
+			 method: 'GET',
+			})
+			.then((res)=>{
+			return res.json() 
+			}).then((res)=>{
+
+				$('.grade2').empty()
+				for (let i of res) {
+					$('.grade2').append('<option>'+i.grade2+'</option>')
+				}
+				
+				$('#show2').html($('#level2').clone())
+				
+			})	
+	})
+	
+	
+	//根据一二级目录，获取三级目录	
+	$('.grade2').on('change click',function  () {
+				let data={}
+		    data.grade1=$('#grade1').val()
+		    data.grade2=$(this).val()
+            data=JSON.stringify(data)
+			fetch('/jd/commodity_get_grade3?data='+data, {
+			 method: 'GET',
+			})
+			.then((res)=>{
+			     return res.json() 
+			}).then((res)=>{
+
+			     console.log(res)
+				$('.grade3').empty()
+				for (let i of res) {
+					
+					$('.grade3').append('<option>'+i+'</option>')
+				}
+			})
+	})
+
+
+				
+
+	//一级菜单更换，后面跟随切换，并且获取参数
+	$('#menu_input').change(function  () {
+		let name=$(this).val()
+		$('#for_menu_input').html(name)
+
+		if(name=='二级目录'){
+			
+			$('#show2').hide()
+			$('#show1').show()
+			
+
+	
+		}else if(name=='三级目录'){
+			$('#show1').show()
+			$('#show2').show()
+
+			
+		}else{
+				$('#show2').hide()
+			    $('#show1').hide()
+		}
+	})
+	
+	
+	//新增一个，栏目，包括123级
+	$('#save').click(function  () {
+		let menu_name=$('#menu_input').val()
+		if(menu_name=='一级目录'){
+			let data={}
+		    data.menu=menu_name
+		    data.val=$('#save_val').val()
+		    data=JSON.stringify(data)
+		    fetch('/jd/commodity?data='+data, {
+			 method: 'GET',
+			})
+			.then((res)=>{
+			return res.json() 
+			})
+			.then((res)=>{
+				if(res==true){alert('保存成功')}else{
+					alert('保存失败')
+				}		   
+	        })
+		}else if(menu_name=='二级目录'){
+			let data={}
+		    data.menu=menu_name
+		    data.val=$('#save_val').val()
+		    data.grade1=$('#show1>div>select').val()
+			data=JSON.stringify(data)
+			fetch('/jd/commodity?data='+data, {
+			 method: 'GET',
+			})
+			.then((res)=>{
+			return res.json() 
+			})
+			.then((res)=>{
+			   	if(res==true){alert('保存成功')}else{
+					alert('保存失败')
+				}	
+			})
+
+			
+		}else if(menu_name=='三级目录'){
+			
+			let data={}
+		    data.menu=menu_name
+		    data.val=$('#save_val').val()
+		    data.grade1=$('#show1>div>select').val()
+		    data.grade2=$('#show2 .grade2').val()
+			data=JSON.stringify(data)
+			fetch('/jd/commodity?data='+data, {
+			 method: 'GET',
+			})
+			.then((res)=>{
+			return res.json() 
+			})
+			.then((res)=>{
+			   	if(res==true){alert('保存成功')}else{
+					alert('保存失败')
+				}	
+			})
+			
+		}
+		
+	})
+   
+	}) //fetch end 1
+}
+</script>
+
+</body>
+</html>

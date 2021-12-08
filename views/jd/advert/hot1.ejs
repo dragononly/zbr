@@ -1,0 +1,54 @@
+<style type="text/css">
+	#advert{width: 100%;height: 160px;background: #f1f1f1;}
+	
+</style>
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<div id="advert" >
+	<div class="row" id="my_for">
+		
+		<div class="col-sm-1" style="color:#ff6600;">
+			<div style="font-size:14px;padding:10px;background: #fff;width:48px;margin-left: 25px;text-align: center;height: 70px;border-radius:0 0 100px 100px ;">
+				热推
+			    <br />产品
+			</div>
+		</div>
+		
+		<div class="col-sm-3" style="background: #fff;margin-right: 10px;padding: 10px;margin-top: 20px;" v-for="i in tos">
+			<a href="/jd/item">
+			<div class="row">
+					<div class="col">
+						<img :src="i.a1[0]"/>
+					</div>
+					<div class="col" style="font-size: 12px;margin-left: -50px;">
+						<div>{{i.a1[1]}}</div>
+						<div style="color: #e4393c;font-weight:bold;margin-top: 5px;">{{i.a1[2]}}</div>
+						  <button type="button" class="btn btn-danger">立即抢购</button>
+					</div>
+			</div>
+			</a>
+		</div>
+		
+		<div class="col-sm-1" style="color:#ff6600;">
+			<div style="font-size:14px;padding:10px;background: #fff;width:48px;text-align: center;height: 70px;border-radius:0 0 100px 100px ;">
+				促销
+			    <br />活动
+			</div>
+		</div>
+
+
+	</div>
+
+</div>
+
+<script type="text/javascript">
+			var my_for = new Vue({
+								  el: '#my_for',
+								  data: {
+								    tos: [
+								      { a1:['../jd/images/later/1.jpg','360手机 N6 全网通 6GB+64GB 琉璃蓝 移动联通电信4G','￥1399.00']},
+								      { a1:['../jd/images/later/1.jpg','360手机 N6 全网通 6GB+64GB 琉璃蓝 移动联通电信4G','￥1399.00']},
+								      { a1:['../jd/images/later/1.jpg','360手机 N6 全网通 6GB+64GB 琉璃蓝 移动联通电信4G','￥1399.00']},
+								    ]
+								  }
+								})
+</script>

@@ -1,0 +1,157 @@
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8"/>
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript" charset="utf-8"></script>
+        <link href="../images/ico.ico" rel="icon" type="image/x-icon" />
+	   <style type="text/css">
+	   	*{margin: 0;padding: 0;}
+	   	a{
+	   		display: block;
+	   	}
+	   </style>
+	
+	</head>
+	<body>
+		<div data-role="page" id="pageone" data-theme="a">
+  <div data-role="header">
+    
+  </div>
+
+  <div data-role="content">
+  <div class="box" style="width: 80%;margin: auto;margin-top: 30px;margin-bottom: 200px;">	
+  	<div style="font-size: 30px;">后台管理</div>
+     
+     <input type="button" name="" id="" value="说明书" class="a1"/>
+<!--     <input type="button" name="" id="" value="概率调整" class="a4"/>-->
+     <input type="button" name="" id="" value="制作二维码" class="a5"/>
+     <input type="button" name="" id="" value="资源库造数据" class="a2"/>
+     <input type="button" name="" id="" value="生成客户链接" class="a3"/>
+     <input type="button" name="" id="" value="客户兑奖" class="a6"/>
+     <div class="view"></div>
+     <div class="view2" style="display: none;">
+     	<input type="text" name="" id="" value="" placeholder="请输入新闻标题" class="newpaper"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入所属文件夹的名字" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入转盘图片的名称.png" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入图片1的名称.jpg"  class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入图片2的名称.jpg" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入图片3的名称.jpg" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入图片4的名称.jpg" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入图片5的名称.jpg" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入图片6的名称.jpg" class="data"/>
+     	<input type="text" name="" id="" value="" placeholder="请输入二维码付款图.jpg" class="datatwo"/>
+     	<input type="text" class="gl" placeholder="概率设置,例如 12-1-4用减隔开" value=""/>
+      
+     	<input type="button" name="" id="" value='确定生成' class="make" />
+
+     </div>
+     
+     
+     <div class="view3" style="display: none;">
+     	<input type="text" name="" id="" value="" class="view31"/>
+     	
+     </div>
+     <script type="text/javascript">
+     	//a href
+     	
+     	$('.a1').click(function  () {
+     		$('.view').html('在资源库造数据里面，每一链接新建一个单独文件夹，然后放置图片，并记住图片的名字,图片的名字带尾缀，如.jpg,.png,转盘的图片需要png无边角的透明图,概率设置10个数，以百分号-隔开，图片的12点钟方向算第一个')
+     		$('.view3').css('display','none')
+     		$('.view2').css('display','none')
+     	})
+     	
+     	$('.a2').click(function  () {
+     	  location.href="jump?jump=christmas2017/login"
+     	})
+     	
+     	$('.a4').click(function  () {
+     	  location.href="jump?jump=christmas2017/gl"
+     	})
+     	
+     	$('.a5').click(function  () {
+     	  location.href="jump?jump=christmas2017/erweima"
+     	})
+     	
+     	$('.a6').click(function  () {
+     	  location.href="jump?jump=christmas2017/exchange"
+     	})
+     	
+     	
+     	$('.a3').click(function  () {
+     		$('.view').html("")
+     		$('.view2').css('display','block')
+     		$('.view3').css('display','none')
+     	})
+     	
+     	$('.make').click(function  () {
+     	
+     	var n=0;
+     	
+     	
+        for (var ii = 0; ii < $('.data').length; ii++) {
+        	
+		       if($('.data')[ii].value!=""){
+		       	n++
+		       }
+        	  
+        }
+     
+       if(n<8){
+       		alert('还有空的字符串')
+       }else{
+       	
+        
+        if($('.gl').val()==""){
+        	alert('还有空的字符串')
+        	return
+        }
+        
+        if($('.newpaper').val()==""){
+        	alert('还有空的字符串')
+        	return
+        }
+       	
+       	
+      
+     
+       	$('.view').css('display','none')
+     		$('.view2').css('display','none')
+     		$('.view3').css('display','block')
+     		
+     		var data=[];
+     		
+     		for (var i = 0; i < $('.data').length; i++) {
+     			data[i]=$('.data')[i].value
+     		}
+     		
+     	 var gl=$('.gl').val(),newpaper=$('.newpaper').val(),datatwo=$('.datatwo').val()
+     	
+     	var	href ='http://www.cxcuu.com/christmas2017/get?order=makeurl&data='+data+'&gl='+gl+'&newpaper='+newpaper+'&datatwo='+datatwo
+     		
+     		//location.href=href
+       
+     		$('.view31').val(href)
+       
+     		  }
+     		
+     	})
+     </script>
+     
+     
+  	<!--<a href="">说明书</a>
+  	<a href="http://xzb99.iok.la/get?jump=program/20171124/login">资源库造数据</a>
+  	<a href="">生成客户链接</a>-->
+  	
+ </div>
+
+  </div>
+
+  <div data-role="footer">
+  
+  </div>
+</div> 
+	</body>
+</html>

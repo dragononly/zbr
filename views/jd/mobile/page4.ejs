@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+ <script src="https://cdn.bootcss.com/js-sha1/0.6.0/sha1.min.js"></script>
+ <link href="../../ico.ico" rel="icon" type="image/x-icon" />
+ <title>i am jd mobile page four</title>
+ <script type="text/javascript">
+	  let page=4;
+	  document.addEventListener( "plusready", function(){
+	// 扩展API加载完毕，现在可以正常调用扩展API
+	var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+  })
+ </script>  
+ <script>
+ $(function () {
+	 //定义全局变量
+	 const openid=sessionStorage.id//用户名
+	 let global={}//全局对象
+
+	 
+// 	//如果没有的登陆，请点击登陆
+// 	$('.wanthide').on('click',function () {
+// 			         //login event    
+// 	$('#login').on('click',function  () {
+       
+//        if(regz()){
+//        	    let data={};
+//      	    data.phone=$('#user').val()
+//      	    data.password=sha1($('#password').val())
+//      	    data=JSON.stringify(data)
+//      	    let ur='/jd_mobile?order=login_phone&data='+data	      
+//      	        ur=encodeURI(ur)
+// 					 fetch(ur, {
+//               method: 'GET',
+//               })
+//               .then((res)=>{
+//                 return res.json() 
+//               })
+//               .then((res)=>{
+// 								console.log(res)
+// 								if(res){
+// 								 sessionStorage.user=res
+								
+// 								 $('#myModal').modal('hide');
+							
+// 								 location.reload()
+// 								}else{
+// 									alert('账号或密码错误')
+// 								}
+//               })
+
+//        }else{
+//        		let data={};
+//      	    data.user=$('#user').val()
+//      	    data.password=sha1($('#password').val())
+//      	    data=JSON.stringify(data)
+//      	    let ur='/jd_mobile?order=login_user&data='+data      
+//      	    ur=encodeURI(ur)
+// 					 fetch(ur, {
+//               method: 'GET',
+//               })
+//               .then((res)=>{
+//               return res.json() 
+//               })
+//               .then((res)=>{
+//                if(res){
+// 				   console.log(res)
+// 								sessionStorage.user=res
+								
+// 								$('#myModal').modal('hide');
+// 								location.reload()
+// 							 }else{
+// 								alert('账号或密码错误')
+// 							 }
+//               })
+
+//        }
+     
+ 
+   	
+//       })//login click end！！！！    
+        
+        
+// function regz () {
+// 		var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;  
+//           if (!myreg.test($('#user').val())) {  
+//               return false;  
+//           } else {  
+//               return true;  
+//           }  
+// }   
+// 		$('#myModal').modal('show');
+// 	})
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 //通过openid去获取他收藏的宝贝
+	{
+	 let data={};
+      data.openid=openid
+      data=JSON.stringify(data)
+      let ur='/jd_mobile?order=get_shop_cart&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+				  console.log(res)
+							 global.ware=res.xf.shop_cart
+							})
+							.then(()=>{
+                        get_ware_content()
+							})
+							.catch(error => console.log('error is', error));
+		}				 	
+
+		//通过id去获取商品详情
+    function get_ware_content() {
+			let data={};
+					data.id=global.ware
+					data=JSON.stringify(data)
+          let ur='/jd_mobile?order=get_ware_of_id&data='+data;  
+		      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+								 ui()
+								 create(res)
+							})
+							.then(()=>{
+								 //宝贝增减和一些运算
+								 $('.add').on('click',function () {
+									 let a=parseInt($(this).prev().val())+1
+									 $(this).prev().val(a)
+									 for_ware_list()
+								 })
+								 $('.reduce').on('click',function () {
+									 if($(this).next().val()>1){
+										let a=parseInt($(this).next().val())-1
+										  $(this).next().val(a)
+										  for_ware_list()
+									 }else{
+									 let ware_id=  $(this).parent().next().html()
+									 $(this).parent().parent().remove()
+									 let myelement=$(this)
+									 //通过id在数据库中删除元素
+									 let data={};
+										 data.id=ware_id
+										 data.openid=sessionStorage.id
+									     data=JSON.stringify(data)
+										 let ur='/jd_mobile?order=shop_cart_delete&data='+data;  
+									 
+									 fetch(ur, {
+										method: 'GET',
+										})
+										.then((res)=>{
+										return res.json() 
+										})
+										.then((res)=>{
+									       if(res.ok==1){
+											   console.log("删除成功")
+											   let n=myelement.next().val()
+											   let danjia=myelement.prev().prev().prev().prev().prev().prev().html().split('￥')[1]
+											   let last_price=danjia*n
+											   let old_price=$('#sub_price').html()
+											   let nowprice=old_price-last_price
+											   
+											   $('#sub_price').html(nowprice)
+										   }
+										})
+
+									
+										
+									 }
+									 
+								 })
+							})
+							.then(()=>{
+								ware_list()
+							})
+							.then(()=>{
+								$('#sub').on('click',function () {
+									let price=$("#sub_price").html()
+									let data={}
+									data.price=price
+									data.size='购物车综合付款'
+									data.color=''
+									data.openid=sessionStorage.id
+									data.nickname=sessionStorage.nickname
+									data.store_user='cab.user'
+									data.ware_name='购物车综合付款'
+									data.ems='运费默认'
+									data=JSON.stringify(data)   
+									console.log(data)
+									return
+									location.href="/want?want=jd/mobile/await_address&data="+data
+
+								})
+
+							})
+							.then(()=>{
+							
+							})
+							.catch(error => console.log('error is', error));
+		}
+
+	  
+	//统计被勾选的个数，和总价
+	function for_ware_list() {
+		global.price=0;
+		$('#sub_price').html(0)
+		$('.ware_list').each(function (i) {
+			if($(this).is(":checked")){
+				global.price+=parseFloat($('.ware_price').eq(i).html().split('￥')[1])*($('.ware_number').eq(i).val())+parseFloat($('.ems').eq(i).html().split('￥')[1])
+			}
+		 })
+		 let last=	parseFloat($('#sub_price').html())+global.price
+		$('#sub_price').html(last)
+	}
+	
+	
+	//全选
+	{
+		let off=0;
+
+	$('#all_checkbox').on('click',function () {
+	  	
+		if(off==0){
+			$('.ware_list').each(function () {
+				$(this).prop("checked",true)
+			})
+			off=1
+   	}else{
+			$('.ware_list').each(function () {
+				$(this).prop("checked",false)
+				off=0
+			})
+		}
+		global.price=0;
+		$('#sub_price').html(0)
+		for_ware_list()
+	})
+
+ }
+  
+
+  //当有人被勾选的时候
+  function ware_list() {
+		$('.ware_list').on('click',function () {
+			global.price=0;
+			$('#sub_price').html(0)
+			for_ware_list()
+			let index =	$(this).index()
+		})
+	}
+
+   //一些响应式动作
+   function ui() {
+		 if(sessionStorage.user){$('.wanthide').hide()}
+   }
+	 
+	 //创建元素
+   function create(res) {
+		if(res!=""){
+			$('#watch1').hide()
+		}
+	
+
+		//global.ware对象去除重复 
+	let arr=global.ware
+	    n=0
+		var hash = {};
+    arr = arr.reduce(function(item, next) {
+    hash[next.id] ? '' : hash[next.id] = true && item.push(next);
+    return item
+    }, [])
+
+    for (const i of res) {
+                let html='<div class="row" style="font-size:12px;margin-top:10px;background:#fff;padding:10px 10px;">'+
+							'<div class="col-2"><input type="checkbox" "checked"="false" class="ware_list" style="zoom:250%;margin-right:5px;vertical-align:middle;;height:40px;"></div>'+
+							'<div class="col-5"><img width="100%" style="margin-right:5px;" src='+i.information.imga1+'></div>'+
+							'<div class="col-5">'+
+								'<span style="font-size:15px;font-weight:500;">'+i.information.pack.store_name+'</span><br>'+
+				 							'<span style="color:#666">'+i.information.name+'</span><br>'+
+				 							'<span class="ware_price" style="color:red;font-weight:bolder;">￥'+arr[n].ware_price+'</span>'+
+				 							'<span class="ems" style="margin-left:20px;color:darkred;font-weight:bolder;">运费￥'+i.information.ems+'</span><br>'+
+				 							'<span>'+arr[n].size+'</span>'+'<span>'+arr[n].color+'</span><br>'+
+				 							'<input type="button" class="reduce" style="margin-left:10px;padding-right:9px;padding-left:9px;" value="-"><input type="number" class="ware_number" value="1" style="width:40px;"><input class="add" type="button" value="+">'+
+							'</div>'+
+							'<div style="display:none">'+i._id+'</div>'+
+						 '</div>'
+				 $('#ware_content').append(html)
+				 n++
+		}
+
+	 }
+
+
+ })
+ </script>
+</head>
+
+
+<body style="background: #f5f5f5;">
+	  	
+		
+<div class="container-fluid">
+
+	<nav class="navbar navbar-expand-sm  navbar-dark fixed-top" style="background: #fff;">
+		<div style="text-align: center; width: 100%;font-weight: bold;">
+			  购物车
+			  
+		<div style="position: relative;float: right;">
+			<a href="#">
+			 <img src="../jd/images/mobile/消息.png" width="30px" style="float: right;"/>
+			 <div style="line-height:15px;height:15px;width:15px;font-size:4px;border-radius: 50%;background:#ef2326;color:#fff;position: absolute;right: -4px;top:;">4</div>
+		    </a>
+		</div>
+			
+		</div>
+	 
+	</nav> 
+	
+
+
+
+
+
+      <!-- 模态框
+	 <div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+	   
+		
+			<div class="modal-header">
+			  <h4 class="modal-title">请登陆</h4>
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+	   
+			<div class="modal-body" >
+							<div style="height: 100%;">
+									<form class="bs-example bs-example-form" role="form" >
+										<div class="input-group input-group-on'">
+											<span class="input-group-addon">账号</span>
+											<input type="text" id="user" class="form-control" placeholder="用户名/手机号">
+										</div><br>
+										<div class="input-group">
+											<span class="input-group-addon">密码</span>
+											<input id="password" type="password" class="form-control" placeholder="密码">
+										</div><br>
+											<a href="#" style="text-decoration: none;color: black;">忘记密码？</a>
+											
+											<div id="myButtons2" class="bs-example" style="margin-top: 20px;">
+													<button type="button" id="login" class="btn btn-primary" 
+															data-loading-text="Loading..." style="font-size:20px;width: 300px;background: #e4393c;border: #e4393c;">登陆
+													</button>
+											</div>
+											<div style="text-align: right;padding: 20px;padding-right: 0px;">
+												<a href="/jd/reg" style="text-decoration: none;colo:black;font-size: 15px;">立即注册>></a>
+											</div>
+											
+									</form>
+								</div>
+			</div>
+	   
+		   
+	   
+		  </div>
+		</div>
+	  </div> -->
+
+
+    
+    <div id="watch1" style="background: #fff;padding-bottom: 20px;padding-left: 5px;">
+	    <!-- <div style="margin-top: 60px;" >
+	    	<button type="button"  class="btn btn-outline-secondary wanthide">登陆</button>
+	    	<span class="wanthide" style="margin-left:2%;color: #808080;font-size: 14px;">登陆后同步电脑与手机购物车中的商品</span>
+	    </div> -->
+	    
+	    <div style="color: #808080;text-align: center;margin-top: 20px;margin-top: 100px">
+	    	<img src="../jd/images/mobile/page4/购物车.png" width="60px"/>
+	    	购物车是空的
+	    </div>
+	    
+	    <!-- <div style="margin-top: 20px;text-align: center;">
+	    	<button type="button" class="btn btn-outline-secondary">逛逛秒杀</button>
+	    	<button type="button" class="btn btn-outline-danger">看看关注</button>
+	    </div> -->
+    </div>
+		
+		<div id="ware_content" style="margin-top: 60px">
+			
+	
+		</div>
+		<div style="height: 30px;">
+
+		</div>
+
+  <!-- 模态框 -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+   
+        <!-- 模态框头部 -->
+        <div class="modal-header">
+          <h4 class="modal-title">模态框头部</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+   
+        <!-- 模态框主体 -->
+        <div class="modal-body">
+          模态框内容..
+        </div>
+   
+        <!-- 模态框底部 -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+   
+      </div>
+    </div>
+  </div>
+	<nav class="navbar navbar-expand-sm navbar-dark fixed-bottom" style="background: #fff;margin-bottom: 60px">
+	 <div><input type="checkbox" id="all_checkbox">全选</div>
+	 <div>合计:￥<span id="sub_price" style="color:red;font-weight: 500">0</span></div>
+	 <div><button type="button" class="btn btn-danger" id="sub">结算</button></div>
+	 
+  </nav>
+  <%- include foot%>
+    
+</div>
+
+
+</body>
+</html>

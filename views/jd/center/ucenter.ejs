@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+ <style type="text/css">
+ 	#baby{margin-bottom: 10px;}
+ 	#baby>div>div>div>span:nth-child(1){margin-left: 40px}
+ 	#baby .babya{margin-left: 40px;color: #fff}
+ 	.card-body{font-size: 13px;}
+ 	.card-body img{width: 100%;}
+ 	.card-body a{display: block;}
+ </style>
+</head>
+
+
+<body>
+	
+   <% include ../header %>
+		<nav class="navbar navbar-expand-sm bg-danger navbar-dark" style="position: relative;">	
+			<div style="margin-left:50%;">
+		  <form class="form-inline">
+		    <input class="form-control" type="text" placeholder="您喜欢的宝贝" style="width:400px;">
+		    <button class="btn btn-success" type="button">搜索</button>
+		  </form>
+		  </div>
+		</nav>
+		
+	
+	
+<div class="container-fluid" style="margin-top: 20px;margin-left: 100px;margin-bottom: 200px;">
+ 
+  <div class="row">
+    <div class="col-sm-3" >
+    <div class="list-group">
+	    <a href="/jd/shop" class="list-group-item list-group-item-light">我的购物车</a>
+	    <a href="/jd/ucenter" class="list-group-item list-group-item-light bg-info text-white">我的订单</a>
+	    <a href="/jd/collect" class="list-group-item list-group-item-light">我的收藏</a>
+	    <a href="/jd/favourable" class="list-group-item list-group-item-light">我的优惠信息</a>
+	    <a href="/jd/evaluate" class="list-group-item list-group-item-light">评价管理</a>
+	    <a href="/jd/retreat" class="list-group-item list-group-item-light">退款维权</a>
+   </div>
+   
+   
+    
+    </div>
+    
+    
+    <div class="col-sm-9" >
+    	
+    	<!--订单搜索功能-->
+    	<nav class="navbar navbar-expand-sm  navbar-dark" style="padding-left: 0;">
+		  <form class="form-inline">
+		    <input class="form-control" type="text" placeholder="输入搜索标题或者订单号查询" style="width: 300px;">
+		    <button class="btn btn-success" type="button">订单搜索</button>
+		  </form>
+		</nav>
+    	
+    	<!--所有功能菜单栏-->
+    	<ul class="pagination">
+		  <li class="page-item active"><a class="page-link" href="#">所有订单</a></li>
+		  <li class="page-item"><a class="page-link" href="#">待付款</a></li>
+		  <li class="page-item"><a class="page-link" href="#">待发货</a></li>
+		  <li class="page-item"><a class="page-link" href="#">待收货</a></li>
+		  <li class="page-item"><a class="page-link" href="#">待评价</a></li>
+		</ul>
+		
+		
+		<div id="box" style="width: 800px;">
+			<!--动态加载买家宝贝----宝贝单条信息-->
+			
+			
+			
+			
+		</div>
+		
+  </div> <!--栅栏 9结尾-->
+    
+    
+    
+  </div><!--row 栅栏结尾-->
+  
+  <% include ../advert/advert2 %>
+  
+</div><!--流结尾-->
+	
+	
+	
+	
+	
+	
+	
+	
+  <script type="text/babel">
+
+	var HelloMessage = React.createClass({
+    render: function() {
+    	
+    	{
+    	var items = [];
+        for (var i = 0; i < 3; i++) {
+        	items.push(
+        	<div className="card" id="baby">
+			  <div className="card-header bg-danger text-white">
+			  	<div className="form-check">
+			      <label className="form-check-label">
+			        <input type="checkbox" className="form-check-input" value="" />2018-04-06
+			      </label>
+			      <span>订单号: 145553782391907361</span>
+			      <a href="#" className="babya">店铺</a>
+			      <a href="#" className="babya">卖家联系名</a>
+			      <a href="#" className="babya">删除订单</a>
+			    </div>
+			  </div>
+			  
+			   <div className="card-body">
+			  	 <div className="row">
+				    <div className="col-sm-8">
+				     
+				    	<div className="row" >
+						    <div className="col-sm-3" >
+						    	<img src={"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523532103419&di=657ebeaad3b43d046d492c4d9a063d1f&imgtype=0&src=http%3A%2F%2Fpic2.ooopic.com%2F13%2F17%2F64%2F79b1OOOPIC0c.jpg"}/>
+						    </div>
+						    <div className="col-sm-5" >
+						    	红钻电风扇家用落地扇宿舍床头机械立式遥控静音摇头工业电扇 [交易快照]
+						    	<div>7❀正</div>
+						    </div>
+						    <div className="col-sm-2" >￥259.00</div>
+						    <div className="col-sm-2" >2335件</div>
+						</div>
+				    </div>
+
+				    <div className="col-sm-2">
+				    	<a href="#">退换货</a>
+				    	<a href="#">投诉卖家</a>
+				    	<a href="#">交易状态</a>
+				    	<a href="#">订单详情</a>
+				    	<a href="#">查看物流</a>
+				    </div>
+				    
+				    <div className="col-sm-2">
+				    	
+				    	<a href="#">还剩3天21时</a>
+				    	<a href="#">确认收货</a>
+				    	<a href="#">再次购买</a>
+				    
+				    </div>
+				    
+				  </div>
+			  </div> 
+			  
+			  <div className="card-footer bg-danger text-white">
+			  	
+			  </div>
+			  
+			 
+			</div>);//push end!!!!!!!!
+            }//for end~~~~~
+        }//{}end~~~~
+    	
+        return (
+            <div>
+                {items}
+            </div>
+               )	   
+		
+  }
+ });
+ 
+ 
+    ReactDOM.render(
+    <HelloMessage />,
+   $('#box')[0]
+    );
+    
+    
+
+//}//for end~~~
+
+ 
+
+  
+
+    </script>
+	
+	
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+   <% include ../foot %>	
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+  <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+  <style type="text/css">
+  	*{margin: 0;padding: 0;}
+  	#left{float: left;width: 300px;background: #ececec;}
+  	#right{float: right;width: 900px;background: #ececec;}
+  	a{display: block;text-decoration: none;}
+  </style>
+</head>
+
+
+<body>
+	
+<div class="container-fluid">
+  <button type="button" class="btn btn-primary btn-block">后台管理模板</button>
+  <div class="row" style="margin-top: 5px;">
+    <div class="col-sm-2">
+	    <div class="list-group" id="menu">
+		    <a href="#" class="list-group-item list-group-item-action">操作列表</a>
+		    <a href="#" class="list-group-item list-group-item-success">商家店铺管理</a>
+		    <a href="#" class="list-group-item list-group-item-secondary">次要列表项</a>
+		    <a href="#" class="list-group-item list-group-item-info">信息列表项</a>
+		    <a href="#" class="list-group-item list-group-item-warning">警告列表项</a>
+		    <a href="#" class="list-group-item list-group-item-danger">危险列表项</a>
+		    <a href="#" class="list-group-item list-group-item-primary">主要列表项</a>
+		    <a href="#" class="list-group-item list-group-item-dark">深灰色列表项</a>
+		    <a href="#" class="list-group-item list-group-item-light">浅色列表项</a>
+	    </div><!--list-group !!!!-->
+    </div><!--col-sm-2 !!!-->
+    <div class="col-sm-10">
+    	    <!-- Nav tabs -->
+			<ul class="nav nav-tabs">
+			  <li class="nav-item">
+			    <a class="nav-link active" data-toggle="tab" href="#home">在营商家</a>
+			  </li>
+			  <li class="nav-item">
+			    <a class="nav-link" data-toggle="tab" href="#menu1">待审核的商家</a>
+			  </li>
+			  <li class="nav-item">
+			    <a class="nav-link" data-toggle="tab" href="#menu2">商家提交的图库</a>
+			  </li>
+			 
+			</ul>
+ 
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active container" id="home">
+ <table class="table table-bordered table-sm" style="margin-top: 5px;">
+    <thead>
+      <tr>
+        <th>会员账号</th>
+        <th>姓名</th>
+        <th>电话</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="tab">
+      <tr v-for="i in be">
+        <td>{{i.user}}</td>
+        <td>{{i.name}}</td>
+        <td>{{i.phone}}</td>
+        <td>
+        	<input type="button" name="" class="off_store" value="关闭" />
+        	
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  
+  <div class="tab-pane container" id="menu1">
+  	  <table class="table table-bordered table-sm" style="margin-top: 5px;">
+    <thead>
+      <tr>
+        <th>会员账号</th>
+        <th>姓名</th>
+        <th>电话</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="tab2">
+      <tr v-for="i in nobe">
+        <td>{{i.user}}</td>
+        <td>{{i.name}}</td>
+        <td>{{i.phone}}</td>
+        <td>
+        	<input type="button" name="" class="pass_store" value="通过审核" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  
+  <div class="tab-pane container" id="menu2" style="padding-top: 40px;">
+  	 <a target="_blank" href="/cloud/get?user=open_store2018&password=d354b3d46c9e1bddeab98f2ff1c75957baf526a3&order=cloudLogin" class="btn btn-info" role="button">查看照片库</a>
+		 <div>点击进入后，Ctrl+F进行查询</div>
+		 
+		</div>
+  
+</div>
+            
+    </div><!--col-sm-10 !!!-->
+    
+    <div class="col-sm-10" style="background-color:lavenderblush;">
+    	
+    </div>
+    
+  </div><!--row !!-->
+  
+
+  
+</div><!--container-fluid !-->
+
+<script type="text/javascript">
+	
+	
+	//start
+
+	//click this left menu can chang display
+	menu_show_child()
+
+	//show_all_store
+	show_all_store()
+
+    //pass store
+    //pass_store()
+
+function  show_all_store() {
+//  	
+//  	
+//          let data={};
+//   	    data.name=$('#name').val()
+//   	    data.phone=$('#phone').val()
+//   	    data=JSON.stringify(data)
+     	    let ur='/jd_index?order=get_all_store';    
+     	    ur=encodeURI(ur)
+		
+	fetch(ur, {
+		 method: 'GET',
+		})
+		.then((res)=>{
+		return res.json() 
+		})
+		.then((res)=>{
+           let be=[],n=0,n2=0,nobe=[];
+           
+           for (var i = 0; i < res.length; i++) {
+
+           	   if(res[i].exist==1){
+           	     	be[n]=res[i];
+           	     	n++
+           	   }else{
+           	   	    nobe[n2]=res[i];
+           	     	n2++
+           	   }
+           }
+           
+
+               
+               new Vue({
+               	   el:'#tab',
+               	   data:{
+               	   	  be
+               	   }
+               })
+               
+                 new Vue({
+               	   el:'#tab2',
+               	   data:{
+               	   	  nobe
+               	   }
+               })
+               
+               
+                 
+        })
+		.then((res)=>{
+			
+			$('.pass_store').on('click',function  () {
+				
+			    let val=$(this).parent().prev().prev().prev().html()
+			    
+				let data={};
+	     	    data.user=val
+	     	    data=JSON.stringify(data)
+	     	    let ur='/jd_index?order=pass_store&data='+data;    
+	     	    ur=encodeURI(ur)
+				
+				
+				
+				fetch(ur, {
+				 method: 'GET',
+				})
+				.then((res)=>{
+				return res.json() 
+				})
+				.then((res)=>{
+					if(res){
+						alert('审核成功')
+						location.reload()
+					}
+				})
+				
+			})
+			
+			
+			
+			
+			
+			
+			
+			$('.off_store').on('click',function  () {
+				
+			    let val=$(this).parent().prev().prev().prev().html()
+			    
+				let data={};
+	     	    data.user=val
+	     	    data=JSON.stringify(data)
+	     	    let ur='/jd_index?order=off_store&data='+data;    
+	     	    ur=encodeURI(ur)
+				
+				
+				
+				fetch(ur, {
+				 method: 'GET',
+				})
+				.then((res)=>{
+				return res.json() 
+				})
+				.then((res)=>{
+					if(res){
+						alert('关闭商家成功')
+						location.reload()
+					}
+				})
+				
+			})
+			
+			
+			
+			
+			
+			
+			
+			
+		})
+    	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function  menu_show_child() {
+		$('#menu>a').on('click',function  () {
+		let index=$(this).index();
+		$('.col-sm-10').css('display','none')
+		$('.col-sm-10').eq(index-1).css('display','block')
+	})
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <link href="../../ico.ico" rel="icon" type="image/x-icon" />
+ <title>i am await_address</title>
+ <script type="text/javascript">
+	  let page=4;
+	  document.addEventListener( "plusready", function(){
+	// 扩展API加载完毕，现在可以正常调用扩展API
+	var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+  })
+ </script>  
+ <script>
+ $(function () {
+	//获取地址
+	get_address()
+	
+	$('#add_new_address').on('click',function () {
+		sessionStorage.back="/want?want=jd/mobile/await_address&data="+'<%- data%>'
+						//需要执行添加地址栏任务
+		location.href="want?want=jd/mobile/account"
+	})
+	//由于我们引用了app，和手机号作为唯一引导，所以我们以后搜索商品，将通过手机号来
+	function get_address() {
+		let data={};
+		//这个时候我们通过phone number 去索引数据库
+		data.phone=sessionStorage.phone
+		console.log(sessionStorage.phone)
+		data=JSON.stringify(data)
+		let ur='/jd_mobile?order=get_address&data='+data;    
+		ur=encodeURI(ur)   
+		fetch(ur, {
+				method: 'GET',
+				})
+				.then((res)=>{
+				return res.json() 
+				})
+				.then((res)=>{
+					if(!res[0].xf){return}
+					 create_address(res[0].xf.address)
+					 create_address_true(res[0].xf.address[0])
+				})
+				.then(()=>{
+					//改变收货地址
+					change_button()
+				})
+				.then(()=>{
+					//改变实际收货地址
+					select_address()
+				})
+				.then(()=>{
+					
+				})
+				.then(()=>{
+					
+						
+						
+					$('#pay').on('click',function () {
+						let user_data='<%- data%>'
+						user_data=JSON.parse(user_data)
+						user_data.user=$('.name').html()
+						user_data.address=$('.address').html()
+						user_data.phone=$('.phone').html()
+						
+						// console.log(user_data)
+						// return
+						//如果登陆的通道，是app通道，那么将去选择app方法
+						
+						if(sessionStorage.way=="app"){
+							//由于是app传参，所以得补充更为完备的参数
+							user_data.openid=sessionStorage.openid
+							user_data.phone=sessionStorage.phone
+							user_data=JSON.stringify(user_data)
+                            location.href='http://www.cxcuu.com/h5pay?data='+user_data
+						}else{
+
+							user_data.openid=sessionStorage.id
+							user_data=JSON.stringify(user_data)
+							location.href='http://www.cxcuu.com/wxpay?data='+user_data
+						}
+						
+						
+					
+						
+					})
+				})
+				.catch(error => console.log('error is', error));
+	}
+
+   
+   //选中收货地址
+   function select_address() {
+	   $('.select_button').on('click',function () {
+		   let arr={}
+			   arr.phone=$(this).prev().html()
+			   arr.address=$(this).parent().prev().html()
+			   arr.name=$(this).parent().prev().prev().html()
+			   $('#address_true').empty()
+	           let html='<div >'+
+							'<div><span class="name">'+arr.name+'</span></div>'+
+							'<div><span class="address">'+arr.address+'</span></div>'+
+							'<div><span class="phone">'+arr.phone+'</span><button id="change_button" style="margin-left:60px;" type="button" class="btn btn-info">更换</button></div>'+
+				        '</div>'
+			   $('#address_true').append(html)	
+			   $('#address').hide()
+			   $('#address_true').show()
+			   change_button()
+	   })
+   }
+
+   //change_button() 改变收货地址
+   function change_button() {
+	   $('#change_button').on('click',function () {
+		$('#address').show()
+		$('#address_true').hide()
+	   })
+   }
+   
+   
+	//渲染地址元素
+	function create_address(res) {
+		  for (const i of res) {
+			let html='<div style="margin-bottom:20px;background:#fff;padding:20px;">'+
+						'<div>收货人：'+i.xingming+'</div>'+
+						'<div>收货地址：'+i.sheng+i.dizhi+'</div>'+
+						'<div><span>联系电话：'+i.phone+'</span><button style="margin-left:30px;" type="button" class="btn btn-info select_button">选中</button></div>'+
+				     '</div>'
+		    $('#address').append(html)
+		  }
+	}
+
+	function create_address_true(res) {
+		let html='<div >'+
+					'<div>收货人：<span class="name">'+res.xingming+'</span></div>'+
+					'<div>收货地址：<span class="address">'+res.sheng+res.dizhi+'</span></div>'+
+					'<div>联系电话：<span class="phone">'+res.phone+'</span><button id="change_button" style="margin-left:60px;" type="button" class="btn btn-info">更换</button></div>'+
+				'</div>'
+		$('#address_true').append(html)
+    }
+	
+	let result='<%- data%>'
+	    result=JSON.parse(result)
+		const sub_price=parseFloat(result.price)+parseFloat(result.ems)
+	$('#price').html('￥'+sub_price)
+ 
+ })
+
+ </script>
+</head>
+
+
+<body style="background: #f5f5f5;">
+	  	
+		
+<div class="container-fluid">
+	<div style="margin-top: 20px;text-align: center">
+			<a href="##" id="add_new_address" class="btn btn-success" role="button">新增收货地址</a>
+	</div>
+
+    <div id="address" style="display: none;margin-top: 10px;padding: 20px;">
+
+	</div>
+
+	<div id="address_true" style="background: #fff;margin-top: 10px;padding: 20px;">
+
+	</div>
+
+
+
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom" style="background: #fff;margin-bottom:60px;">
+		<span style="">总共需要支付：</span>
+		<span id="price" style="color: red;font-size: 20px;font-weight: 500">false</span>
+		<a href="##" id="pay" class="btn btn-success" role="button">立即下单</a>
+	 </nav>
+    <%- include foot%>
+    
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>拉卡拉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+   *{text-align: center;color: #666;}  body{background: #ececec}a{text-decoration: none !important}
+</style>
+<script>
+$(function () {
+  upload()
+  //submit message about this page 
+
+  
+  function specific() {
+    let data={};
+      data.theme=$('.val').eq(0).val()
+      data.monicker=$('.val').eq(1).val()
+      data.cost=$('.val').eq(2).val()
+      data=JSON.stringify(data)
+      let ur='/lakala2018?order=upload_db&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                if(res){
+                  alert('上传成功，等待审核')
+                }
+              })
+              .catch(error => console.log('error is', error));
+  }
+  
+  function upload () {
+
+var xhr;
+var ot;//
+var oloaded;
+//上传文件方法
+
+  
+ 
+  $('#file').change(function () {
+    start()
+  })
+
+
+var dataLength=0;
+function start() {
+    
+    var url = "/lakala_upload"; // 接收上传文件的后台地址 
+    var form = new FormData(); // FormData 对象
+    form.enctype="multipart/form-data";
+      var fileObj = document.getElementById("file").files
+
+
+         form.append("mf", fileObj[0]); // 文件对象
+
+        dataLength=parseInt(fileObj[0].size);
+          
+
+    form.append("address",'lakala2018-'); // 文件对象
+    //form.append("new_name",$('#name').val()); // 新的文件名
+    
+    xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
+    xhr.open("post", url, true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
+    xhr.onload = uploadComplete; //请求完成
+    xhr.onerror =  uploadFailed; //请求失败
+    xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
+    xhr.upload.onloadstart = function(){//上传开始执行方法
+        ot = new Date().getTime();   //设置上传开始时间
+        oloaded = 0;//设置上传开始时，以上传的文件大小为0
+    };
+    xhr.send(form); //开始上传，发送form数据
+}
+//上传进度实现方法，上传过程中会频繁调用该方法
+function progressFunction(evt) {
+    
+     var progressBar = document.getElementById("progressBar");
+     var percentageDiv = document.getElementById("percentage");
+     // event.total是需要传输的总字节，event.loaded是已经传输的字节。如果event.lengthComputable不为真，则event.total等于0
+     if (evt.lengthComputable) {//
+         progressBar.max = evt.total;
+         progressBar.value = evt.loaded;
+         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100) + "%";
+     }
+    
+    var time = document.getElementById("time");
+    var nt = new Date().getTime();//获取当前时间
+    var pertime = (nt-ot)/1000; //计算出上次调用该方法时到现在的时间差，单位为s
+    ot = new Date().getTime(); //重新赋值时间，用于下次计算
+    
+    var perload = evt.loaded - oloaded; //计算该分段上传的文件大小，单位b       
+    oloaded = evt.loaded;//重新赋值已上传文件大小，用以下次计算
+
+    //上传速度计算
+    var speed = perload/pertime;//单位b/s
+    var bspeed = speed;
+    var units = 'b/s';//单位名称
+    if(speed/1024>1){
+        speed = speed/1024;
+        units = 'k/s';
+    }
+    if(speed/1024>1){
+        speed = speed/1024;
+        units = 'M/s';
+    }
+    speed = speed.toFixed(1);
+    //剩余时间
+    var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
+    time.innerHTML = '，速度：'+speed+units+'，剩余时间：'+resttime+'s';
+       if(bspeed==0)
+        time.innerHTML = '上传已取消';
+}
+//上传成功响应
+function uploadComplete(evt) {
+
+            console.log('图片已经保存成功',evt)
+              //window.location.reload()
+              $('#sub').on('click',function () {
+                        //
+                        specific()
+                        
+                    })
+}
+//上传失败
+function uploadFailed(evt) {
+    alert("上传失败！");
+}
+ 
+
+ //取消上传
+$('.clear').on("tap",function  () {
+   xhr.abort();
+})
+
+}
+   
+
+  
+})//end
+</script>
+</head>
+
+
+<body>
+<div class="container-fluid">
+
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+                <!-- Brand -->
+                <a class="navbar-brand" href="http://www.lklgongyi.com/index.aspx">回到首页</a>
+               
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+               
+                <!-- Navbar links -->
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                  <ul class="navbar-nav">
+                   
+                    
+                  </ul>
+                </div> 
+              </nav>
+
+    <div id="content">
+      <div style="width: 40%;margin: auto;margin-top:20px;padding: 20px;border:1px solid #fff;box-shadow:3px 3px 3px #74cfe9 ">
+          <div class="form-group">
+              <label for="theme">主题:</label>
+              <input  type="text" class="form-control val" id="theme">
+          </div>
+          <div class="form-group">
+              <label for="monicker">机构名称:</label>
+              <input  type="text" class="form-control val" id="monicker">
+          </div>
+          <div class="form-group">
+              <label for="cost">收费:</label>
+              <input   type="text" class="form-control val" id="cost">
+          </div>
+          <div class="form-group">
+              <label for="file">上传文件:</label>
+              <input   type="file" class="form-control val" id="file">
+          </div>
+
+          <div style="font-size: 12px;">
+              <progress id="progressBar" value="0" max="100" ></progress>
+              <span id="percentage"></span>
+              <span id="time"></span>
+           </div>
+          
+            <button type="button" class="btn btn-primary" id="sub">确认提交</button>
+      </div>
+    </div>
+
+</div>    
+
+</body>
+</html>

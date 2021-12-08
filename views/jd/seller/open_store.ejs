@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>申请开店</title>
+<style type="text/css">
+	body{overflow-y:scroll;}
+</style>
+<script type="text/javascript">
+$(function  () {
+	
+  //全局变量
+  
+  let pass={}
+      pass.sub=false
+	
+	//保存用户，和相关资料到数据库中
+	//save_user()
+
+	//upload files means
+	upload()	
+  
+
+  //验证店铺名是否重复
+  proving()
+
+
+  function proving() {
+    $('#store_name').change(function () {
+      let data={};
+      data.name=$(this).val()
+      data=JSON.stringify(data)
+      let ur='/jd_index?order=proving_store_name&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                if(res){
+                  alert('店铺名已经存在')
+                  pass.sub=false
+                }
+              })
+              .catch(error =>{
+              pass.sub=true
+               console.log('error is', error)}
+              );
+    })
+  }
+
+
+
+
+function save_user () {
+
+          let data={};
+     	    data.user='<%- user %>'
+     	    data.name=$('#name').val()
+     	    data.phone=$('#phone').val()
+     	    data.store_name=$('#store_name').val()
+     	    data=JSON.stringify(data)
+     	    let ur='/jd_index?order=open_store&data='+data;    
+     	    ur=encodeURI(ur)
+		
+          fetch(ur, {  
+            method: 'GET',
+            })
+            .then((res)=>{
+            return res.json() 
+            })
+            .then((res)=>{
+              if(res==true){
+                alert('已提交审核，等待通知')
+              }else{
+              
+                alert('已经是商家账户')
+              }
+                      
+            })
+}
+	
+		
+function upload () {
+
+        var xhr;
+        var ot;//
+        var oloaded;
+        //上传文件方法
+       
+        $('#start').on("click",function  () {
+          if ($('#name').val=="" || $('#phone').val=="" || $('#store_nam').val=="" || $('#file').val().length==0 || $('#file2').val().length==0) {
+              alert('所有项不能为空')
+              return
+            }else{
+              if(pass.sub=true){
+                start()
+              }else{
+                alert('用户名已经存在')
+              }
+              
+            }
+        })
+    
+        $('#name').change(function  () {
+        	if($(this).val()!=""){
+        		$('#file,#file2').attr('disabled',false)
+        	}
+        })
+
+        var dataLength=0;
+        function start() {
+            
+       
+
+
+
+            var url = "/jd_upload"; // 接收上传文件的后台地址 
+            var form = new FormData(); // FormData 对象
+            form.enctype="multipart/form-data";
+        		  var fileObj = document.getElementById("file").files
+        		  var file2=document.getElementById("file2").files
+
+        		   	form.append("mf", fileObj[0]); // 文件对象
+                    form.append("mf", file2[0]); // 文件对象
+        		    dataLength=parseInt(fileObj[0].size+file2[0].size);
+        		      
+
+            form.append("address",'open_store2018-'+$('#name').val()); // 文件对象
+            //form.append("new_name",$('#name').val()); // 新的文件名
+            
+            xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
+            xhr.open("post", url, true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
+            xhr.onload = uploadComplete; //请求完成
+            xhr.onerror =  uploadFailed; //请求失败
+            xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
+            xhr.upload.onloadstart = function(){//上传开始执行方法
+                ot = new Date().getTime();   //设置上传开始时间
+                oloaded = 0;//设置上传开始时，以上传的文件大小为0
+            };
+            xhr.send(form); //开始上传，发送form数据
+        }
+        //上传进度实现方法，上传过程中会频繁调用该方法
+        function progressFunction(evt) {
+            
+             var progressBar = document.getElementById("progressBar");
+             var percentageDiv = document.getElementById("percentage");
+             // event.total是需要传输的总字节，event.loaded是已经传输的字节。如果event.lengthComputable不为真，则event.total等于0
+             if (evt.lengthComputable) {//
+                 progressBar.max = evt.total;
+                 progressBar.value = evt.loaded;
+                 percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100) + "%";
+             }
+            
+            var time = document.getElementById("time");
+            var nt = new Date().getTime();//获取当前时间
+            var pertime = (nt-ot)/1000; //计算出上次调用该方法时到现在的时间差，单位为s
+            ot = new Date().getTime(); //重新赋值时间，用于下次计算
+            
+            var perload = evt.loaded - oloaded; //计算该分段上传的文件大小，单位b       
+            oloaded = evt.loaded;//重新赋值已上传文件大小，用以下次计算
+        
+            //上传速度计算
+            var speed = perload/pertime;//单位b/s
+            var bspeed = speed;
+            var units = 'b/s';//单位名称
+            if(speed/1024>1){
+                speed = speed/1024;
+                units = 'k/s';
+            }
+            if(speed/1024>1){
+                speed = speed/1024;
+                units = 'M/s';
+            }
+            speed = speed.toFixed(1);
+            //剩余时间
+            var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
+            time.innerHTML = '，速度：'+speed+units+'，剩余时间：'+resttime+'s';
+               if(bspeed==0)
+                time.innerHTML = '上传已取消';
+        }
+        //上传成功响应
+        function uploadComplete(evt) {
+
+                    console.log('图片已经保存成功')
+                      //window.location.reload()
+                    save_user()
+    }
+        //上传失败
+        function uploadFailed(evt) {
+            alert("上传失败！");
+        }
+         
+
+         //取消上传
+        $('.clear').on("tap",function  () {
+        	 xhr.abort();
+        })
+        
+       }
+
+
+})//end 1
+</script>
+</head>
+<body>
+	
+   <% include ../header %>
+   
+   
+   
+   
+   <div class="container" style="width: 800px;">
+  <h2>填写申请开店信息</h2>
+  <form>
+    <div class="form-group">
+      <label for="text">真实姓名:</label>
+      <input type="text" id="name" class="form-control"  placeholder="姓名">
+    </div>
+    <div class="form-group">
+      <label for="pwd">手机号:</label>
+      <input type="text" id="phone" class="form-control"  placeholder="手机号">
+    </div>
+    <div class="form-group">
+      <label for="store_name">店铺名:</label>
+      <input type="text" id="store_name" class="form-control"  placeholder="起个店铺名吧">
+    </div>
+    <script type="text/javascript">
+    	$('#store_name').change(function  () {
+    		
+    		let data={};
+     	    data.store_name=$('#store_name').val()
+     	    data=JSON.stringify(data)
+
+    		$.ajax({
+    			type:"get",
+    			url:"/jd_index",
+    			async:true,
+    			data:{       
+    				'order':'watch_store_name',
+    				'data':data
+    				
+    			},
+    			success:function  (d) {
+    			//	console.log(d)
+    			},
+    			error:function  (e) {
+    				alert('ajax'+e)
+    				console.log(e)
+    			}
+    		});
+    		
+    		
+    	})
+    	
+    </script>
+    
+    <div class="form-group">
+      <label for="pwd">身份证照片正面:</label>
+      <input type="file" disabled class="form-control suolue" id="file" placeholder="身份证照片">
+    </div>
+    <div class="form-group">
+      <label for="pwd">身份证照片反面:</label>
+      <input type="file" disabled class="form-control suolue" id="file2" placeholder="身份证照片">
+    </div>
+    <div style="width: 800px;margin: auto;text-align: center;">
+   	<img src="" width="340px" >
+   	<img src="" width="340px" >
+   </div>
+    <button type="button" id="start" class="btn btn-primary">确认提交</button>
+    
+     <div style="font-size: 12px;">
+		    <progress id="progressBar" value="0" max="100" ></progress>
+		    <span id="percentage"></span>
+		    <span id="time"></span>
+     </div>
+  </form>
+</div>
+   
+   
+   
+   <script type="text/javascript">
+   	
+   	$('.suolue').eq(0).change(function  () {
+
+   		 var preview = $('img')[0];
+         var file    = this.files[0];
+         var reader  = new FileReader();
+
+		  reader.onloadend = function () {
+		    preview.src = reader.result;
+		  }
+
+		  if (file) {
+		    reader.readAsDataURL(file);
+		  } else {
+		    preview.src = "";
+		  }
+    })
+   	
+   	$('.suolue').eq(1).change(function  () {
+
+
+   		 var preview2 = $('img')[1];
+         var file    = this.files[0];
+         var reader2  = new FileReader();
+
+		  reader2.onloadend = function () {
+		    preview2.src = reader2.result;
+		  }
+
+		  if (file) {
+		    reader2.readAsDataURL(file);
+		  } else {
+		    preview2.src = "";
+		  }
+    })
+   	
+   
+ 
+</script>
+<!--<input type="file" onchange="previewFile()"><br>-->
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+<div id="fixed" style="z-index:2;border:3px solid #c3c3c3;position: fixed;margin: auto;left: 0;right: 0;top: 20px;width: 1000px;background: #fff;">
+	<div style="background: #f3f3f3;padding: 5px;">用户注册协议和隐私政策</div>
+	<div style="width: 990px;background: #fff;height: 400px;overflow-y: scroll;padding:0 40px ;">
+		<div style="padding-top:15px;font-size:20px;color: #000000;font-weight:bold;text-align: center;">用户注册协议书</div>
+		<br />
+		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  
+  		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  		本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。
+	    
+京东商城网站用户注册协议  本协议是您与京东商城网站所有者（以下简称为“京东商城”）之间就京东商城网站服务等相关事宜所订立的契约，
+请您仔细阅读本注册协议，您点击“同意以下协议，提交”按钮后，本协议即构成对双方有约束力的法律文件。  第1条 本站服务条款的确认和接纳  1.1本站的各项电子服务的所有权和运作权归京东商城所有。用户同意所有注册协议条款并完成注册程序，才能成为本站的正式用户。用户确认：本协议条款是处理双方权利义务的契约，始终有效，法律另有强制性规定或双方另有特别约定的，依其规定。  1.2用户点击同意本协议的，即视为用户确认自己具有享受本站服务、下单购物等相应的权利能力和行为能力，能够独立承担法律责任。
+  1.3如果您在18周岁以下，您只能在父母或监护人的监护参与下才能使用本站。 1.4京东商城保留在中华人民共和国大陆地区法施行之法律允许的范围内独自决定拒绝服务、
+  关闭用户账户、清除或编辑内容或取消订单的权利
+  
+	
+	</div>
+	
+	<div id="myButtons1" class="bs-example" style="margin: auto;margin-top: 40px;margin-bottom:40px;float: left;margin-left: 250px;">
+    	<button id="cancel" type="button" class="btn btn-primary" style="height: 50px;width: 200px;">取消</button>
+    </div>
+    <div id="myButtons2" class="bs-example" style="margin: auto;margin-top:40px;margin-bottom:40px;float: left;margin-left: 50px;">
+    	<button id="agree" type="button" class="btn btn-primary" style="height: 50px;width: 200px;">同意并继续</button>
+    </div>
+
+	
+</div>
+
+<script type="text/javascript">
+	
+	$('#cancel').on('click',function  () {
+		window.location.href='../'
+	})
+	
+	$('#agree').on('click',function  () {
+		$('#fixed').hide()
+	})
+	
+</script>
+
+<% include ../foot %>
+</body>
+</html>

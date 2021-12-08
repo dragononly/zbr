@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+ <script src="https://cdn.bootcss.com/js-sha1/0.6.0/sha1.min.js"></script>
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<script type="text/javascript">
+	$(function  () {
+					    //reg event    
+			     $('#reg').on('click',function  () {
+			     	
+			     	if($('#pwd').val()!=$('#pwd2').val()){
+			     		alert('两次密码不一致') 
+			     		return
+			     	}
+			     	
+			     	let data={};
+			     	    data.user=$('#user').val()
+			     	    data.password=sha1($('#pwd').val())
+			     	    data.phone=$('#phone').val()
+			     	    data=JSON.stringify(data)
+			     	  
+			     	fetch('/jd/reg_user?&data='+data, {
+					 method: 'GET',
+					})
+					.then((res)=>{
+					return res.json() 
+					})
+					.then((res)=>{
+					if(res==true){
+						alert('恭喜，注册成功！')
+						location.href='/jd_mobile?order=login'
+					}else{
+						alert('账号已经存在')
+					}
+			        		   
+			        })
+			   	
+			  })//reg click end！！！！
+			  
+  
+	})
+	
+</script>
+  
+</head>
+
+
+<body>
+<div class="container" style="padding: 20px;">	
+<form>
+  <div class="form-group">
+    <label for="user">账号:</label>
+    <input type="text" class="form-control" id="user" placeholder="请输入账号">
+  </div>
+  <div class="form-group">
+    <label for="pwd">密码:</label>
+    <input type="password" class="form-control" id="pwd" placeholder="请输入密码">
+  </div>
+  <div class="form-group">
+    <label for="pwd2">密码:</label>
+    <input type="password" class="form-control" id="pwd2" placeholder="请再次输入密码">
+  </div>
+  <div class="form-check">
+    <div class="form-group">
+    <label for="pwd2">手机号:</label>
+    <input type="text" class="form-control" id="phone" placeholder="请输入手机号">
+  </div>
+  </div>
+  <button type="button" class="btn btn-primary" id="reg">注册</button>
+</form>
+
+</div>
+</body>
+</html>

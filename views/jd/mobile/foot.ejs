@@ -1,0 +1,55 @@
+
+	<div style="margin-bottom:100px;clear: both;">
+		
+	</div>
+<nav class="navbar navbar-expand-sm navbar-dark fixed-bottom" style="background: #fff;" id="foot_img">
+   <!-- <div style="width: 24%;margin-right: 1%;"><a href="/jd_mobile?order=page1&from=wechat"><img width="100%"/></a></div> -->
+   <div style="width: 24%;margin-right: 1%;"><a href="https://m.mallcoo.cn/a/home/10484"><img width="100%"/></a></div>
+   
+  <div style="width: 24%;margin-right: 1%;"><a href="/jd_mobile?order=page2&from=wechat"><img width="100%"/></a></div>
+  <div style="width: 24%;margin-right: 1%;"><a href="/jd_mobile?order=page3&from=wechat"><img width="100%"/></a></div>
+  <!-- <div style="width: 19%;margin-right: 1%;"><a href="/jd_mobile?order=page4&from=wechat"><img width="100%"/></a></div> -->
+  <div style="width: 24%;"><a href="/jd_mobile?order=page5&from=wechat"><img width="100%"/></a></div>
+</nav>
+
+
+<script type="text/javascript">
+
+
+
+	function initialise () {
+		
+		//let src=['../jd/images/mobile/page1/微信图片_20180507141751_02.png','../jd/images/mobile/page1/微信图片_20180507095419_24.png','../jd/images/mobile/page1/微信图片_20180507095419_25.png','../jd/images/mobile/page1/微信图片_20180507095419_26.png','../jd/images/mobile/page1/微信图片_20180507095419_27.png']
+		let src=['../jd/images/mobile/page1/微信图片_20180507141751_02.png','../jd/images/mobile/page1/微信图片_20180507095419_24.png','../jd/images/mobile/page1/微信图片_20180507095419_25.png','../jd/images/mobile/page1/微信图片_20180507095419_27.png']
+        for (let i = 0; i < src.length; i++) {
+        	
+        	$('#foot_img img').eq(i).attr('src',src[i])
+        	
+        }
+		
+		
+	}
+	
+	initialise()
+	switch(page){
+        case 1:
+        $('#foot_img img').eq(0).attr('src','../jd/images/mobile/page1/微信图片_20180507095419_23.png')
+        break;
+        
+		case 2:
+		$('#foot_img img').eq(1).attr('src','../jd/images/mobile/page1/微信图片_20180507141803_03.png')
+		break;
+		
+		case 3:
+		$('#foot_img img').eq(2).attr('src','../jd/images/mobile/page1/微信图片_20180507141800_04.png')
+		break;
+		
+		// case 4:
+		// $('#foot_img img').eq(3).attr('src','../jd/images/mobile/page1/微信图片_20180507141757_05.png')
+		// break;
+		
+		case 5:
+		$('#foot_img img').eq(3).attr('src','../jd/images/mobile/page1/微信图片_20180507141751_06.png')
+		break;
+	}
+</script>

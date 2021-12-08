@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>拉卡拉</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+<style>
+   *{text-align: center;color: #666;}  body{background: #ececec}a{text-decoration: none !important}
+</style>
+<script>
+$(function () {
+  console.log(sessionStorage.off)
+  if(sessionStorage.off==1){
+    console.log(1 )
+    $('#content').show()
+    $('#account').hide()
+  }
+  //先进行密码认证
+  $('.sub').on('click',function () {
+    if($('.val').eq(0).val()=='<%- token%>'){
+      $('#content').show()
+      $('#account').hide()
+    }else{
+      alert('aaccount error')
+    }
+  })
+  go()
+  //1.2from sever gain data
+    function go() {
+      let ur='/lakala2018?order=admin_gain_data';    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+              
+              
+               
+                for (const i of res) {
+                  
+                   let html='<div>'+
+                             '<span>主题：'+i.lakala.theme+'</span>&nbsp&nbsp&nbsp&nbsp'+
+                             '<span>机构名称：'+i.lakala.monicker+'</span>&nbsp&nbsp&nbsp'+
+                             '<span>收费：'+i.lakala.cost+'￥</span>&nbsp&nbsp&nbsp'+
+                             '<input type=button class="pass_click" value="通过审核">'+
+                             '<span style="display:none">'+i._id+'</span>&nbsp&nbsp&nbsp'+
+                            
+                            '</div>'
+                  $('#content').append(html)
+
+                }
+
+              })
+              .then(()=>{
+                $('.pass_click').on('click',function () {
+                   let val= $(this).next().html()
+        
+                        let ur='/lakala2018?order=delete&data='+val;    
+                        ur=encodeURI(ur)   
+                        fetch(ur, {
+                                method: 'GET',
+                                })
+                                .then((res)=>{
+                                return res.json() 
+                                })
+                                .then((res)=>{
+                                  console.log(res)
+                                  if(res.n==1 && res.ok==1){
+                                    alert('审核成功')
+                                    sessionStorage.off=1
+                                    window.location.reload()
+                                   
+                                  }
+                                })
+                                .catch(error => console.log('error is', error));
+
+
+                 
+                })
+                
+              })
+              .catch(error => console.log('error is', error));
+    }
+     
+
+
+
+
+  
+})//end
+</script>
+</head>
+
+
+<body>
+<div class="container-fluid">
+       <div id="account" style="width: 20%;margin: auto;margin-top:50px;padding: 10px;border: 1px solid #fff ">
+        <div class="form-group" >
+          <label for="text">请输入管理员密码:</label>
+          <input type="password" class="form-control val" id="text">
+        </div>
+        <button type="button" class="btn btn-primary sub">确认登陆</button>
+       </div>
+
+      <div id="content" style="margin-top:50px;display: none">
+        
+      </div>
+
+</div>    
+
+</body>
+</html>

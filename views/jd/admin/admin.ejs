@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+  <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+  
+</head>
+
+
+<body>
+
+<div data-role="page" data-theme="a" class=" ui-shadow">
+
+	<style type="text/css">
+	.viewPage>a{width: 100px;line-height:100px;color:black;float:left;margin: auto;height: 100px;border: 1px solid #ececec;box-shadow: 10px 5px 10px skyblue;margin-top: 20px;margin-right:10px;display: block;text-align: center;"}
+    .viewPage>a:hover{color: red !important;cursor: pointer;}
+</style>
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content" style="margin-top: 100px;">
+      
+			
+         <form method="post" action="demo_form.php">
+					<div class="ui-field-contain" >
+                      <div style="width: 60%;margin: auto;"><a href="#" class="ui-btn ui-btn-b ui-corner-all">欢迎来到，商城后台。</a></div>
+					</div>
+		</form>
+		
+		
+		
+			
+				
+				
+		
+		  <div class="viewPage" style="width: 60%;margin: auto;">
+			<a href="admin_pc" class="view" data-role='none' data-transition="flip">
+				
+				电脑端
+				
+		  </a>	
+		    
+		  <a href="#" class="view" data-role='none' data-transition="flip">
+				
+				手机端
+				
+		  </a>	
+
+		     
+		  <a href="#" class="view" data-role='none' data-transition="flip">
+				
+				数据中心
+				
+		  </a>	
+		  
+		  <a href="/jd_index?order=work_admin" class="view" id="bug1" data-role='none' data-transition="flip">
+				
+				事务处理中心
+				
+		  </a>	
+
+       
+		</div>	
+		
+		
+		
+		   
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+</div>
+
+</html>
+</body>

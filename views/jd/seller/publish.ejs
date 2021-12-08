@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>申请开店</title>
+<style type="text/css">
+	body{overflow-y:scroll;}
+</style>
+
+</head>
+<body>
+	
+   <% include ../header %>
+   
+   
+   
+   
+   <div class="container" style="margin-top: 1%;">
+   	
+   	
+   	<div class="row">
+	  <div class="col-sm-2.5">
+	      <div class="card">
+		    <div class="card-header bg-success text-white">
+		    	店铺管理
+		    </div><!--card-header end~~~-->
+		    <div class="card-body" style="font-size: 12px;">
+		    	<div class="row">
+				  <div class="col"><a href="/jd/cloud">图片空间</a></div>
+				  <div class="col"><a href="/jd/user_store">查看店铺</a></div>
+				</div>
+				<div class="row">
+				  <div class="col"><a href="/jd/sell_in">出售中的宝贝</a></div>
+				  <div class="col"><a href="/jd/release_baby">发布宝贝</a></div>
+				</div>
+		    </div> <!--card-body end~~~-->
+		  </div>
+		  
+		   <div class="card" style="margin-top:20px;">
+		    <div class="card-header bg-success text-white">
+		    	交易管理
+		    </div><!--card-header end~~~-->
+		    <div class="card-body" style="font-size: 12px;">
+		    	<div class="row">
+				  <div class="col"><a href="/jd/evaluate_seller">评价管理</a></div>
+				  <div class="col"><a href="/jd/sell_out">已卖出宝贝</a></div>
+				</div>
+				<div class="row">
+				  <div class="col"><a href="#">发货</a></div>
+				  <div class="col"><a href="#">我要推广</a></div>
+				</div>
+				
+		    </div> <!--card-body end~~~-->
+		   </div>
+		   
+		   
+		   <div class="card" style="margin-top:20px;">
+		    <div class="card-header bg-success text-white">
+		    	服务中心
+		    </div><!--card-header end~~~-->
+		    <div class="card-body" style="font-size: 12px;">
+		    	<div class="row">
+				  <div class="col"><a href="#">退款管理</a></div>
+				  <div class="col"><a href="#">违规记录</a></div>
+				</div>
+		    </div> <!--card-body end~~~-->
+		  </div>
+		  
+		  <div class="card" style="margin-top:20px;">
+		    <div class="card-header bg-success text-white">
+		    	您当前的排名
+		    	<br />
+		    	<span style="font-size: 24px;color: #fbd437;font-weight: bold;">2342423</span>
+		    </div><!--card-header end~~~-->
+		   
+		  </div>
+		  
+	  </div><!--col3 end~~~-->
+	  
+	  <div class="col-sm-9.5" style="margin-left: 30px;">
+	  	<div class="card bg-light text-dark" style="width: 900px;padding-left: 10px;">
+		    <div class="card-body" >亲，这是您开店的<span style="color: #1e98e8;font-size: 20px;font-weight: 400;">100</span>天，继续加油~~~~</div>
+		</div>
+	    <div style="width: 900px;">
+	     <div id="mountNode"></div>
+	     
+	    </div>
+	   
+	    
+	  </div><!--col9.5 end~~~-->
+	</div><!--row end~~-->
+         
+   </div><!--container end~-->
+   
+   
+   
+   
+   
+  <script>
+  const { DataView } = DataSet;
+  const data = [
+    { item: '访问量', count: 40 },
+    { item: '推广点击量', count: 21 },
+    { item: '成交量', count: 17 },
+    { item: '收藏量', count: 13 },
+    { item: '投诉指数', count: 9 }
+  ];
+  const dv = new DataView();
+  dv.source(data).transform({
+    type: 'percent',
+    field: 'count',
+    dimension: 'item',
+    as: 'percent'
+  });
+  const chart = new G2.Chart({
+    container: 'mountNode',
+    forceFit: true,
+    height: window.innerHeight,
+  });
+  chart.source(dv, {
+    percent: {
+      formatter: val => {
+        val = (val * 100) + '%';
+        return val;
+      }
+    }
+  });
+  chart.coord('theta', {
+    radius: 0.75
+  });
+  chart.tooltip({
+    showTitle: false,
+    itemTpl: '<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+  });
+  chart.intervalStack()
+    .position('percent')
+    .color('item')
+    .label('percent', {
+      formatter: (val, item) => {
+        return item.point.item + ': ' + val;
+      }
+    })
+    .tooltip('item*percent', (item, percent) => {
+      percent = percent * 100 + '%';
+      return {
+        name: item,
+        value: percent
+      };
+    })
+    .style({
+      lineWidth: 1,
+      stroke: '#fff'
+    });
+  chart.render();
+</script>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+<% include ../foot %>
+</body>
+</html>

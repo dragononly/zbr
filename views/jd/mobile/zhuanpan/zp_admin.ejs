@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<link href="../../ico.ico" rel="icon" type="image/x-icon" />
+  <style>
+    #zp{transform: rotate(18deg)}
+  </style>
+</head>
+
+
+<body>
+<div class="container-fluid">
+  <div id="hide" >
+    <div class="form-group">
+      <label for="email">管理员账号:</label>
+      <input type="text" class="form-control" value="admin" id="user" placeholder="Enter">
+    </div>
+    <div class="form-group">
+      <label for="pwd">密码:</label>
+      <input type="password" class="form-control" id="pwd" placeholder="输入密码">
+    </div>
+
+    <button type="button" id="sub" class="btn btn-primary">确定</button>
+  </div>
+  <div id="show" style="display: none">
+      <div class="form-inline" style="margin-top:20px ">
+        
+          <input type="number" class="form-control" id="mu1" placeholder="现金奖1688元的个数" style="margin-bottom: 5px">
+          <input type="number" class="form-control" id="mu2" placeholder="现金奖100元的个数" style="margin-bottom: 5px">
+          <input type="number" class="form-control" id="mu3" placeholder="现金奖20元的个数" style="margin-bottom: 5px">
+          <input type="number" class="form-control" id="mu4" placeholder="小夜灯的数量" style="margin-bottom: 5px">
+          <input type="number" class="form-control" id="mu5" placeholder="进口零食" style="margin-bottom: 5px">
+          <input type="number" class="form-control" id="fenmu" placeholder="今天访问的总人数" style="margin-bottom: 5px">
+        
+          <button type="sub" id="save" class="btn btn-primary">保存设置</button>&nbsp;
+          <button type="sub" id="people" class="btn btn-primary">校对中奖人数</button>
+          <a href="/jd_mobile?order=jd/mobile/zhuanpan/promise" class="btn btn-info" role="btn btn-primary">进入兑奖后台</a>
+
+          
+      </div>
+      <div id="show2"></div>
+  </div>
+</div>   
+</body>
+</html>
+<script>
+$(function () {
+
+       //查询中奖人数
+       $('#people').on('click',function () {
+        let ur='/jd_mobile?order=zp_find_cake';    
+          ur=encodeURI(ur)   
+          fetch(ur, {
+                  method: 'GET',
+                  })
+                  .then((res)=>{
+                  return res.json() 
+                  })
+                  .then((res)=>{
+                    let people=0
+                    
+                   for (const i of res) {
+                     console.log(i)
+                      if(i.zp_one!='0'){
+                        people++
+                      }
+                   }
+                    $('#show2').html("总中奖人数"+people+":个")
+                  })
+                  .catch(error => console.log('error is', error));
+
+       })
+
+
+
+
+
+
+    $('#save').on('click',function () {
+      let data={};
+      data.mu1=$('#mu1').val()
+      data.mu2=$('#mu2').val()
+      data.mu3=$('#mu3').val()
+      data.mu4=$('#mu4').val()
+      data.mu5=$('#mu5').val()
+      data.fenmu=$('#fenmu').val()
+      data=JSON.stringify(data)
+      let ur='/jd_mobile?order=xf_zp&data='+data;    
+      ur=encodeURI(ur)   
+      fetch(ur, {
+              method: 'GET',
+              })
+              .then((res)=>{
+              return res.json() 
+              })
+              .then((res)=>{
+                if(res.ok==1){alert('设置成功')}else{
+                  alert('设置失败')
+                }
+                
+              })
+              .catch(error => console.log('error is', error));
+
+    })
+})
+
+
+
+
+  $('#sub').on('click',function () {
+    if($('#pwd').val()=="mm000000"){
+      $('#hide').hide()
+      $('#show').show()
+  }else{
+      alert('密码错误')
+    }
+  })
+</script>

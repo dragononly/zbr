@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8"/>
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js" type="text/javascript" charset="utf-8"></script>
+        <link href="../images/ico.ico" rel="icon" type="image/x-icon" />
+	    <script type="text/javascript">
+	    
+	    </script>
+	
+	</head>
+	<body>
+		<div data-role="page" id="pageone" data-theme="a">
+  <div data-role="header">
+   
+  </div>
+
+  <div data-role="content">
+    
+    
+    
+    <input type="text" name="" id="" value="" placeholder="请输入你需要的客户链接" class="address"/>
+     
+     <input type="button" name="" id="" value="合成一个二维码链接-等待一定时间" class="button"/>
+     
+     <div id="x">
+     	 <img src="" class="view"/>
+     </div>
+    
+    
+    <script type="text/javascript">
+    	$(function  () {
+    		
+    			for (var x = 0; x <99; x++) {
+    			   
+    				$('#x').append('<img src="" class="view"/>')
+    			}
+    			
+    		$('.button').click(function  () {
+    		
+    		var times = (new Date()).valueOf(); 
+    			var timestamp={}
+    			    timestamp.arr=[]
+    			   for (var i = 0; i <100; i++) {
+    			   	times=times+i
+    			     timestamp.arr[i]=times
+    			   
+    			   }
+    			   
+    			   
+    			   var addurl=$('.address').val().replace(/&/g,'%26')
+    			
+    			$.ajax({
+    				type:"get",
+    				url:"christmas2017/get",
+    				async:true,
+    				data:{
+    					'order':'erweima',
+    					'data':timestamp
+    				},
+    				success:function  (d) {
+  
+    					if(d==true){
+    						
+    				     for (var ii = 0; ii <100; ii++) {
+    				      $('.view')[ii].src='http://qr.topscan.com/api.php?text='+addurl+'%26key='+timestamp.arr[ii]
+    				      }
+    						
+    					
+    					}
+    					
+    				},
+    			});
+    			
+    			
+    			
+    			
+    		
+    			
+    			//$('.view')[0].src='http://pan.baidu.com/share/qrcode?w=150&h=150&url='+$('.address').val()
+    			//cli.im&mhid=sELPDFnok80gPHovKdI
+    			
+    		})
+    		
+    		
+    		
+    		
+    		
+    		
+    	})
+    </script>
+  </div>
+
+  <div data-role="footer">
+    
+  </div>
+</div> 
+	</body>
+</html>

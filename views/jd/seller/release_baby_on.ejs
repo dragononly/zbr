@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>发布宝贝</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+  <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+  <style type="text/css">
+  	*{margin: 0;padding: 0;}
+  	#left{float: left;width: 300px;background: #ececec;}
+  	#right{float: right;width: 900px;background: #ececec;}
+  	a{display: block;text-decoration: none;}
+  	.size{padding: 10px;border: 1px solid #00589C;float: left;}
+  	.size>input{width: 50px;}
+  </style>
+  
+<script type="text/javascript">
+$(function  () {
+	
+	{
+		let   size=$('.size:last').clone();
+	
+	
+	  	$('#size_button').on('click',function  () {
+	  		
+	  			$('.size:last').after('<div class="size" style="margin-right:3px;">'+
+			                          '大小:<input type="text" value="24"/>&nbsp;'+
+									  '数量:<input type="number" value="0"/>&nbsp;'+
+									  '颜色:<input type="text" value="默认" />&nbsp;'+
+									  '价格:<input type="number" value="0"/>&nbsp;'+
+		                              '</div>'
+		)
+	  			
+	  	})
+//	  	$('#color_button').on('click',function  () {
+//	  			$('.color:last').after('<div class="color"  style="margin-right:3px;">颜色:<input type="text" /></div>')
+//	  	})
+//	
+  	}	
+  		
+  		
+})//$
+</script>
+</head>
+
+
+<body>
+
+	  <div id="fixed_img" style="display:none;border-radius:5px;padding:20px;z-index:3;position: fixed;left: 0;right: 0;margin: auto;background: #ECECEC;width: 60%;height: 50%;">
+  	    <div class="form-group">
+		    <label >请输入图片地址:</label>
+		    <input type="text" class="form-control" >
+		    <br />
+		    <button type="button" class="btn btn-danger">确定</button>&nbsp;&nbsp;&nbsp;
+		    <button type="button" class="btn btn-danger">关闭</button>
+		</div>
+      </div>	
+      
+       <div id="fixed_img2" style="display:none;border-radius:5px;padding:20px;z-index:3;position: fixed;left: 0;right: 0;margin: auto;background: #ECECEC;width: 60%;height: 50%;">
+  	    <div class="form-group">
+		    <label >请输入图片地址:</label>
+		    <input type="text" class="form-control" >
+		    <br />
+		    <button type="button" class="btn btn-danger">确定</button>&nbsp;&nbsp;&nbsp;
+		    <button type="button" class="btn btn-danger">关闭</button>
+		</div>
+      </div>
+  
+<div class="container-fluid" style="width: 70%;margin: auto;margin-top: 20px;font-size: 14px;">
+  <button type="button" class="btn btn-primary btn-block">发布宝贝</button>
+  <div class="form-inline" style="margin-top: 20px;margin-bottom: 20px;">
+	  <label for="usr">宝贝标题:</label>
+	  <input id="ware_title" type="text" class="form-control"  maxlength="20" style="width: 70%;" placeholder="只能输入20个字">
+  </div>
+  <!--form-inline 2-->
+  
+  <div>
+   	宝贝属性	<span style="font-size: 12px;color: #767676;">错误填写宝贝属性，可能会引起宝贝下架或搜索流量减少，影响您的正常销售，请认真准确填写！</span>
+  </div>
+  <!--2-->
+
+  <div class="row" style="margin-top: 20px;">
+	  <div class="col">
+	  	<div class="form-inline">
+		  <label for="sel1">适用对象:&nbsp;</label>
+		  <select class="form-control" id="sel1">
+		    <option>儿童（0-12周岁）</option>
+		    <option>少年（12-18周岁）</option>
+		    <option>青年（18-28周岁）</option>
+		    <option>中年（28-40周岁）</option>
+		    <option>老年（40周岁以上）</option>
+		  </select>
+		</div>
+		
+	  </div>
+	  <div class="col">
+	  	<div class="form-inline">
+		  <label for="sel2">上市年份季节:&nbsp;</label>
+		  <select class="form-control" id="sel2" >
+		  	<option>2018年春</option><option>2018年夏</option><option>2018年秋</option><option>2018年冬</option><option>2017年春</option><option>2017年夏</option><option>2017年秋</option><option>2017年冬</option><option>2016年春</option><option>2016年夏</option><option>2016年秋</option><option>2016年冬</option><option>2015年春</option><option>2015年夏</option><option>2015年秋</option><option>2015年冬</option><option>2014年春</option><option>2014年夏</option><option>2014年秋</option><option>2014年冬</option><option>2013年春</option><option>2013年夏</option><option>2013年秋</option><option>2013年冬</option><option>2012年春</option><option>2012年夏</option><option>2012年秋</option><option>2012年冬</option><option>2011年春</option><option>2011年夏</option><option>2011年秋</option><option>2011年冬</option><option>2010年春</option><option>2010年夏</option><option>2010年秋</option><option>2010年冬</option><option>2009年春</option><option>2009年夏</option><option>2009年秋</option><option>2009年冬</option>	
+		  </select>
+		</div>
+	  </div>
+  </div>
+  <!--row s2--> 
+    
+
+   
+  <div class="row" style="margin-top: 20px;">
+       <div class="col">
+       	  <form class="form-inline">
+			  <label for="text">品牌：</label>
+			  <input type="text" class="form-control" id="brand">
+			 
+		  </form>
+       </div>
+       
+       
+  </div>
+  <!--row s2--> 
+  
+    <div class="row" style="margin-top: 20px;">
+      <div class="col">
+       
+		<div class="size" style="margin-right:3px;">
+			大小:<input type="text"  value="24"/>&nbsp
+			数量:<input type="number" value="1"/>
+			颜色:<input type="text" value="默认"/>
+			价格:<input type="number" value="0"/>
+		</div>
+        <input style="margin-left:3px;height: 45px;width: 60px;" id="size_button" type="button" value="新增"/>
+      </div>
+      
+    </div><!--row s2--> 
+    
+  <div class="row" style="margin-top: 20px;">
+       <div class="col">
+       	  <form class="form-inline">
+			  <label for="text">展示价格：</label>
+			  <input type="number" class="form-control" id="price">
+		  </form>
+       </div>
+       <div class="col">
+       	  <form class="form-inline">
+			  <label for="text">运费：</label>
+			  <input type="number" class="form-control" id="ems">
+		  </form>
+       </div>
+       
+  </div>
+  <!--row s2--> 
+    
+
+
+  <div style="margin-top: 20px;">
+  	<iframe src="/jd/cloud" width="100%" height="500px"></iframe>
+  <!--	<webview id="foo" src="http://www.baidu.com/" style="width:640px; height:480px"></webview>-->
+  </div>
+  
+  
+  <div id="img_add">
+  	<img src="../jd/images/later/baby_master.png" alt=""  style="width: 100px;height: 100px;"/>
+  	<img src="../jd/images/later/baby_add.png" alt="" style="width: 100px;height: 100px;"/>
+  	<img src="../jd/images/later/baby_add.png" alt="" style="width: 100px;height: 100px;"/>
+  	<img src="../jd/images/later/baby_add.png" alt="" style="width: 100px;height: 100px;"/>
+  	<img src="../jd/images/later/baby_bottom.png" alt="" style="width: 100px;height: 100px;"/>
+  </div>
+  
+
+  <script type="text/javascript">
+  	let img_index=null
+  	
+  	$('#img_add>img').on('click',function  () {
+  		$('#fixed_img').show()
+  		img_index=$(this).index()
+  	})
+  	$('#fixed_img button').eq(1).on('click',function  () {
+  		$('#fixed_img').hide()
+  	})
+  	
+  	$('#fixed_img button').eq(0).on('click',function  () {
+  		
+  		$('#fixed_img').hide()
+  		
+  		let user_input=$('#fixed_img input').val()
+  		
+
+  		$('#img_add>img').eq(img_index).attr('src',user_input)
+  	
+  	})
+  	
+  </script>
+
+  <div class="form-group" style="margin-top: 20px;">
+	  <label for="comment">简单描述:</label>
+	  <textarea class="form-control" rows="5" id="describe"></textarea>
+  </div>
+  
+  
+  <div class="form-group" style="margin-top: 20px;">
+  	<div>详情页：（只接收图片形式，从上到下，排序，请先制作好图片）</div>
+  	<br />
+  	<button type="button" class="btn btn-danger" id="inset_img">插入图片</button>
+  	<div id="img_box">
+
+  		 
+
+  	</div>
+  </div>
+	
+  <script type="text/javascript">
+  	
+{  	
+	let url_arr=[],url_arr_l=null;
+	
+	$('#inset_img').on('click',function  () {
+		$('#fixed_img2').show()
+			
+	})
+
+  	$('#fixed_img2 button').eq(1).on('click',function  () {
+  		$('#fixed_img2').hide()
+  	})
+  	$('#fixed_img2 button').eq(0).on('click',function  () {
+  		$('#fixed_img2').hide()
+  		let user_input=$('#fixed_img2 input').val()
+  		
+  		url_arr_l=url_arr.length
+
+  		url_arr[url_arr_l]=user_input
+        $('#img_box').empty()
+        
+        for (let i of url_arr) {
+        	  
+        	  let html='<img src='+i+' style="width: 90%;">'
+        	  
+        	  $('#img_box').append(html)
+        }
+        
+
+
+  	})
+  	
+
+ }
+  </script>	
+ 	
+	
+	
+
+    <div>
+    	<div class="form-check">
+
+		  <label class="form-check-label ">
+		    <input type="checkbox" class="form-check-input hz"  value="">7天无理由退货
+		  </label>
+		   <label class="form-check-label">
+		    <input type="checkbox" class="form-check-input hz" value="">正品保障
+		  </label>
+		   <label class="form-check-label">
+		    <input type="checkbox" class="form-check-input hz" value="">如实描述
+		  </label>
+		</div>
+
+    </div>
+  
+    <button type="button" class="btn btn-danger btn-block" id="release" style="margin-bottom: 200px;">发布</button>
+</div><!--container-fluid 1-->
+
+</body>
+</html>
+
+
+<script type="text/javascript">
+	$(function  () {
+		//start
+		//发布事件
+		//release onclick
+        
+    let store_name;    
+    //获取店铺名
+	get_store_name()
+
+
+	function get_store_name() {
+		let data={};
+		data.user='<%- user%>'
+		data=JSON.stringify(data)
+		let ur='/jd_index?order=get_store_name&data='+data;    
+		ur=encodeURI(ur)   
+		fetch(ur, {
+				method: 'GET',
+				})
+				.then((res)=>{
+				return res.json() 
+				})
+				.then((res)=>{
+
+					store_name= res.message.store_name
+					
+				})
+				.then(()=>{
+
+                      $('#release').on('click',function  () {
+			
+			
+							let size=[],size_number=[],size_color=[],size_price=[]
+							$('.size').each(function  () {
+								let index=$(this).index()
+								size[index]=$(this).children('input').eq(0).val()
+								size_number[index]=$(this).children('input').eq(1).val()
+								size_color[index]=$(this).children('input').eq(2).val()
+								size_price[index]=$(this).children('input').eq(3).val()
+							})
+							
+
+							let data={};
+							data.name=$('#ware_title').val()
+							data.age=$('#sel1').val()
+							data.year=$('#sel2').val()
+							data.brand=$('#brand').val()
+							data.price=$('#price').val()
+							data.size=size
+							data.size_number=size_number
+							data.color=size_color
+							data.size_price=size_price
+							data.describe=$('#describe').val()
+							data.hz=[]
+							data.pack={}
+							data.pack.store_name=store_name
+							if($('.hz').eq(0).is(':checked')){
+								data.hz[0]='7天无理由退货'
+							}else{
+								data.hz[0]=""
+							}
+							
+							if($('.hz').eq(1).is(':checked')){
+								data.hz[1]='正品保障'
+							}else{
+								data.hz[1]=""
+							}
+							
+							if($('.hz').eq(2).is(':checked')){
+								data.hz[2]='如实描述'
+							}else{
+								data.hz[2]=""
+							}
+							data.ems=$('#ems').val()
+							data.imga1=$('#img_add>img').eq(0).attr('src')
+							data.imga2=$('#img_add>img').eq(1).attr('src')
+							data.imga3=$('#img_add>img').eq(2).attr('src')
+							data.imga4=$('#img_add>img').eq(3).attr('src')
+							data.imga5=$('#img_add>img').eq(4).attr('src')
+							data.imgb=[]
+							for (var i = 0; i < $('#img_box>img').length; i++) {
+
+								data.imgb[i]=$('#img_box>img').eq(i).attr('src')
+							}
+
+							data=JSON.stringify(data)
+							console.log(data)
+								
+							
+							
+						
+							let ur='/jd_index?order=release_true&data='+data+'&user=<%- user%>';    
+							ur=encodeURI(ur)
+							
+							fetch(ur, {
+											method: 'GET',
+											})
+											.then((res)=>{
+											return res.json() 
+											})
+											.then((res)=>{
+												if(res==true){
+													alert('发布宝贝成功')
+												}else{
+													alert('发布失败')
+												}
+											})
+
+							
+							
+							
+							
+						})
+
+
+
+
+
+
+			
+				})
+
+				.catch(error => console.log('error is', error));
+
+	}
+
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	})
+	
+</script>

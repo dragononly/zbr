@@ -1,0 +1,564 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+ <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+<script src="cdn/sha1.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://apps.bdimg.com/libs/jquery/1.10.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+	
+	*{margin: 0;padding: 0;}	a{display: block;}
+  .huodong{margin-top: 30px;display: none;}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="page" >
+
+     <% include header %>
+<div class="main">
+	<div class="user">
+		
+	</div>
+	
+	<div class="data" style="margin-top: 20px;">
+		<input type="button" name="" id="master" value="管理员登陆日志查询" />
+		<div class="show1">
+			
+		</div>
+		
+	<!--	<input type="button" name="" id="uu" value="导出票据"  style="margin-top: 50px;"/>
+		<div class="show2">-->
+		
+		</div>
+		
+		
+		
+		
+		<input type="button" name="" id="username" value="查看捐赠人信息"  style="margin-top: 50px;" id="username"/>
+		<div class="show3">
+		
+		</div>
+
+		<div id="">
+		<input type="button" name=""  value="活动编辑"  style="margin-top: 50px;" id="huodong"/>
+        <div>活动按照1-5自行进行优先排序。修改时请注意相关顺序。</div>
+        
+        
+        <div>更换图片只需要替换原来，格式一致，并且名称一致</div>
+		
+			
+		
+		<a href="jump?jump=commonweal/login" style="text-align:center;width:130px;display: block;font-size: 17px;margin-top: 24px;border: 1px solid saddlebrown;">后台上传素材</a>
+		</div>
+		<div class="show5" style="clear: both;margin-top: 20px;">
+	
+			<div class="huodong">
+			  <div>活动名称：<input type="text" value="" class="c1" /></div>
+			   <div>活动机构：<input type="text" value=" " class="c1" /></div>
+			   <div>新闻页内容：<textarea name="" style="width: 300px;height:100px;" class="c1" ></textarea></div>
+			   <div>引用的图片名称：<input type="text" value="" placeholder="1-2-3排序" class="c1" /></div>
+			   <div><input type="button" value="修改" id="c1"/></div>
+			  
+			</div>
+			
+			<div class="huodong">
+			  <div>活动名称：<input type="text" value="" class="c2" /></div>
+			   <div>活动机构：<input type="text" value=" " class="c2" /></div>
+	     	   <div>新闻页内容：<textarea name="" style="width: 300px;height:100px;" class="c2">
+</textarea></div>
+			   <div>引用的图片名称：<input type="text" value="" placeholder="1-2-3排序" class="c2"/></div>
+			   <div><input type="button" value="修改" id="c2"/></div>
+			</div>
+			
+			<div class="huodong">
+			  <div>活动名称：<input type="text" value="" class="c3"/></div>
+			   <div>活动机构：<input type="text" value=" " class="c3"/></div>
+	              <div>新闻页内容：<textarea name="" style="width: 300px;height:100px;" class="c3">
+</textarea></div>
+			   <div>引用的图片名称：<input type="text" value="" placeholder="1-2-3排序" class="c3"/></div>
+			   <div><input type="button" value="修改" id="c3"/></div>
+			</div>
+			
+			<div class="huodong">
+			  <div>活动名称：<input type="text" value="" class="c4"/></div>
+			   <div>活动机构：<input type="text" value="" class="c4"/></div>
+			      <div>新闻页内容：<textarea name="" style="width: 300px;height:100px;" class="c4"></textarea></div>
+			   <div>引用的图片名称：<input type="text" value="" placeholder="1-2-3排序" class="c4"/></div>
+			   <div><input type="button" value="修改" id="c4"/></div>
+			</div>
+		
+		</div>
+		
+		
+		<div class="huodong">
+			  <div>活动名称：<input type="text" value="" class="c5"/></div>
+			   <div>活动机构：<input type="text" value="" class="c5"/></div>
+			      <div>新闻页内容：<textarea name="" style="width: 300px;height:100px;" class="c5"></textarea></div>
+			   <div>引用的图片名称：<input type="text" value="" placeholder="1-2-3排序" class="c5"/></div>
+			   <div><input type="button" value="修改" id="c5"/></div>
+			</div>
+		
+		</div>
+
+		
+
+	</div>
+	
+	
+
+	
+</div>
+
+<script type="text/javascript">
+	$(function  () {
+		
+		
+		//获取项目信息
+
+		$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'getxm',
+				},
+				success:function  (d) {
+		
+				
+				for (var i = 0; i < 4; i++) {
+					$('.c1')[i].value=d[0].data[i]
+					$('.c2')[i].value=d[1].data[i]
+					$('.c3')[i].value=d[2].data[i]
+					$('.c4')[i].value=d[3].data[i]
+					$('.c5')[i].value=d[4].data[i]
+				}
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+
+		
+		
+		
+		$('#c1').click(function  () {
+			
+			var data=[]
+			    data[0]='1'
+			    data[1]=[]
+			    data[1][0]=$('.c1')[0].value
+			    data[1][1]=$('.c1')[1].value
+			    data[1][2]=$('.c1')[2].value
+			    data[1][3]=$('.c1')[3].value
+
+			    
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'cwxm',
+					'data':data,
+				},
+				traditional : true,
+				success:function  (d) {
+					if(d==true){
+						alert('修改成功')
+					}else{
+						alert('修改失败')
+					}
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+	
+			
+		})
+		
+		
+		
+			$('#c2').click(function  () {
+			
+			var data={}
+			data.address='2'
+			    data.arr=[]
+			    data.arr[0]=$('.c2')[0].value
+			    data.arr[1]=$('.c2')[1].value
+			    data.arr[2]=$('.c2')[2].value
+			    data.arr[3]=$('.c2')[3].value
+
+			    
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'cwxm',
+					'data':data,
+				},
+				traditional : true,
+				success:function  (d) {
+					if(d==true){
+						alert('修改成功')
+					}else{
+						alert('修改失败')
+					}
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+	
+			
+		})
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	    	$('#c3').click(function  () {
+			
+			var data={}
+			    data.address='3'
+			    data.arr=[]
+			    data.arr[0]=$('.c3')[0].value
+			    data.arr[1]=$('.c3')[1].value
+			    data.arr[2]=$('.c3')[2].value
+			    data.arr[3]=$('.c3')[3].value
+
+			    
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'cwxm',
+					'data':data,
+				},
+				traditional : true,
+				success:function  (d) {
+					if(d==true){
+						alert('修改成功')
+					}else{
+						alert('修改失败')
+					}
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+	
+			
+		})
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    		$('#c4').click(function  () {
+			
+			var data={}
+			    data.address='4'
+			    data.arr=[]
+			    data.arr[0]=$('.c4')[0].value
+			    data.arr[1]=$('.c4')[1].value
+			    data.arr[2]=$('.c4')[2].value
+			    data.arr[3]=$('.c4')[3].value
+
+			    
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'cwxm',
+					'data':data,
+				},
+				traditional : true,
+				success:function  (d) {
+					if(d==true){
+						alert('修改成功')
+					}else{
+						alert('修改失败')
+					}
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+	
+			
+		})
+	    		
+	    		
+	    		
+	    		
+	    		
+	    		
+	    			$('#c5').click(function  () {
+			
+			var data={}
+			    data.address='5'
+			    data.arr=[]
+			    data.arr[0]=$('.c5')[0].value
+			    data.arr[1]=$('.c5')[1].value
+			    data.arr[2]=$('.c5')[2].value
+			    data.arr[3]=$('.c5')[3].value
+
+			    
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'cwxm',
+					'data':data,
+				},
+				traditional : true,
+				success:function  (d) {
+					if(d==true){
+						alert('修改成功')
+					}else{
+						alert('修改失败')
+					}
+				},
+				error:function  (e) {
+					alert('连接错误')
+				},
+				
+				
+			});
+	
+			
+		})
+		
+
+		
+		$('#username').click(function  () {
+			$('.show3').empty()
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'username',
+				},
+				success:function  (d) {
+				
+					for (var i = 0; i < d.length; i++) {
+						var vi='<div>'+'会员名：'+d[i].user+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp捐款总额：'+'60元'+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp捐款次数：'+'2次'+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp捐赠人创建时间：'+d[i].logindate+'</div>'
+						$('.show3').append(vi)
+					}
+					
+				},
+				error:function  (e) {
+					alert('连接服务器失败')
+				}
+				
+				
+			});
+			
+			
+			
+		})
+		
+
+		
+		$('#huodong').click(function  () {
+			$('.huodong').show()
+		})
+
+
+
+		$('#master').click(function  () {
+			
+			$('.show1').empty()
+			var data=[]
+			data[0]=sessionStorage.user
+			
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'getMaster',
+					'data':data
+				},
+				traditional : true,
+				success:function  (d) {
+					
+					for (var i = 0; i < d.length; i++) {
+						var vi='<div>'+'操作员：'+d[i].other[0]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbspip地址：'+d[i].other[1]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp登陆地点：'+d[i].other[2]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp登陆时间（美国时间-中国+8）：'+d[i].logindate+'</div>'
+						$('.show1').append(vi)
+					}
+					
+				},
+				error:function  (e) {
+					alert('连接服务器失败')
+				}
+				
+				
+			});
+	
+		})
+		
+		
+		
+		
+		
+		
+		
+		$('#uu').click(function  () {
+			
+			
+			$('.show2').empty()
+//			var data={}
+//			data.user=sessionStorage.user
+			
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+				data:{
+					'order':'getU',
+				},
+				traditional : true,
+				success:function  (d) {
+					
+
+                for (var i = 0; i < d.length; i++) {
+						var vi='<div>'+'捐款会员：'+d[i].user+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp捐款金额：'+d[i].other[0]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp捐款项目：'+d[i].other[1]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp发票收货人：'+d[i].other[3]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp收货地址：'+d[i].other[2]+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp捐款时间：'+d[i].logindate+'</div>'
+						
+						$('.show2').append(vi)
+					}
+					
+				},
+				error:function  (e) {
+					alert('连接服务器失败')
+				}
+				
+				
+			});
+			
+
+			
+			
+		})
+
+
+		if(sessionStorage.user=='admin'){
+			var data=[]
+			    data[0]=sessionStorage.user
+			    data[1]=returnCitySN['cip']
+			    data[2]=returnCitySN['cname']
+			 
+			
+			$.ajax({
+				type:"get",
+				url:"commonweal",
+				async:true,
+			    data:{
+			    	'order':'saveIp',
+			        'data':data
+			    },
+			    traditional : true,
+			    success:function  (d) {
+			    	
+			    },
+			    error:function  (e) {
+			    	alert('同步失败')
+			    },
+			    
+			});
+			
+			
+			
+			
+			
+			
+			
+			$('#huodong2').click(function  () {
+				$('.make1').show()
+			})
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		}
+
+		
+	})
+	
+
+	
+	if(sessionStorage.user!='admin'){
+		alert('请用管理员账户进入此页面')
+		location.href='http://www.cxcuu.com/jump?jump=commonweal/pc'
+	}
+	$('.user').html('欢迎你，管理员'+sessionStorage.user)
+</script>
+
+</div>
+
+<% include footer %>
+</body>
+
+
+
+
+
+
+</html>

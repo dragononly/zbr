@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>申请开店</title>
+<style type="text/css">
+	
+    #show_shop{text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+    body{overflow-y:scroll;}
+	#for_brand .col{text-overflow: ellipsis;white-space: nowrap;}
+	#for_brand a{display: block;float: left;width: 90px;margin-right: 5px;height: 20px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-bottom: 5px;margin-right: 20px;}
+    #for_brand>div>div{height: 50px;margin-bottom: 5px;}
+	#ware_title{border: 1px solid #ececec;padding: 20px;}
+	#ware_title>div{padding: 5px;margin-bottom: 20px;}
+	#ware_title>div>span:nth-child(1){display:inline-block;width: 100px;color: #666666;}
+	#ware_title>div>a{padding: 15px}
+	#ware_center>div{width:250px;float: left;margin-right: 5px;margin-bottom: 30px}
+	#ware_center a:hover{text-decoration: none;color:#e5393c;}
+</style>
+
+<script>
+	
+$(function () {
+
+	//全局变量区
+	 let record,ware={};
+
+
+	//start()
+	
+	
+	//搜索宝贝功能
+	search()
+	
+	//从后台获取参数
+	record='<%- record%>'
+	record=JSON.parse(record)
+	console.log(record,record.length)
+       
+
+	//（1）提取宝贝总数量
+	ware_name()
+	
+	
+	//提取品牌,适用年龄段
+	ware_title()
+	
+	//加载商品中间显示
+	ware_center()
+
+    
+
+
+
+	function ware_center() {
+          for (const i of record) {
+			let html='<div>'+
+				        '<a href=/jd/item?data='+i._id+'>'+
+						'<div><img width="250px" height="160px" src='+i.information.imga1+'></div>'+
+						'<div style="font-size:22px;font-weight:400;color:#e5393c;">￥'+i.information.price+'</div>'+
+						'<div style="font-size:13px;margin-top:2px;">'+i.information.name+'</div>'+
+						// '<div>评价</div>'+
+						'</a>'+
+						'<a href=/jd_index?store_name='+i.information.pack.store_name+'&order=store_page>'+
+						'<div style="color:#999;font-size:12px;margin-top:5px;">'+i.information.pack.store_name+'</div>'+
+						'</a>'
+					'</div>'
+				$('#ware_center').append(html)
+		  }  
+		
+	}
+     
+
+	function ware_title() {
+		
+		let ware_arr={}
+			ware_arr.brand=[]   //品牌
+			ware_arr.size=[]    //尺寸
+			ware_arr.year=[]    //上市年份
+			ware_arr.age=[]     //适用对象
+
+		//通过for 来把所有的标签都捡起来
+		for (const key of record) {
+
+			ware_arr.brand.push(key.information.brand)
+            ware_arr.year.push(key.information.year)
+			ware_arr.age.push(key.information.age)
+			//二维数组再度降解
+			for (const i of key.information.size) {
+				ware_arr.size.push(i)
+			}
+		}
+        
+		//去掉重复的部分
+		ware_arr.brand=Array.from(new Set(ware_arr.brand));//品牌去重
+		ware_arr.size=Array.from(new Set(ware_arr.size));//尺寸去重
+		ware_arr.year=Array.from(new Set(ware_arr.year));//年份去重
+		ware_arr.age=Array.from(new Set(ware_arr.age));//适用对象去重
+        
+
+		
+		//把品牌组装起来
+		for (const iterator of ware_arr.brand) {
+			$('#ware_brand').append('<a href="##">'+iterator+'</a>')
+		}
+		//把尺寸组装起来
+        for (const i of ware_arr.size) {
+			$('#ware_size').append('<a href="##">'+i+'</a>')
+		}
+
+		//把年份组装起来
+        for (const i of ware_arr.year) {
+			$('#ware_year').append('<a href="##">'+i+'</a>')
+		}
+
+		//把适用对象组装起来
+        for (const i of ware_arr.age) {
+			$('#ware_age').append('<a href="##">'+i+'</a>')
+		}
+
+
+		
+	}
+
+
+
+
+	function ware_name() {
+		ware.number=record.length
+		$('#ware_name').html('共找到商品总数量：'+ware.number+'件')
+	}
+
+
+
+
+	function search() {
+
+		function search_get() {
+		let val=$('#search').val()
+			let data={};
+			data.val=val
+			data=JSON.stringify(data)
+			let ur='/jd_index?order=search_ware&data='+data;    
+			ur=encodeURI(ur)	
+			location.href=ur
+		}
+
+		$('#search_button').on('click',function () {
+
+		search_get()
+
+		})
+
+		$(document).keydown(function (event) {  
+		if(event.keyCode==13){
+			search_get()
+		}
+		})
+
+	}
+    
+
+
+})	
+</script>
+
+
+
+
+</head>
+<body>
+	
+	<% include ../header %>
+	
+    <nav class="navbar navbar-expand-sm  navbar-dark" style="position: relative;">	   			
+   			<div class="row" style="margin: auto;margin-top: 20px;">
+			  <div class="class=col-sm-8">
+				  <div class="form-inline">
+				    <input id="search" class="form-control" type="text" placeholder="搜索" style="width:400px;">
+				    <button class="btn btn-danger" type="button" id="search_button">搜索</button>
+				  </div>
+			  </div>
+			  <div class="class=col-sm-4" style="padding-left: 30px;">
+			  	<button type="button" class="btn btn-danger" id="mygouwuche">
+				  我的购物车<span class="badge badge-light">4</span>
+				</button>
+			  </div>
+			  <script type="text/javascript">
+			  	$('#mygouwuche').click(function  () {
+			  		location.href='/jd/shop'
+			  	})
+			  </script>
+			</div>
+	</nav>
+		
+   
+   
+   
+   <div class="container" style="margin-top: 1%;">
+      <div id="ware_name" style="background: #ececec;padding:10px;text-align: left;color:#666666;">商品总数量：2331231</div>
+	  
+	  <div id="ware_title">
+		<div id="ware_brand">
+			<span>品牌：</span>
+		</div>
+
+		<div id="ware_size">
+				<span>尺寸大小：</span>
+			</div>
+		
+		<div id="ware_year">
+				<span>上市年份：</span>
+		</div>
+			
+		<div id="ware_age">
+			<span>适用对象：</span>
+		</div>
+	  </div>
+	  
+	  <div id="ware_center">
+           
+	  </div>
+   </div>
+
+
+
+
+
+    
+    
+   
+   <% include ../foot %>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+<style type="text/css">
+	#box>div>a{
+		display: block;
+		width: 200px;
+		height: 220px;
+		background: gold;
+		float: left;
+		margin-right: 10px;
+		margin-top: 10px;
+		
+	}
+	#box>div>a>div:nth-child(4)>button{float: right;}
+	#box>div>a>img:nth-child(1){height: 130px;}
+</style>
+</head>
+
+
+<body>
+	
+   <% include ../header %>
+	
+	<div id='menu' style="width:900px;margin: auto;margin-top: 10px; text-align: center;"></div>
+	
+   <script type="text/babel">
+
+	var HelloMessage = React.createClass({
+    render: function() {
+    	
+    	{
+
+
+
+        }//{}end~~~~
+
+    	var sty2={width:'250px'} 
+        return (
+        	<div>	
+               <ul className="pagination pagination-lg" style={{width:'1000px',margin:'auto',background:'red'}}>
+				    <li className="page-item active" style={sty2}><a className="page-link" href="#">买家申请退款</a></li>
+				    <li className="page-item" style={sty2}><a className="page-link" href="#">卖家处理退款</a></li>
+				    <li className="page-item" style={sty2}><a className="page-link" href="#">买家退货</a></li>
+				    <li className="page-item" style={sty2}><a className="page-link" href="#">退款完毕</a></li>
+				</ul>
+				<div style={{fontSize:'18px',marginTop:'20px'}}> 
+				     <span style={{fontWeight:'bold',marginRight:'30px'}}>状态(请等待商家收货并退款)</span>
+				     <span style={{color:'red'}} >时间（还剩6天5时0分）</span>
+				</div>
+				<div style={{marginTop:'20px'}}> 
+				     <span style={{fontWeight:'bold',marginRight:'30px'}}>退货物流详情(圆通速递（889086898877852661))</span>
+				     <a href="#">查看物流详情</a>
+				</div>
+				<div style={{marginTop:'20px'}}> 
+				     <div>留言板<a href="#" style={{color:'green',fontWeight:'bold'}}>申请客服介入</a></div>	
+				     <div className="card">
+				        <div className="card-header"><span>用户名</span><span>时间</span></div>
+				        <div className="card-body">买家已退货
+													物流公司：圆通速递
+													退货单号：889086898877852661
+													退货说明：未收到货，拒签单。</div>
+				        
+				     </div>
+				     
+				</div>
+				
+				
+				
+            </div>
+               )	   
+		
+  }
+ });
+ 
+ 
+    ReactDOM.render(
+    <HelloMessage />,
+   $('#menu')[0]
+    );
+    
+
+ 
+
+
+
+    </script>
+			
+	
+   
+</body>
+</html>

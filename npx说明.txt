@@ -1,0 +1,5 @@
+npm install -g @vue/cli
+
+后直接
+npx vue create hello-world
+达到，铺平环境的目的。

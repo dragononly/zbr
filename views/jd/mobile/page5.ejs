@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+ <!-- <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script> -->
+ <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+ <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+ <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+ <link href="../../ico.ico" rel="icon" type="image/x-icon" />
+ <title>用户中心5</title>
+ <script type="text/javascript">
+	  let page=5;
+	  document.addEventListener( "plusready", function(){
+	// 扩展API加载完毕，现在可以正常调用扩展API
+	var webview = plus.webview.currentWebview();
+    plus.key.addEventListener('backbutton', function() {
+    	
+        webview.canBack(function(e) {
+            if(e.canBack) {
+                webview.back();
+            } else {
+                webview.close(); //hide,quit
+                //plus.runtime.quit();
+            }
+        })
+        
+    });
+  })
+ </script>  
+ <style>
+
+ </style>
+</head>
+
+
+<body style="background: #f5f5f5;">
+	  	
+		
+<div class="container-fluid">
+
+
+<div style="padding: 10px;padding-left:0;font-size: 17px;font-weight: 600 ">我的订单</div>
+<div class="btn-group" style="text-align: center;width: 100%">
+		<button type="button" id="await_pay" class="btn btn-danger active" style="width: 20%">已下单</button>
+		<button type="button" id="pay_true" class="btn btn-danger" style="width: 20%">待发货</button>
+		<button type="button" id="shouhuo" class="btn btn-danger" style="width: 20%">待收货</button>
+		<button type="button" id="pingjia" class="btn btn-danger" style="width: 20%">待评价</button>
+		<button type="button" id="end" class="btn btn-danger" style="width: 20%">全订单</button>
+</div>
+
+<div id="content">
+	
+</div>
+
+<!-- 模态框 -->
+<div class="modal fade" id="myModal">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+   
+		<!-- 模态框头部 -->
+		<div class="modal-header">
+				<div class="form-group">
+						<label for="sel1">给个♥评价呗:</label>
+						<select class="form-control" id="sel1">
+						  <option>♥</option>
+						  <option>♥♥</option>
+						  <option>♥♥♥</option>
+						  <option>♥♥♥♥</option>
+						  <option>♥♥♥♥♥</option>
+						</select>
+					  </div>
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		</div>
+   
+		<!-- 模态框主体 -->
+		<div class="modal-body">
+				<div class="form-group">
+						<label for="comment">评论:</label>
+						<textarea class="form-control" rows="5" id="comment">5分好评~系统默认评价~</textarea>
+				</div>
+		</div>
+   
+		<!-- 模态框底部 -->
+		<div class="modal-footer">
+		  <button type="button" id="button_pingjia" class="btn btn-danger">确定评价</button>
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		</div>
+   
+	  </div>
+	</div>
+  </div>
+
+
+<div>
+	
+	<script>
+	   
+	 ui()
+	 function ui() {
+		 //菜单点击变色
+		 $('.btn-group button').on('click',function () {
+			$('.btn-group button').removeClass('active')
+		 })
+	 }
+
+	 
+	 
+	 //菜单点击综合事件
+	 $('.btn-group button').on('click',function () {
+			//任何人点击，将清理残留
+			$('#content').empty()
+	 })
+
+
+
+
+	//加载已经付款的商品，并且渲染。
+	$('#pay_true').on('click',function () {
+		pay_state('pay_true')
+	})
+
+	//加载等待付款的商品，并且渲染。
+	$('#await_pay').on('click',function () {
+		pay_state('await_pay')
+	})
+	
+	//加载待收货渲染
+	$('#shouhuo').on('click',function () {
+		pay_state('shouhuo')
+	})
+
+
+	//加载等待评价渲染
+	$('#pingjia').on('click',function () {
+		pay_state('pingjia')
+	})
+
+	//加载已经完成订单
+	$('#end').on('click',function () {
+			pay_state('ware_end')
+    })
+
+      //默认一进入，就加载已经下单，但没有付款的订单。
+	  //通过微信的openid 去获取数据库中的待支付和已支付订单。
+	  //由于这段代码复用性很高，所以，我们决定，封装一下他，并且吧order=await_pay作为判断入口
+
+	  //一进入这个页面就加载一次，我们选定为未支付的
+	  pay_state('await_pay')
+      
+     
+function pay_state(order) {		  
+			let data={};
+			//如果是app端，那么将这么走
+            if(sessionStorage.way=="app"){
+				data.openid=sessionStorage.openid
+				//为了方便后台去处理事务
+				data.way="app"
+			}else{
+				data.openid=sessionStorage.id
+			}
+			
+
+			data=JSON.stringify(data)
+			let ur='/jd_mobile?order='+order+'&data='+data;    
+			ur=encodeURI(ur)   
+			fetch(ur, {
+					method: 'GET',
+					})
+					.then((res)=>{
+					return res.json() 
+					})
+					.then((res)=>{
+						console.log(res,res.length)
+						//得到参数后，去渲染页面
+						switch(order){
+							case 'pay_true':
+							draw2(res)
+							break;
+							case 'await_pay':
+							draw(res)
+							break;
+							case 'shouhuo':
+							draw3(res)
+							break;
+
+							case 'pingjia':
+							draw4(res)
+							break;
+
+							case 'ware_end':
+							draw5(res)
+							break;
+
+							
+						}
+
+					})
+					.then((res)=>{
+
+						//用户取消订单
+						pay_off()
+
+						//待支付订单继续付款
+						pay_on()
+
+						//确认收货
+						shouhuo()
+
+						//用户评价事件
+						pingjia()
+						
+					})
+					.catch(error => console.log('error is', error));
+			 
+			function shouhuo() {
+				$('.shouhuo').on('click',function () {
+					const out_trade_no=$(this).attr('val')
+							let datac={};
+							    if(sessionStorage.way=="app"){
+									
+									
+									datac.openid=sessionStorage.openid
+								}else{
+									
+									datac.openid=sessionStorage.id
+								}
+								datac.out_trade_no=out_trade_no
+								datac.way=sessionStorage.way
+								datac=JSON.stringify(datac)
+
+							let ur='/jd_mobile?order=shouhuo_true&data='+datac;
+							fetch(ur, {
+								method: 'GET',
+								})
+								.then((res)=>{
+								return res.json() 
+								})
+								.then((res)=>{
+								
+								if(res==true){
+									location.reload()
+								}
+								})
+				})
+			}
+     
+			function pay_on() {
+						$('.pay_on').on('click',function () {
+									const out_trade_no=$(this).attr('val')
+									let datac={};
+										datac.price=$(this).parent().parent().find('.price').html().split('￥')[1]
+									    datac.size=$(this).parent().parent().find('.color').html()
+										datac.color=""
+										datac.openid=sessionStorage.id
+										datac.ems=$(this).parent().parent().find('.ems').html().split('￥')[1]
+										datac.ware_id=out_trade_no
+									let ur;
+									if(sessionStorage.way="app"){
+										data.openid=sessionStorage.openid
+										datac=JSON.stringify(datac)
+                                        ur='/h5pay?data='+datac;
+									}else{
+										datac=JSON.stringify(datac)
+                                        ur='/wxpay?data='+datac;
+									}
+									
+								    location.href=ur
+								})
+					}
+
+			
+			
+			//用户取消付款事件
+			function pay_off() {
+				$('.pay_off').on('click',function () {
+							const out_trade_no=$(this).attr('val')
+							let datac={};
+								datac.openid=sessionStorage.id
+								datac.out_trade_no=out_trade_no
+								datac=JSON.stringify(datac)
+							let ur='/jd_mobile?order=pay_off&data='+datac;
+							fetch(ur, {
+								method: 'GET',
+								})
+								.then((res)=>{
+								return res.json() 
+								})
+								.then((res)=>{
+								
+								if(res.ok==1 && res.nModified==1 && res.n==1){
+									location.reload()
+								}
+								})
+						})
+			}
+
+
+
+			//用户评价事件
+			function pingjia() {
+				$('.pingjia').on('click',function () {
+					
+					$('#myModal').modal('show')
+					const out_trade_no=$(this).attr('val')
+					$('#button_pingjia').on('click',function () {
+					
+							let datac={};
+							    if(sessionStorage.way=="app"){
+                                    datac.openid=sessionStorage.openid  
+								}else{
+									datac.openid=sessionStorage.id
+								}
+								datac.way="app"
+								datac.out_trade_no=out_trade_no
+								datac.pingjia=$('#sel1').val()
+								datac.pingjia_content=$("#comment").val()
+								datac=JSON.stringify(datac)
+							let ur='/jd_mobile?order=pingjia_user&data='+datac;
+							fetch(ur, {
+								method: 'GET',
+								})
+								.then((res)=>{
+								return res.json() 
+								})
+								.then((res)=>{
+								console.log(res)
+								if(res==true){
+									location.reload()
+								}
+								})					
+					})
+				
+					//先加载出一个页面，里面存放星级和用户想要说的话。
+
+
+					
+							
+				})
+			}
+
+
+
+
+
+            //画已经付款的画面
+			function draw2(res) {
+				
+				for (const i of res) {
+					
+				const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+								'<div style="float:left;">'+i.xf.pay.store_user+'</div>'+
+								'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.xf.pay.out_trade_no+'</div>'+
+								'<div class="row" style="clear:both;">'+
+									'<div class="col"><img style="width:100%;" src='+i.xf.pay.logo+'></div>'+
+									'<div class="col" style="font-size:12px;">'+i.xf.pay.ware_name+
+									'<div>'+i.xf.pay.size+i.xf.pay.color+'</div>'+
+									'</div>'+
+									'<div class="col">'+
+										'<div style="font-size:14px;">￥'+i.xf.pay.price+'</div>'+
+										'<div style="font-size:12px;">邮费：￥'+i.xf.pay.ems+'</div>'+
+									'</div>'+
+								'</div>'+
+								'<div style="text-align:right;">'+
+									'<a href="##" style="margin-top:20px;" class="btn btn-outline-success btn-sm" role="button">买家已付款</a>'+
+							    '</div>'+
+								'</div>'
+							
+					$('#content').append(html)
+				}
+			
+			}
+
+		
+
+			//画还没有付款的页面
+			function draw(res) {
+				
+				for (const i of res) {
+					
+				const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+								'<div style="float:left;">'+i.xf.pay.store_user+'</div>'+
+								'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.xf.pay.out_trade_no+'</div>'+
+								'<div class="row" style="clear:both;">'+
+									'<div class="col"><img style="width:100%;" src='+i.xf.pay.logo+'></div>'+
+									'<div class="col" style="font-size:12px;">'+
+										'<span class=ware_name>'+i.xf.pay.ware_name+'</span>'+
+									'<div class="color">'+i.xf.pay.size+i.xf.pay.color+'</div>'+
+									'</div>'+
+									'<div class="col">'+
+										'<div class="price" style="font-size:14px;">￥'+i.xf.pay.price+'</div>'+
+										'<div class="ems" style="font-size:12px;">邮费：￥'+i.xf.pay.ems+'</div>'+
+									'</div>'+
+								'</div>'+
+								'<div style="text-align:right;">'+
+									'<a href="#" val='+i.xf.pay.out_trade_no+' style="margin-top:20px;margin-right:20px;" class="btn btn-outline-success btn-sm pay_off" role="button">取消订单</a>'+
+									'<a href="#" logo='+i.xf.pay.logo+' val='+i.xf.pay.out_trade_no+' style="margin-top:20px;" class="btn btn-outline-success btn-sm pay_on" role="button">立即付款</a>'+
+							    '</div>'+
+								'</div>'
+							
+					$('#content').append(html)
+				}
+			
+			}
+
+
+
+			//画收货的画面
+			//画还没有付款的页面
+			function draw3(res) {
+				
+				for (const i of res) {
+					
+				const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+								'<div style="float:left;">'+i.xf.pay.store_user+'</div>'+
+								'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.xf.pay.out_trade_no+'</div>'+
+								'<div class="row" style="clear:both;">'+
+									'<div class="col"><img style="width:100%;" src='+i.xf.pay.logo+'></div>'+
+									'<div class="col" style="font-size:12px;">'+
+										'<span class=ware_name>'+i.xf.pay.ware_name+'</span>'+
+									'<div class="color">'+i.xf.pay.size+i.xf.pay.color+'</div>'+
+									'</div>'+
+									'<div class="col">'+
+										'<div class="price" style="font-size:14px;">￥'+i.xf.pay.price+'</div>'+
+										'<div class="ems" style="font-size:12px;">邮费：￥'+i.xf.pay.ems+'</div>'+
+									'</div>'+
+								'</div>'+
+								'<div style="text-align:right;">'+
+									// '<a href="#" val='+i.xf.pay.out_trade_no+' style="margin-top:20px;margin-right:20px;" class="btn btn-outline-success btn-sm pay_off" role="button">取消订单</a>'+
+									'<a href="#" logo='+i.xf.pay.logo+' val='+i.xf.pay.out_trade_no+' style="margin-top:20px;" class="btn btn-outline-success btn-sm shouhuo" role="button">确认收货</a>'+
+							    '</div>'+
+								'</div>'
+							
+					$('#content').append(html)
+				}
+
+			
+			}
+
+
+			//画评价等待页面
+			
+			function draw4(res) {
+				
+				for (const i of res) {
+					
+				const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+								'<div style="float:left;">'+i.xf.pay.store_user+'</div>'+
+								'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.xf.pay.out_trade_no+'</div>'+
+								'<div class="row" style="clear:both;">'+
+									'<div class="col"><img style="width:100%;" src='+i.xf.pay.logo+'></div>'+
+									'<div class="col" style="font-size:12px;">'+
+										'<span class=ware_name>'+i.xf.pay.ware_name+'</span>'+
+									'<div class="color">'+i.xf.pay.size+i.xf.pay.color+'</div>'+
+									'</div>'+
+									'<div class="col">'+
+										'<div class="price" style="font-size:14px;">￥'+i.xf.pay.price+'</div>'+
+										'<div class="ems" style="font-size:12px;">邮费：￥'+i.xf.pay.ems+'</div>'+
+									'</div>'+
+								'</div>'+
+								'<div style="text-align:right;">'+
+									// '<a href="#" val='+i.xf.pay.out_trade_no+' style="margin-top:20px;margin-right:20px;" class="btn btn-outline-success btn-sm pay_off" role="button">取消订单</a>'+
+									'<a href="#" logo='+i.xf.pay.logo+' val='+i.xf.pay.out_trade_no+' style="margin-top:20px;" class="btn btn-outline-success btn-sm pingjia" role="button">评价</a>'+
+							    '</div>'+
+								'</div>'
+							
+					$('#content').append(html)
+				}
+
+			
+			}
+
+
+
+			//画结束的订单
+			
+			function draw5(res) {
+				
+				for (const i of res) {
+					
+				const html='<div style="background:#fff;padding:10px;margin-top:10px;">'+
+								'<div style="float:left;">'+i.xf.pay.store_user+'</div>'+
+								'<div style="color:#666;font-size:12px;float:right;">订单号：'+i.xf.pay.out_trade_no+'</div>'+
+								'<div class="row" style="clear:both;">'+
+									'<div class="col"><img style="width:100%;" src='+i.xf.pay.logo+'></div>'+
+									'<div class="col" style="font-size:12px;">'+
+										'<span class=ware_name>'+i.xf.pay.ware_name+'</span>'+
+									'<div class="color">'+i.xf.pay.size+i.xf.pay.color+'</div>'+
+									'</div>'+
+									'<div class="col">'+
+										'<div class="price" style="font-size:14px;">￥'+i.xf.pay.price+'</div>'+
+										'<div class="ems" style="font-size:12px;">邮费：￥'+i.xf.pay.ems+'</div>'+
+									'</div>'+
+								'</div>'+
+								'<div style="text-align:right;">'+
+									// '<a href="#" val='+i.xf.pay.out_trade_no+' style="margin-top:20px;margin-right:20px;" class="btn btn-outline-success btn-sm pay_off" role="button">取消订单</a>'+
+									'<a href="#" logo='+i.xf.pay.logo+' val='+i.xf.pay.out_trade_no+' style="margin-top:20px;" class="btn btn-outline-success btn-sm pingjia" role="button">评价完毕</a>'+
+							    '</div>'+
+								'</div>'
+							
+					$('#content').append(html)
+				}
+
+			
+			}
+          
+          
+
+
+}    
+
+	
+
+	
+	</script>
+
+</div>
+    
+<%- include foot%>
+    
+</div>
+
+
+</body>
+</html>

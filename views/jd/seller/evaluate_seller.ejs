@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+<title>评价管理</title>
+<style type="text/css">
+	body{overflow-y:scroll;}
+</style>
+
+</head>
+<body>
+	
+   <% include ../header %>
+   
+   
+   
+   
+   <div class="container" style="margin-top: 1%;">
+  
+     <div id="mountNode" style="width: 60%;margin: auto;"></div>
+	     
+	 </div>
+	 
+	 <div style="margin: auto;width: 40%;font-weight: 400;">
+	 	卖家累积信用：<span>95</span>&nbsp; <span style="color: darkred;font-size: 20px;">♥♥♥♥</span>
+	 </div>
+ 
+   </div><!--container end~-->
+   
+   
+   
+   
+   
+  <script>
+
+  const data = [
+    { country: '1分很不满意', population: 131 },
+    { country: '2分不满意', population: 104 },
+    { country: '3分一般', population: 29 },
+    { country: '4分满意', population: 23 },
+    { country: '5分非常满意', population: 18 }
+  ];
+  const ds = new DataSet();
+  const dv = ds.createView().source(data);
+  dv.source(data)
+    .transform({
+      type: 'sort',
+      callback(a, b) { // 排序依据，和原生js的排序callback一致
+        return a.population - b.population;
+      }
+    });
+  const chart = new G2.Chart({
+    container: 'mountNode',
+    forceFit: true,
+    height: '400'
+  });
+  chart.source(dv);
+  chart.axis('country', {
+    label: {
+      offset: 12
+    }
+  });
+  chart.coord().transpose();
+  chart.interval().position('country*population');
+  chart.render();
+
+</script>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+<% include ../foot %>
+</body>
+</html>

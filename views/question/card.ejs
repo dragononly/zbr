@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <link href="../../images/ico.ico" rel="icon" type="image/x-icon" />
+</head>
+
+
+<body >
+
+<div data-role="page" data-theme="a" class=" ui-shadow" style="background: url(../images/question/card.png) repeat no-repeat;background-size:100%;">
+	
+	<style type="text/css">
+		 .view{border:15px solid #87CEEB;border-radius:5px ;padding: 5px;font-family: 隶书;}
+	</style>
+	
+  <div data-role="header">
+   
+  </div>
+  
+
+
+   <div data-role="main" class="ui-content">
+   	  
+      <a href="#" id="keyback" data-transition="flip" data-role="button" target="_top" style="position: fixed;bottom: 20px;width: 70%;left: 0;right: 0;margin: auto;">返回</a>
+  
+  
+     <script type="text/javascript">
+     	$('#keyback').attr('href',localStorage.minpoo_url)
+     </script>
+		       <div style="font-family:'隶书';margin-top: 50px;padding-bottom: 10px;">
+			 	     <div style="width: 50%;float: left;" id="no_use">	
+			 	    	<input type="button" name="" id="" value="未使用" />
+			 	     </div>	
+			 	     
+			 	     	<div style="width: 50%;float: left;" id="use">	
+			 	    	<input type="button" name="" id="" value="已使用" />
+			 	     </div>	
+		 	    </div>
+          <div id="ca" style="font-size: 10px;color:green"></div>
+		 <div style="margin-top: 80px;" id="god">
+		 	
+          
+		 </div>   
+		 
+		 <div style="margin-top: 80px;" id="god2" style="display: none;">
+		 	
+          
+		 </div>  
+
+		   
+   </div>
+  
+   <div data-role="footer" data-position="fixed">
+
+    </div>
+  
+  
+  <script type="text/javascript">
+$(function  () {
+	
+  		//载入卡券
+  		let card=localStorage.card,card_arry,store='<%- data%>';
+  		    
+  		    card=card.split(',')
+
+  		    fetch('/question/card_get?store='+store, {
+			    method: 'GET',
+				  })
+				  .then((res)=>{
+				    return res.json() 
+				  })
+				  .then((res)=>{
+
+                  card_arry=[]
+                 for (let i = 0; i < res.length; i++) {
+                 	   card_arry[i]=[]
+                 	   card_arry[i].name=res[i].data[0]
+                 	   card_arry[i].describe=res[i].data[1]
+                     card_arry[i].type=res[i].data[2]
+                     card_arry[i].mark=res[i].store_mark
+                 }
+
+                 
+                    for (let i = 1; i < card.length; i++) {
+ 
+                       for (let ii = 0; ii < card_arry.length; ii++) {
+                       	           if(card_arry[ii].name==card[i]){
+
+                        	          let html_mould='<div class="view">'+
+						        	              '<div>'+card_arry[ii].name+'</div>'+
+														        	'<div style="color: red;">'+card_arry[ii].describe+'</div>'+
+														        	'<div style="text-align: right;font-size: 10px;color: #579F23;">'+card_arry[ii].type+'</div>'+
+														        	'<input type="button" value="使用" class="use"/>'+
+														        	'<div style="display:none" >'+card_arry[ii].mark+'</div>'+
+														        	
+						                        '</div>'
+						                        $('#god').append(html_mould)  
+
+                           }
+                       }
+
+                    	
+                    }
+                 
+
+		   
+			     })
+				  .then((e)=>{
+
+		           $('.use').on('click',function  () {
+		           	
+		           	de_name=$(this).prev().prev().prev().html()
+
+		           	$(this).parent().css('background', 'gold');
+              
+              alert($(this).next().html())
+
+
+ 
+		           	time()
+		           	function time () {
+                      
+                      if(localStorage.card_use){
+                      	 let card_use=localStorage.card_use.split(',')
+                            card_use[card_use.length]=de_name
+                            localStorage.card_use=card_use.toString()
+                      }else{
+                      	  localStorage.card_use=de_name
+                      }
+  
+                             
+						           	$(this).parent().remove()
+						               
+										  	 for (var i = 0; i < card.length; i++) {
+										  	 	
+										  	   if(card[i]==de_name){
+										  	   	
+										  	   	 card.splice(i,1)
+										  	   	 break
+										  	   }
+										  	 
+										  	 }
+						           	
+						           	card=card.join(',')
+						           	
+						           	localStorage.card=card
+						
+						            window.location.reload()
+		            
+		             	} 
+		
+		           })
+
+				  })
+				  .then((e)=>{
+				  	   
+				  	   let card_use=localStorage.card_use.split(',')
+				  	       
+		            
+		            $('#use').on('click',function  () {
+		            	
+		            	  $('#god2').show()
+		            		$('#god').hide()	            	
+		            	
+		            })
+		            
+		            $('#no_use').on('click',function  () {
+		            	
+		            	  $('#god').show()
+		            		$('#god2').hide()	            	
+		            	
+		            })
+
+		            
+		              for (let i = 1; i < card_use.length; i++) {
+ 
+                       for (let ii = 0; ii < card_arry.length; ii++) {
+                       	           if(card_arry[ii].name==card_use[i]){
+
+                        	          let html_mould='<div class="view">'+
+						        	              '<div>'+card_arry[ii].name+'</div>'+
+														        	'<div style="color: red;">'+card_arry[ii].describe+'</div>'+
+														        	'<div style="text-align: right;font-size: 10px;color: #579F23;">'+card_arry[ii].type+'</div>'+
+														        	'<div style="color: green;">已经使用过了</div>'+
+														        
+														        	
+						                        '</div>'
+						                        $('#god2').append(html_mould)  
+
+                           }
+                       }
+
+                    	
+                    }
+		            
+		          
+				  	 $('#god2').hide()	 
+				  	
+				  	
+				  })
+
+  		
+  		
+  		
+  		
+		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+  		
+})
+  </script>
+  
+</div>
+
+</html>
+</body>
