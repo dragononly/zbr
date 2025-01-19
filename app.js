@@ -2,38 +2,15 @@ const http = require('http');
 const logger = require('koa-logger')
 const Koa = require('koa');
 const path = require('path')
-const koaBody = require('koa-body');
 const bodyparser = require('koa-bodyparser');
-// const session = require("koa-session2");
 const session = require('koa-session');
-const Router = require('koa-router')
 const static = require('koa-static')
 const cors = require('koa2-cors');
 const app = new Koa()
 const WebSocket = require('ws');
-const jwt = require('jsonwebtoken')
-// const jwtKoa = require('koa-jwt')
-const util = require('util')
-const verify = util.promisify(jwt.verify) // 解密
 global.secret = 'jwt xzb'
 app.keys = ['some secret hurr'];
 
-// app.use(koaBody({
-//   multipart:true, // 支持文件上传
-//   // encoding:'gzip',
-//   jsonLimit:1000000000,
-//   formLimit:1000000000,
-//   textLimit:1000000000,
-//   // formidable:{
-//   //   uploadDir:path.join(__dirname,'public/upload/'), // 设置文件上传目录
-//   //   keepExtensions: true,    // 保持文件的后缀
-//   //   maxFieldsSize:2000 * 1024 * 1024, // 文件上传大小
-//   //   onFileBegin:(name,file) => { // 文件上传前的设置
-//   //     // console.log(`name: ${name}`);
-//   //     // console.log(file);
-//   //   },
-//   // }
-// }));
 
 app.use(bodyparser({
   jsonLimit: 1000000000,
@@ -45,8 +22,6 @@ app.use(bodyparser({
   }
 }));
 
-// app.use(bodyparser.json({limit:'50mb'}));
-// app.use(bodyparser.urlencoded({limit:'50mb',extended:true}));
 
 const CONFIG = {
   key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
@@ -61,20 +36,13 @@ const CONFIG = {
   renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
 };
 
-// app.use(session({
-//   store: new Store()
-// }));
-// app.use(session({
-//     key: "SESSIONID",   //default "koa:sess"
-// }));
+
 app.use(session(CONFIG, app));
-//http.createServer(app.callback()).listen(3000);
-const port=2000
+const port = 2000
 const server = http.createServer(app.callback()).listen(port);
 global.wss = new WebSocket.Server({ server });
 wss = global.wss
 console.log(`端口号${port}`)
-//origin: 'http://localhost:8080',
 app.use(cors({
   origin: function (ctx) {
     // if (ctx.url === '/test') {
@@ -161,38 +129,22 @@ app.use(static(path.join(__dirname, '/public')));
 let index = require('./routers/index');//首页
 
 //公共部分
-let all = require('./routers/all/index'); //chat moudle
-let cloud = require('./routers/cloud/index'); //cloud 云盘项目
-let quesion = require('./routers/question/index'); //百万答题项目
-let getup = require('./routers/getup/index'); //早起打卡
-let chat = require('./routers/chat/rou'); //chat moudle
-let wxpay = require('./routers/pay/wxpay'); //chat moudle
-let sse = require('./routers/chat/sse'); //sse通讯
-let gather = require('./routers/other/gather'); //sse通讯
-let companypg = require('./routers/work/companypg'); //sse通讯
-let api = require('./routers/api/api'); //sse通讯
-let sky = require('./routers/sky/sky'); //skynote
-let ai = require('./routers/ai/index'); //sse通讯
-let build = require('./routers/build/index'); //sse通讯
+
+
+
+
+
+
+
+
+let build = require('./routers/build/index');
 
 app.use(index.routes(), index.allowedMethods());
-app.use(cloud.routes(), cloud.allowedMethods());
-app.use(quesion.routes(), quesion.allowedMethods());
-app.use(getup.routes(), getup.allowedMethods());
-app.use(chat.routes(), chat.allowedMethods());
-app.use(all.routes(), all.allowedMethods());
-app.use(wxpay.routes(), wxpay.allowedMethods());
-app.use(sse.routes(), sse.allowedMethods());
-app.use(gather.routes(), gather.allowedMethods());
-app.use(companypg.routes(), companypg.allowedMethods());
-app.use(sky.routes(), sky.allowedMethods());
-app.use(api.routes(), api.allowedMethods());
-app.use(ai.routes(), ai.allowedMethods());
+
 app.use(build.routes(), build.allowedMethods());
 //app.use(session());
 
 
-require("./routers/chat/websocket")
 //require("./routers/chat/socket")
 
 
