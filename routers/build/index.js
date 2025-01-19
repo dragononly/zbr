@@ -21,8 +21,8 @@ router.post('/build/getprojec3tid', async (ctx, next) => {
     let db = {
         news: data["name"],
     }
-    
-    const cab = await build3.findOne(db,{_id:1})
+
+    const cab = await build3.findOne(db, { _id: 1 })
 
     ctx.body = cab
 })
@@ -35,7 +35,7 @@ router.post('/build/getproid', async (ctx, next) => {
         menu2: data["menu2"],
     }
     const cab = await build2.findOne(db)
-    
+
     ctx.body = cab
 })
 
@@ -48,7 +48,7 @@ router.post('/build/changepromenu', async (ctx, next) => {
     let id = { _id: data.id }
 
     const cab = await build2.updateMany(id, db)
-    
+
     ctx.body = cab
 })
 
@@ -65,7 +65,7 @@ router.get('/build/getonenews2', async (ctx, next) => {
     data = JSON.parse(data)
 
     const cab = await build3.findOne({ '_id': data.id })
-    
+
     ctx.body = cab
 })
 
@@ -79,7 +79,7 @@ router.post('/build/upnews2', async (ctx, next) => {
         weizhi: data["weizhi"],
         zhaiyao: data["zhaiyao"],
         "leixing": data.leixing,
-        paixu:data.paixu
+        paixu: data.paixu
     }
     const cab = await build3.findByIdAndUpdate({ _id: data.id }, db)
     ctx.body = cab
@@ -94,7 +94,7 @@ router.post('/build/upnews', async (ctx, next) => {
         newstype: data["newstype"],
         newsimg: data["newsimg"],
         zhaiyao: data["zhaiyao"],
-        paixu:data.paixu
+        paixu: data.paixu
     }
     const cab = await build.findByIdAndUpdate({ _id: data.id }, db)
     ctx.body = cab
@@ -102,15 +102,15 @@ router.post('/build/upnews', async (ctx, next) => {
 
 //获取首页mainwork数据
 router.get('/build/getmainwork', async (ctx, next) => {
-    const cab = await build2.find({"isshow":1}, { menu: 1, menu2: 1,srcarr:1 })
-    
+    const cab = await build2.find({ "isshow": 1 }, { menu: 1, menu2: 1, srcarr: 1 })
+
     ctx.body = cab
 })
 
 //获取首页delegate数据
 router.get('/build/delegate', async (ctx, next) => {
-    const cab = await build3.find({"weizhi":{$regex:'代表项目'}}, { newsimg: 1 })
-    
+    const cab = await build3.find({ "weizhi": { $regex: '代表项目' } }, { newsimg: 1 })
+
     ctx.body = cab
 })
 //获取目录下的具体内容
@@ -119,34 +119,34 @@ router.get('/build/getproject', async (ctx, next) => {
     data = JSON.parse(data)
     const cab = await build2.findOne({
         "menu2": data["menu2"]
-    },{_id:0,__v:0,menu:0,menu2:0})
+    }, { _id: 0, __v: 0, menu: 0, menu2: 0 })
     ctx.body = cab
 })
 //获取目录下的瀑布流内容
 router.post('/build/getproject2', async (ctx, next) => {
     let data = ctx.request.body
-  
-    const cab = await build3.find({"leixing": data["leixing"]},{newscontent:0}).sort({"paixu":1})
-    let cab2=[]
-    for (const i of cab) {
-        if(/主要项目/.exec(i.weizhi)){
 
-        }else{
-cab2.push(i)
+    const cab = await build3.find({ "leixing": data["leixing"] }, { newscontent: 0 }).sort({ "paixu": 1 })
+    let cab2 = []
+    for (const i of cab) {
+        if (/主要项目/.exec(i.weizhi)) {
+
+        } else {
+            cab2.push(i)
         }
-        
+
     }
-    
+
     ctx.body = cab2
 })
 //删除悬浮目录
 router.get('/build/rmNoteMenu', async (ctx, next) => {
     let data = ctx.query.data
     data = JSON.parse(data)
-    const cab = await build2.remove({
+    const cab = await build2.findOneAndDelete({
         "menu2": data["name"]
     })
-    if (cab.ok == "1") {
+    if (cab) {
         ctx.body = "ok"
     } else {
         ctx.body = "no"
@@ -182,7 +182,6 @@ router.get('/build/addmenu', async (ctx, next) => {
 
 //删除新闻
 router.get('/build/deletenew2', async (ctx, next) => {
-
     let self = ctx.query.data;
     try {
         self = JSON.parse(self)
@@ -191,17 +190,15 @@ router.get('/build/deletenew2', async (ctx, next) => {
         ctx.body = "server json parse error"
         return
     }
-  
+
     let cab = await build3.findByIdAndRemove({ _id: self.id })
     if (cab) {
         ctx.body = "ok"
     }
-
 })
 
 //删除新闻
 router.get('/build/deletenew', async (ctx, next) => {
-
     let self = ctx.query.data;
     try {
         self = JSON.parse(self)
@@ -215,16 +212,15 @@ router.get('/build/deletenew', async (ctx, next) => {
     if (cab) {
         ctx.body = "ok"
     }
-
 })
 
 //通过id获取新闻
 router.get('/build/showsearch2', async (ctx, next) => {
     let id = ctx.query.id;
     let cab = await build.findOne({ '_id': id })
-    if(!cab){
-    cab= await build3.findOne({ '_id': id })
-      }
+    if (!cab) {
+        cab = await build3.findOne({ '_id': id })
+    }
     ctx.body = cab
 })
 //通过id获取新闻
@@ -251,29 +247,29 @@ router.get('/build/getnews4', async (ctx, next) => {
 //获取项目列表素有
 router.post('/build/getnews3', async (ctx, next) => {
     let data = ctx.request.body
-    let cab = await build3.find({"weizhi":{$regex:data.name}}, { newscontent: 0, }).sort({ "date": -1 })
+    let cab = await build3.find({ "weizhi": { $regex: data.name } }, { newscontent: 0, }).sort({ "date": -1 })
     ctx.body = cab
 })
 
 //查询主目录
 router.post('/build/searchmenu', async (ctx, next) => {
     let data = ctx.request.body
-    let cab = await build2.findOne({"menu2":data.leixing}, { menu: 1})
+    let cab = await build2.findOne({ "menu2": data.leixing }, { menu: 1 })
     ctx.body = cab
 })
 
 //获取项目列表素有,这里查询的是leixing
 router.post('/build/getnews32', async (ctx, next) => {
     let data = ctx.request.body
-    let cab = await build3.find({"leixing":{$regex:data.name}}, { newscontent: 0, }).sort({ "paixu": 1 })
-   
+    let cab = await build3.find({ "leixing": { $regex: data.name } }, { newscontent: 0, }).sort({ "paixu": 1 })
+
     ctx.body = cab
 })
 //获取项目列表素有,这里查询的是leixing，并且只查询一个
 router.post('/build/getnews322', async (ctx, next) => {
     let data = ctx.request.body
-    let cab = await build3.findOne({"_id":data.id}, { leixing: 1, })
-    
+    let cab = await build3.findOne({ "_id": data.id }, { leixing: 1, })
+
     ctx.body = cab
 })
 
@@ -294,13 +290,13 @@ router.get('/build/getnews2', async (ctx, next) => {
 //添加项目内容
 router.post('/build/addproject', async (ctx, next) => {
     let data = ctx.request.body
-    
-  
+
+
     let db = {
         'content': data.content,
         'srcarr': data.srcarr,
-        'namearr':data.namearr,
-        'isshow':data.isshow
+        'namearr': data.namearr,
+        'isshow': data.isshow
     }
 
     let cab = await build2.findOneAndUpdate({ 'menu2': data.menu2 }, db)
@@ -325,8 +321,8 @@ router.post('/build/addnew2', async (ctx, next) => {
         "weizhi": data["weizhi"],
         zhaiyao: data["zhaiyao"],
         "leixing": data.leixing,
-        paixu:data.paixu
-       
+        paixu: data.paixu
+
     })
 
     let cab = await db.save()
@@ -345,7 +341,7 @@ router.post('/build/addnew', async (ctx, next) => {
         newstype: data["newstype"],
         newsimg: data["newsimg"],
         zhaiyao: data["zhaiyao"],
-        paixu:data.paixu
+        paixu: data.paixu
     })
 
     let cab = await db.save()

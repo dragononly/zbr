@@ -1,5 +1,4 @@
 {
-  "name": "test",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -28,13 +27,11 @@
     "koa2-request": "^1.0.4",
     "moment": "^2.22.2",
     "mongoose": "^5.4.22",
-    "puppeteer": "^8.0.0",
     "qcloudsms_js": "^0.1.0",
     "qs": "^6.9.6",
     "socket.io": "^3.0.3",
     "ssh2": "^0.8.9",
     "superagent": "^6.1.0",
-    "tenpay": "^2.1.6",
     "ws": "^7.4.0"
   }
 }
